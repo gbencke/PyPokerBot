@@ -1,0 +1,11 @@
+appdirs==1.4.3
+EasyProcess==0.2.3
+numpy==1.11.3+mkl
+olefile==0.44
+packaging==16.8
+Pillow==4.0.0
+pyparsing==2.2.0
+pyscreenshot==0.4.2
+pywin32==220.1
+scipy==0.18.1
+six==1.10.0
