@@ -22,7 +22,7 @@ def execute(args):
                                     name=get_table_name(x['title']),
                                     stakes=get_table_stakes(x['title']),
                                     format=get_table_format(x['title'])) for x in pokerstars_tables_hwnd]
-    while True:
+    while True and len(pokerstars_tables) > 0:
         for current_table in pokerstars_tables:
             capture_screenshot(current_table.hwnd,
                                os.path.join(settings['SAMPLES_FOLDER'], current_table.get_screenshot_name()))
