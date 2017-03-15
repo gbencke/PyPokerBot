@@ -10,6 +10,6 @@ local/
 share/
 *.pyc
 .idea/
-
+*.jpg
 
 
