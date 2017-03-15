@@ -4,5 +4,11 @@ Lib/
 Scripts/
 tcl/
 pip-selfcheck.json
+bin/
+lib/
+local/
+share/
+*.pyc
+
 
 
