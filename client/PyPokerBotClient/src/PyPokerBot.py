@@ -1,6 +1,8 @@
 import sys
 import os
 import logging
+
+from datetime import datetime
 from importlib import import_module
 from settings import settings
 
@@ -8,7 +10,11 @@ from settings import settings
 def general_configuration():
     current_path = os.getcwd()
     sys.path.append(current_path)
-    logging.basicConfig(format=settings['LOG_FORMAT'], level=settings['LOG_LEVEL'])
+    logging.basicConfig(format=settings['LOG_FORMAT'],
+                        level=settings['LOG_LEVEL'],
+                        filename=os.path.join(settings['LOG_LOCATION'],
+                                              'log.' + datetime.now().strftime("%Y%m%d%H%M%S.%f") + '.log'))
+    logging.getLogger().addHandler(logging.StreamHandler())
 
 
 def show_usage():

@@ -11,5 +11,7 @@ share/
 *.pyc
 .idea/
 *.jpg
+logs/
+
 
 
