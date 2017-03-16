@@ -1,5 +1,6 @@
 from flask import Flask, request
 import pbots_calc
+from helpers.RangeHelper import RangeHelper
 
 app = Flask(__name__)
 
@@ -7,7 +8,7 @@ app = Flask(__name__)
 def calculator():
     command = request.get_json()['command']
     tokens = command.split(' ')
-    start_cards=tokens[0]
+    start_cards=(RangeHelper()).parse(tokens[0])
     board = ""
     dead = ""
     if len(tokens) > 1:
