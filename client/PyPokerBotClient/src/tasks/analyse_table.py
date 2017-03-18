@@ -21,7 +21,22 @@ def analyse_players_with_cards(Image):
         print "For method {} seat {}:{}".format('Histogram', current_seat_index + 1,
                                                 'Sentado' if cv2.compareHist(
                                                     template_has_card_cv2_hist,
-                                                    current_seat_cv2_hist, 0) > 0.90 else 'Vago')
+                                                    current_seat_cv2_hist, 0) > settings['TABLE_SCANNER'][
+                                                                 'PLAY_HASCARD_THRESHOLD'] else 'Vago')
+
+
+def analyse_button(Image):
+    template_has_card_cv2_hist = get_histogram_from_image(
+        grab_image_from_file(settings['TABLE_SCANNER']['BUTTON_TEMPLATE']))
+    for current_seat_index in range(6):
+        current_seat_cv2_hist = get_histogram_from_image(grab_image_pos_from_image(
+            Image, settings['TABLE_SCANNER']['BUTTON{}'.format(current_seat_index + 1)],
+            settings['TABLE_SCANNER']['BUTTON_SIZE']))
+        print "For method {} button pos {}:{}".format('Histogram', current_seat_index + 1,
+                                                      'BUTTON' if cv2.compareHist(
+                                                          template_has_card_cv2_hist,
+                                                          current_seat_cv2_hist, 0) > settings['TABLE_SCANNER'][
+                                                                      'BUTTON_THRESHOLD'] else '')
 
 
 def execute(args):
@@ -31,3 +46,4 @@ def execute(args):
     image_name = args[0]
     im = grab_image_from_file(image_name)
     analyse_players_with_cards(im)
+    analyse_button(im)
