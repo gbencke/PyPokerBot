@@ -9,7 +9,7 @@ settings = {
         "TEMPLATES_FOLDER": "..\..\data\\templates",
         "TABLE_SIZE": (614, 456),
         "PLAYERCARD_HAS_NOCARD_TEMPLATE": "",
-        "PLAYERCARD_HAS_UNKNOWN_CARD_TEMPLATE": "..\..\data\\templates\PLAYER_HASCARD.jpg",
+        "PLAYERCARD_HAS_UNKNOWN_CARD_TEMPLATE": "..\..\data\\template\PLAYER_HASCARD.jpg",
 
         "PLAYERHASCARD_SIZE": (76, 19),
         "PLAYER1_HASCARD": (495, 112),

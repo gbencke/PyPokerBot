@@ -18,6 +18,10 @@ def capture_screenshot(hwnd, file_to_save):
         return None
 
 
+def grab_image_from_file(image):
+    return PIL.Image.open(image)
+
+
 def grab_image_pos_from_image(image, pos, size):
     return image.crop((pos[0], pos[1], pos[0] + size[0], pos[1] + size[1]))
 
