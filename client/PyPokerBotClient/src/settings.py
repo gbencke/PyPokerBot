@@ -3,5 +3,51 @@ settings = {
     "LOG_FORMAT": "%(asctime)-15s %(message)s",
     "LOG_LOCATION": "..\..\logs",
     "SAMPLES_FOLDER": "..\..\data",
-    "SLEEP_TIME_BETWEEN_CAPTURE_MS": 1000
+    "SLEEP_TIME_BETWEEN_CAPTURE_MS": 1000,
+
+    "TABLE_SCANNER": {
+        "TEMPLATES_FOLDER": "..\..\data\\templates",
+        "TABLE_SIZE": (614, 456),
+        "PLAYERCARD_HAS_NOCARD_TEMPLATE": "",
+        "PLAYERCARD_HAS_UNKNOWN_CARD_TEMPLATE": "..\..\data\\templates\PLAYER_HASCARD.jpg",
+
+        "PLAYERHASCARD_SIZE": (76, 19),
+        "PLAYER1_HASCARD": (495, 112),
+        "PLAYER2_HASCARD": (495, 241),
+        "PLAYER3_HASCARD": (271, 312),
+        "PLAYER4_HASCARD": (48, 241),
+        "PLAYER5_HASCARD": (48, 112),
+        "PLAYER6_HASCARD": (271, 62),
+
+        "PLAYERCARD_SIZE": (1, 1),
+        "PLAYERCARD11_POS": (1, 1),
+        "PLAYERCARD12_POS": (1, 1),
+        "PLAYERCARD21_POS": (1, 1),
+        "PLAYERCARD22_POS": (1, 1),
+        "PLAYERCARD31_POS": (1, 1),
+        "PLAYERCARD32_POS": (1, 1),
+        "PLAYERCARD41_POS": (1, 1),
+        "PLAYERCARD42_POS": (1, 1),
+        "PLAYERCARD51_POS": (1, 1),
+        "PLAYERCARD52_POS": (1, 1),
+        "PLAYERCARD61_POS": (1, 1),
+        "PLAYERCARD62_POS": (1, 1),
+
+        "FLOPCARD_SIZE": (1, 1),
+        "FLOPCARD_HAS_NOCARD_TEMPLATE": "",
+        "FLOPCARD1": (1, 1),
+        "FLOPCARD2": (1, 1),
+        "FLOPCARD3": (1, 1),
+        "FLOPCARD4": (1, 1),
+        "FLOPCARD5": (1, 1),
+
+        "BUTTON_SIZE": (1, 1),
+        "BUTTON_HAS_NOBUTTON_TEMPLATE:": "",
+        "BUTTON1": (1, 1),
+        "BUTTON2": (1, 1),
+        "BUTTON3": (1, 1),
+        "BUTTON4": (1, 1),
+        "BUTTON5": (1, 1),
+        "BUTTON6": (1, 1),
+    }
 }
