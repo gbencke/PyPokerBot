@@ -47,7 +47,7 @@ def analyse_flop_hist(Image):
             Image,
             settings['TABLE_SCANNER']['FLOPCARD{}'.format(current_flop_pos + 1)],
             settings['TABLE_SCANNER']['FLOPCARD_SIZE']))
-        for current_suit in ['red', 'black', 'green', 'blue']:
+        for current_suit in ['h', 's', 'c', 'd']:
             for current_card in ['2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K', 'A']:
                 filename = settings['TABLE_SCANNER']['TEMPLATES_FOLDER'] + '\\' + current_card + current_suit + '.jpg'
                 current_card_image_hst = get_histogram_from_image(grab_image_from_file(filename))
@@ -68,7 +68,7 @@ def analyse_flop_template(Image):
                     Image,
                     settings['TABLE_SCANNER']['FLOPCARD{}'.format(current_flop_pos + 1)],
                     settings['TABLE_SCANNER']['FLOPCARD_SIZE']))[:, :, ::-1].copy()
-        for current_suit in ['red', 'black', 'green', 'blue']:
+        for current_suit in ['h', 's', 'c', 'd']:
             for current_card in ['2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K', 'A']:
                 filename = settings['TABLE_SCANNER']['TEMPLATES_FOLDER'] + '\\' + current_card + current_suit + '.jpg'
                 current_card_image = numpy.array(grab_image_from_file(filename))[:, :, ::-1].copy()
