@@ -10,7 +10,8 @@ local/
 share/
 *.pyc
 .idea/
-*.jpg
+client/data/*.jpg
+client/data/samples/*.jpg
 logs/
 
 
