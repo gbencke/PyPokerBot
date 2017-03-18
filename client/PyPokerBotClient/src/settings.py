@@ -6,7 +6,7 @@ settings = {
     "SLEEP_TIME_BETWEEN_CAPTURE_MS": 1000,
 
     "TABLE_SCANNER": {
-        "TEMPLATES_FOLDER": "..\..\data\\templates",
+        "TEMPLATES_FOLDER": "..\..\data\\template",
         "TABLE_SIZE": (614, 456),
         "PLAYERCARD_HAS_NOCARD_TEMPLATE": "",
         "PLAYERCARD_HAS_UNKNOWN_CARD_TEMPLATE": "..\..\data\\template\PLAYER_HASCARD.jpg",
@@ -42,7 +42,7 @@ settings = {
         "FLOPCARD5": (371, 183),
 
         "BUTTON_SIZE": (16, 13),
-        "BUTTON_THRESHOLD": 0.80,
+        "BUTTON_THRESHOLD": 0.70,
         "BUTTON_TEMPLATE": "..\..\data\\template\BUTTON.jpg",
         "BUTTON1": (473, 171),
         "BUTTON2": (448, 266),
