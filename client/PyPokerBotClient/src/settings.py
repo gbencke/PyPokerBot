@@ -12,6 +12,7 @@ settings = {
         "PLAYERCARD_HAS_UNKNOWN_CARD_TEMPLATE": "..\..\data\\template\PLAYER_HASCARD.jpg",
 
         "PLAYERHASCARD_SIZE": (76, 19),
+        "PLAY_HASCARD_THRESHOLD": 0.90,
         "PLAYER1_HASCARD": (495, 112),
         "PLAYER2_HASCARD": (495, 241),
         "PLAYER3_HASCARD": (271, 312),
@@ -41,13 +42,14 @@ settings = {
         "FLOPCARD4": (1, 1),
         "FLOPCARD5": (1, 1),
 
-        "BUTTON_SIZE": (1, 1),
-        "BUTTON_HAS_NOBUTTON_TEMPLATE:": "",
-        "BUTTON1": (1, 1),
-        "BUTTON2": (1, 1),
-        "BUTTON3": (1, 1),
-        "BUTTON4": (1, 1),
-        "BUTTON5": (1, 1),
-        "BUTTON6": (1, 1),
+        "BUTTON_SIZE": (16, 13),
+        "BUTTON_THRESHOLD": 0.80,
+        "BUTTON_TEMPLATE": "..\..\data\\template\BUTTON.jpg",
+        "BUTTON1": (473, 171),
+        "BUTTON2": (448, 266),
+        "BUTTON3": (354, 294),
+        "BUTTON4": (159, 266),
+        "BUTTON5": (140, 167),
+        "BUTTON6": (259, 127),
     }
 }
