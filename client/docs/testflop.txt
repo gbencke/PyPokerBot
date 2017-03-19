@@ -1,0 +1,26 @@
+
+python PyPokerBot.py analyse_table "..\..\data\samples\Screenshot.20170319090140.056000.Arlon.Table.jpg" >  "Screenshot.20170319090140.056000.Arlon.Table.txt"
+python PyPokerBot.py analyse_table "..\..\data\samples\Screenshot.20170319090703.169000.Perrotin.Table.jpg" >  "Screenshot.20170319090703.169000.Perrotin.Table.txt"
+python PyPokerBot.py analyse_table "..\..\data\samples\Screenshot.20170319090817.667000.Perrotin.Table.jpg" > "Screenshot.20170319090817.667000.Perrotin.Table.txt"
+python PyPokerBot.py analyse_table "..\..\data\samples\Screenshot.20170319090903.275000.Arlon.Table.jpg" > "Screenshot.20170319090903.275000.Arlon.Table.txt"
+python PyPokerBot.py analyse_table "..\..\data\samples\Screenshot.20170319153237.220000.Mrkos III.Table.jpg" > "Screenshot.20170319153237.220000.Mrkos III.Table.txt"
+python PyPokerBot.py analyse_table "..\..\data\samples\Screenshot.20170319153550.685000.Elektra II.Table.jpg" > "Screenshot.20170319153550.685000.Elektra II.Table.txt"
+python PyPokerBot.py analyse_table "..\..\data\samples\Screenshot.20170319153753.591000.Mrkos III.Table.jpg" > "Screenshot.20170319153753.591000.Mrkos III.Table.txt"
+python PyPokerBot.py analyse_table "..\..\data\samples\Screenshot.20170319153914.055000.Mrkos III.Table.jpg" > "Screenshot.20170319153914.055000.Mrkos III.Table.txt"
+python PyPokerBot.py analyse_table "..\..\data\samples\Screenshot.20170319154244.950000.Tautenburg.Table.jpg" > "Screenshot.20170319154244.950000.Tautenburg.Table.txt"
+python PyPokerBot.py analyse_table "..\..\data\samples\Screenshot.20170319154256.735000.Mrkos III.Table.jpg" > "Screenshot.20170319154256.735000.Mrkos III.Table.txt"
+python PyPokerBot.py analyse_table "..\..\data\samples\Screenshot.20170319154754.282000.Mrkos III.Table.jpg" > "Screenshot.20170319154754.282000.Mrkos III.Table.txt"
+python PyPokerBot.py analyse_table "..\..\data\samples\Screenshot.20170319154806.230000.Elektra II.Table.jpg" > "Screenshot.20170319154806.230000.Elektra II.Table.txt"
+python PyPokerBot.py analyse_table "..\..\data\samples\Screenshot.20170319155029.461000.Mrkos III.Table.jpg" > "Screenshot.20170319155029.461000.Mrkos III.Table.txt"
+python PyPokerBot.py analyse_table "..\..\data\samples\Screenshot.20170319155603.205000.Elektra II.Table.jpg" > "Screenshot.20170319155603.205000.Elektra II.Table.txt"
+python PyPokerBot.py analyse_table "..\..\data\samples\Screenshot.20170319155609.819000.Elektra II.Table.jpg" > "Screenshot.20170319155609.819000.Elektra II.Table.txt"
+python PyPokerBot.py analyse_table "..\..\data\samples\Screenshot.20170319160038.170000.Elektra II.Table.jpg" > "Screenshot.20170319160038.170000.Elektra II.Table.txt"
+python PyPokerBot.py analyse_table "..\..\data\samples\Screenshot.20170319160341.289000.Elektra II.Table.jpg" > "Screenshot.20170319160341.289000.Elektra II.Table.txt"
+python PyPokerBot.py analyse_table "..\..\data\samples\Screenshot.20170319160804.348000.Elektra II.Table.jpg" > "Screenshot.20170319160804.348000.Elektra II.Table.txt"
+python PyPokerBot.py analyse_table "..\..\data\samples\Screenshot.20170319161105.671000.Elektra II.Table.jpg" > "Screenshot.20170319161105.671000.Elektra II.Table.txt"
+python PyPokerBot.py analyse_table "..\..\data\samples\Screenshot.20170319161550.393000.Mrkos III.Table.jpg" > "Screenshot.20170319161550.393000.Mrkos III.Table.txt"
+python PyPokerBot.py analyse_table "..\..\data\samples\Screenshot.20170319163324.525000.Mrkos III.Table.jpg" > "Screenshot.20170319163324.525000.Mrkos III.Table.txt"
+python PyPokerBot.py analyse_table "..\..\data\samples\Screenshot.20170319163405.455000.Mrkos III.Table.jpg" > "Screenshot.20170319163405.455000.Mrkos III.Table.txt"
+
+
+
