@@ -34,7 +34,7 @@ settings = {
         "PLAYERCARD62_POS": (312, 56),
 
         "FLOPCARD_SIZE": (16, 20),
-        "FLOPCARD_HAS_NOCARD_TEMPLATE": "",
+        "FLOPCARD_HAS_NOCARD_TEMPLATE": "..\..\data\\template\NOFLOP.jpg",
         "FLOPCARD1": (211, 183),
         "FLOPCARD2": (251, 183),
         "FLOPCARD3": (291, 183),
