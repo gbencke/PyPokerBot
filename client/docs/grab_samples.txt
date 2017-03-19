@@ -1,0 +1,77 @@
+cls
+
+del *.jpg
+
+python PyPokerBot.py grab_image "..\..\data\samples\Screenshot.20170319151332.545000.Tautenburg.Table.jpg" PLAYERCARD61_POS FLOPCARD_SIZE Ad.JPG
+python PyPokerBot.py grab_image "..\..\data\samples\Screenshot.20170319151708.225000.Tautenburg.Table.jpg" FLOPCARD4 FLOPCARD_SIZE Ac.JPG
+python PyPokerBot.py grab_image "..\..\data\samples\Screenshot.20170319150640.732000.Elektra II.Table.jpg" FLOPCARD2 FLOPCARD_SIZE Ah.JPG
+python PyPokerBot.py grab_image "..\..\data\samples\Screenshot.20170319150447.125000.Elektra II.Table.jpg" FLOPCARD3 FLOPCARD_SIZE As.JPG
+
+python PyPokerBot.py grab_image "..\..\data\samples\Screenshot.20170319150903.420000.Mrkos III.Table.jpg" FLOPCARD3 FLOPCARD_SIZE Ks.JPG
+python PyPokerBot.py grab_image "..\..\data\samples\Screenshot.20170319151424.691000.Mrkos III.Table.jpg" FLOPCARD5 FLOPCARD_SIZE Kc.JPG
+python PyPokerBot.py grab_image "..\..\data\samples\Screenshot.20170319164627.154000.Mrkos III.Table.jpg" FLOPCARD1 FLOPCARD_SIZE Kh.JPG
+python PyPokerBot.py grab_image "..\..\data\samples\Screenshot.20170319163740.866000.Mrkos III.Table.jpg" FLOPCARD1 FLOPCARD_SIZE Kd.JPG
+
+python PyPokerBot.py grab_image "..\..\data\samples\Screenshot.20170319151332.545000.Tautenburg.Table.jpg" PLAYERCARD62_POS FLOPCARD_SIZE Qd.JPG
+python PyPokerBot.py grab_image "..\..\data\samples\Screenshot.20170319151546.241000.Mrkos III.Table.jpg" FLOPCARD3 FLOPCARD_SIZE Qc.JPG
+python PyPokerBot.py grab_image "..\..\data\samples\Screenshot.20170319151424.691000.Mrkos III.Table.jpg" PLAYERCARD61_POS FLOPCARD_SIZE Qh.JPG
+python PyPokerBot.py grab_image "..\..\data\samples\Screenshot.20170319162458.207000.Mrkos III.Table.jpg" FLOPCARD4 FLOPCARD_SIZE Qs.JPG
+
+python PyPokerBot.py grab_image "..\..\data\samples\Screenshot.20170319151424.691000.Mrkos III.Table.jpg" PLAYERCARD62_POS FLOPCARD_SIZE Jh.JPG
+python PyPokerBot.py grab_image "..\..\data\samples\Screenshot.20170319164412.531000.Mrkos III.Table.jpg" FLOPCARD3 FLOPCARD_SIZE Js.JPG
+python PyPokerBot.py grab_image "..\..\data\samples\Screenshot.20170319163352.005000.Mrkos III.Table.jpg" FLOPCARD1 FLOPCARD_SIZE Jd.JPG
+python PyPokerBot.py grab_image "..\..\data\samples\Screenshot.20170319163324.525000.Mrkos III.Table.jpg" PLAYERCARD22_POS FLOPCARD_SIZE Jc.JPG
+
+python PyPokerBot.py grab_image "..\..\data\samples\Screenshot.20170319151500.910000.Tautenburg.Table.jpg" FLOPCARD1 FLOPCARD_SIZE Tc.JPG
+python PyPokerBot.py grab_image "..\..\data\samples\Screenshot.20170319151500.910000.Tautenburg.Table.jpg" FLOPCARD2 FLOPCARD_SIZE Th.JPG
+python PyPokerBot.py grab_image "..\..\data\samples\Screenshot.20170319151500.910000.Tautenburg.Table.jpg" FLOPCARD4 FLOPCARD_SIZE Ts.JPG
+python PyPokerBot.py grab_image "..\..\data\samples\Screenshot.20170319162458.207000.Mrkos III.Table.jpg" FLOPCARD2 FLOPCARD_SIZE Td.JPG
+
+python PyPokerBot.py grab_image "..\..\data\samples\Screenshot.20170319162003.729000.Mrkos III.Table.jpg" FLOPCARD4 FLOPCARD_SIZE 9s.JPG
+python PyPokerBot.py grab_image "..\..\data\samples\Screenshot.20170319151531.201000.Elektra II.Table.jpg" FLOPCARD1 FLOPCARD_SIZE 9c.JPG
+python PyPokerBot.py grab_image "..\..\data\samples\Screenshot.20170319151500.910000.Tautenburg.Table.jpg" FLOPCARD3 FLOPCARD_SIZE 9h.JPG
+python PyPokerBot.py grab_image "..\..\data\samples\Screenshot.20170319151424.691000.Mrkos III.Table.jpg" FLOPCARD2 FLOPCARD_SIZE 9d.JPG
+
+python PyPokerBot.py grab_image "..\..\data\samples\Screenshot.20170319151724.845000.Elektra II.Table.jpg" FLOPCARD3 FLOPCARD_SIZE 8s.JPG
+python PyPokerBot.py grab_image "..\..\data\samples\Screenshot.20170319164700.804000.Mrkos III.Table.jpg" FLOPCARD1 FLOPCARD_SIZE 8d.JPG
+python PyPokerBot.py grab_image "..\..\data\samples\Screenshot.20170319164647.354000.Mrkos III.Table.jpg" FLOPCARD1 FLOPCARD_SIZE 8c.JPG
+python PyPokerBot.py grab_image "..\..\data\samples\Screenshot.20170319164317.900000.Mrkos III.Table.jpg" FLOPCARD2 FLOPCARD_SIZE 8h.JPG
+
+python PyPokerBot.py grab_image "..\..\data\samples\Screenshot.20170319151708.225000.Tautenburg.Table.jpg" FLOPCARD5 FLOPCARD_SIZE 7d.JPG
+python PyPokerBot.py grab_image "..\..\data\samples\Screenshot.20170319151531.201000.Elektra II.Table.jpg" FLOPCARD3 FLOPCARD_SIZE 7h.JPG
+python PyPokerBot.py grab_image "..\..\data\samples\Screenshot.20170319090703.169000.Perrotin.Table.jpg" FLOPCARD1 FLOPCARD_SIZE 7s.JPG
+python PyPokerBot.py grab_image "..\..\data\samples\Screenshot.20170319163122.536000.Mrkos III.Table.jpg" FLOPCARD1 FLOPCARD_SIZE 7c.JPG
+
+python PyPokerBot.py grab_image "..\..\data\samples\Screenshot.20170319151708.225000.Tautenburg.Table.jpg" FLOPCARD3 FLOPCARD_SIZE 6h.JPG
+python PyPokerBot.py grab_image "..\..\data\samples\Screenshot.20170319164412.531000.Mrkos III.Table.jpg" FLOPCARD2 FLOPCARD_SIZE 6c.JPG
+python PyPokerBot.py grab_image "..\..\data\samples\Screenshot.20170319164257.813000.Mrkos III.Table.jpg" FLOPCARD1 FLOPCARD_SIZE 6d.JPG
+python PyPokerBot.py grab_image "..\..\data\samples\Screenshot.20170319163412.184000.Mrkos III.Table.jpg" PLAYERCARD21_POS FLOPCARD_SIZE 6s.JPG
+
+
+
+python PyPokerBot.py grab_image "..\..\data\samples\Screenshot.20170319151546.241000.Mrkos III.Table.jpg" FLOPCARD2 FLOPCARD_SIZE 5h.JPG
+python PyPokerBot.py grab_image "..\..\data\samples\Screenshot.20170319151546.241000.Mrkos III.Table.jpg" FLOPCARD5 FLOPCARD_SIZE 5d.JPG
+python PyPokerBot.py grab_image "..\..\data\samples\Screenshot.20170319151424.691000.Mrkos III.Table.jpg" FLOPCARD4 FLOPCARD_SIZE 5c.JPG
+python PyPokerBot.py grab_image "..\..\data\samples\Screenshot.20170319163412.184000.Mrkos III.Table.jpg" PLAYERCARD22_POS FLOPCARD_SIZE 5s.JPG
+
+python PyPokerBot.py grab_image "..\..\data\samples\Screenshot.20170319151708.225000.Tautenburg.Table.jpg" FLOPCARD2 FLOPCARD_SIZE 4c.JPG
+python PyPokerBot.py grab_image "..\..\data\samples\Screenshot.20170319151531.201000.Elektra II.Table.jpg" FLOPCARD2 FLOPCARD_SIZE 4s.JPG
+python PyPokerBot.py grab_image "..\..\data\samples\Screenshot.20170319151531.201000.Elektra II.Table.jpg" FLOPCARD5 FLOPCARD_SIZE 4h.JPG
+python PyPokerBot.py grab_image "..\..\data\samples\Screenshot.20170319163324.525000.Mrkos III.Table.jpg" FLOPCARD1 FLOPCARD_SIZE 4d.JPG
+
+python PyPokerBot.py grab_image "..\..\data\samples\Screenshot.20170319151708.225000.Tautenburg.Table.jpg" FLOPCARD1 FLOPCARD_SIZE 3h.JPG
+python PyPokerBot.py grab_image "..\..\data\samples\Screenshot.20170319163324.525000.Mrkos III.Table.jpg" FLOPCARD5 FLOPCARD_SIZE 3d.JPG
+python PyPokerBot.py grab_image "..\..\data\samples\Screenshot.20170319162251.124000.Mrkos III.Table.jpg" FLOPCARD4 FLOPCARD_SIZE 3s.JPG
+python PyPokerBot.py grab_image "..\..\data\samples\Screenshot.20170319161105.671000.Elektra II.Table.jpg" FLOPCARD4 FLOPCARD_SIZE 3c.JPG
+
+
+python PyPokerBot.py grab_image "..\..\data\samples\Screenshot.20170319151424.691000.Mrkos III.Table.jpg" FLOPCARD3 FLOPCARD_SIZE 2h.JPG
+python PyPokerBot.py grab_image "..\..\data\samples\Screenshot.20170319151500.910000.Tautenburg.Table.jpg" FLOPCARD5 FLOPCARD_SIZE 2d.JPG
+python PyPokerBot.py grab_image "..\..\data\samples\Screenshot.20170319162351.395000.Mrkos III.Table.jpg" FLOPCARD5 FLOPCARD_SIZE 2c.JPG
+python PyPokerBot.py grab_image "..\..\data\samples\Screenshot.20170319155409.683000.Elektra II.Table.jpg" FLOPCARD4 FLOPCARD_SIZE 2s.JPG
+
+
+
+
+
+

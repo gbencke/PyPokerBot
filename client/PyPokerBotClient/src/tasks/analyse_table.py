@@ -47,9 +47,11 @@ def analyse_players_without_cards(Image):
 
 def analyse_button(Image):
     ret = {}
-    template_has_card_cv2_hist = get_histogram_from_image(
-        grab_image_from_file(settings['TABLE_SCANNER']['BUTTON_TEMPLATE']))
+
     for current_seat_index in range(6):
+        empty_card_key = settings['TABLE_SCANNER']['TEMPLATES_FOLDER'] + '\\' + 'BUTTON{}_TEMPLATE'.format(
+            current_seat_index + 1) + '.jpg'
+        template_has_card_cv2_hist = get_histogram_from_image(grab_image_from_file(empty_card_key))
         button_name_key = 'BUTTON{}'.format(current_seat_index + 1)
         current_seat_cv2_hist = get_histogram_from_image(grab_image_pos_from_image(
             Image, settings['TABLE_SCANNER'][button_name_key],
@@ -57,6 +59,29 @@ def analyse_button(Image):
         res = cv2.compareHist(template_has_card_cv2_hist, current_seat_cv2_hist, 0)
         ret[button_name_key] = 'BUTTON' if res > settings['TABLE_SCANNER']['BUTTON_THRESHOLD'] else ''
         # print "For method {} button pos {}:{}".format('Histogram', current_seat_index + 1, ret[button_name_key])
+    return ret
+
+
+def analyse_flop_hist(Image):
+    ret = {}
+    for current_flop_pos in range(5):
+        selected_card = ''
+        selected_card_res = 0
+        flop_card_key = 'FLOPCARD{}'.format(current_flop_pos + 1)
+        current_flop_hst = get_histogram_from_image(grab_image_pos_from_image(
+            Image,
+            settings['TABLE_SCANNER']['FLOPCARD{}'.format(current_flop_pos + 1)],
+            settings['TABLE_SCANNER']['FLOPCARD_SIZE']))
+        for current_suit in ['h', 's', 'c', 'd']:
+            for current_card in ['2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K', 'A']:
+                filename = settings['TABLE_SCANNER']['TEMPLATES_FOLDER'] + '\\' + current_card + current_suit + '.jpg'
+                current_card_image_hst = get_histogram_from_image(grab_image_from_file(filename))
+                res = cv2.compareHist(current_flop_hst, current_card_image_hst, 2)
+                if res > selected_card_res:
+                    selected_card = current_card + current_suit
+                    selected_card_res = res
+                #print("For FLOP{}, Card {} returned {} - WINNER {} ".format(current_flop_pos + 1, current_card + current_suit, res, selected_card))
+        ret[flop_card_key] = selected_card
     return ret
 
 
@@ -74,7 +99,7 @@ def analyse_flop_template(Image):
         return ret
     for current_flop_pos in range(5):
         selected_card = ''
-        selected_card_res = 1000000
+        selected_card_res = 1000000000
         flop_card_key = 'FLOPCARD{}'.format(current_flop_pos + 1)
         current_flop_image = \
             numpy.array(
@@ -87,10 +112,11 @@ def analyse_flop_template(Image):
                 filename = settings['TABLE_SCANNER']['TEMPLATES_FOLDER'] + '\\' + current_card + current_suit + '.jpg'
                 current_card_image = numpy.array(grab_image_from_file(filename))[:, :, ::-1].copy()
                 res = cv2.matchTemplate(current_flop_image, current_card_image, 0)
+                #print("For FLOP{}, Card {} returned {} - WINNER {} ".format(current_flop_pos + 1, current_card + current_suit,res, selected_card))
                 if res < selected_card_res:
                     selected_card = current_card + current_suit
                     selected_card_res = res
-                    # print("For FLOP{}, Card {} returned {} - WINNER {} ".format(current_flop_pos + 1,current_card + current_suit,res, selected_card))
+
         ret[flop_card_key] = selected_card
     return ret
 
@@ -106,7 +132,7 @@ def analyse_hero(im, cards, nocards):
             ret['HERO_POS'] = seat + 1
             for current_hero_card in range(2):
                 selected_card = ''
-                selected_card_res = 1000000
+                selected_card_res = 1000000000
                 flop_card_key = 'PLAYERCARD{}{}_POS'.format(seat + 1, current_hero_card + 1)
                 current_flop_image = \
                     numpy.array(
@@ -125,6 +151,7 @@ def analyse_hero(im, cards, nocards):
                             selected_card = current_card + current_suit
                             selected_card_res = res
                 ret['HERO_CARDS'] += selected_card
+            break
     return ret
 
 
