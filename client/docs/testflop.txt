@@ -1,4 +1,5 @@
 
+::Cards
 python PyPokerBot.py analyse_table "..\..\data\samples\Screenshot.20170319090140.056000.Arlon.Table.jpg" >  "Screenshot.20170319090140.056000.Arlon.Table.txt"
 python PyPokerBot.py analyse_table "..\..\data\samples\Screenshot.20170319090703.169000.Perrotin.Table.jpg" >  "Screenshot.20170319090703.169000.Perrotin.Table.txt"
 python PyPokerBot.py analyse_table "..\..\data\samples\Screenshot.20170319090817.667000.Perrotin.Table.jpg" > "Screenshot.20170319090817.667000.Perrotin.Table.txt"
@@ -22,5 +23,10 @@ python PyPokerBot.py analyse_table "..\..\data\samples\Screenshot.20170319161550
 python PyPokerBot.py analyse_table "..\..\data\samples\Screenshot.20170319163324.525000.Mrkos III.Table.jpg" > "Screenshot.20170319163324.525000.Mrkos III.Table.txt"
 python PyPokerBot.py analyse_table "..\..\data\samples\Screenshot.20170319163405.455000.Mrkos III.Table.jpg" > "Screenshot.20170319163405.455000.Mrkos III.Table.txt"
 
-
+::Command
+python PyPokerBot.py analyse_table "..\..\data\samples\Screenshot.20170320222742.856000.Geramtina.Table.jpg" > Screenshot.20170320222742.856000.Geramtina.Table.txt
+python PyPokerBot.py analyse_table "..\..\data\samples\Screenshot.20170320222938.795000.Geramtina.Table.jpg" > Screenshot.20170320222938.795000.Geramtina.Table.txt
+python PyPokerBot.py analyse_table "..\..\data\samples\Screenshot.20170320223038.169000.Geramtina.Table.jpg" > Screenshot.20170320223038.169000.Geramtina.Table.txt
+python PyPokerBot.py analyse_table "..\..\data\samples\Screenshot.20170320223039.526000.Geramtina.Table.jpg" > Screenshot.20170320223039.526000.Geramtina.Table.txt
+python PyPokerBot.py analyse_table "..\..\data\samples\Screenshot.20170320223040.914000.Geramtina.Table.jpg" > Screenshot.20170320223040.914000.Geramtina.Table.txt
 
