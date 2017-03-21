@@ -151,7 +151,7 @@ def get_suite_from_image(selected_image):
             if pixel[2] >= pixel[0] and pixel[2] >= pixel[1]:
                 blue += 1
                 continue
-    print("red:{} green:{} blue:{} black:{}".format(red, green, blue, black))
+    #print("red:{} green:{} blue:{} black:{}".format(red, green, blue, black))
     if black > 200:
         return 's'
     if red > green and red > blue and red > black:
