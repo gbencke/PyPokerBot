@@ -36,7 +36,7 @@ settings = {
         "PLAYERCARD12_POS": (1138, 176),
         "PLAYERCARD21_POS": (1060, 454),
         "PLAYERCARD22_POS": (1138, 454),
-        "PLAYERCARD31_POS": (575, 610),
+        "PLAYERCARD31_POS": (573, 609),
         "PLAYERCARD32_POS": (651, 610),
         "PLAYERCARD41_POS": (95, 454),
         "PLAYERCARD42_POS": (173, 454),
