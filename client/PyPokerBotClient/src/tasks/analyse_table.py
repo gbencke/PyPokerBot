@@ -1,6 +1,9 @@
+import ast
 import numpy
 import cv2
 import pprint
+import subprocess
+import requests
 from settings import settings
 from helpers.win32.screenshot import grab_image_from_file, grab_image_pos_from_image
 
@@ -80,7 +83,7 @@ def analyse_flop_hist(Image):
                 if res > selected_card_res:
                     selected_card = current_card + current_suit
                     selected_card_res = res
-                #print("For FLOP{}, Card {} returned {} - WINNER {} ".format(current_flop_pos + 1, current_card + current_suit, res, selected_card))
+                    # print("For FLOP{}, Card {} returned {} - WINNER {} ".format(current_flop_pos + 1, current_card + current_suit, res, selected_card))
         ret[flop_card_key] = selected_card
     return ret
 
@@ -112,7 +115,7 @@ def analyse_flop_template(Image):
                 filename = settings['TABLE_SCANNER']['TEMPLATES_FOLDER'] + '\\' + current_card + current_suit + '.jpg'
                 current_card_image = numpy.array(grab_image_from_file(filename))[:, :, ::-1].copy()
                 res = cv2.matchTemplate(current_flop_image, current_card_image, 0)
-                #print("For FLOP{}, Card {} returned {} - WINNER {} ".format(current_flop_pos + 1, current_card + current_suit,res, selected_card))
+                # print("For FLOP{}, Card {} returned {} - WINNER {} ".format(current_flop_pos + 1, current_card + current_suit,res, selected_card))
                 if res < selected_card_res:
                     selected_card = current_card + current_suit
                     selected_card_res = res
@@ -128,7 +131,7 @@ def analyse_hero(im, cards, nocards):
         card_key = 'PLAYER{}_HASCARD'.format(seat + 1)
         nocard_key = 'NOCARD{}'.format(seat + 1)
         if len(cards[card_key]) == 0 and len(nocards[nocard_key]) == 0:
-            #print("found hero at {}".format(seat + 1))
+            # print("found hero at {}".format(seat + 1))
             ret['HERO_POS'] = seat + 1
             for current_hero_card in range(2):
                 selected_card = ''
@@ -146,7 +149,7 @@ def analyse_hero(im, cards, nocards):
                                        'TEMPLATES_FOLDER'] + '\\' + current_card + current_suit + '.jpg'
                         current_card_image = numpy.array(grab_image_from_file(filename))[:, :, ::-1].copy()
                         res = cv2.matchTemplate(current_flop_image, current_card_image, 0)
-                        #print('filename:{} res:{}'.format(filename, res))
+                        # print('filename:{} res:{}'.format(filename, res))
                         if res < selected_card_res:
                             selected_card = current_card + current_suit
                             selected_card_res = res
@@ -155,17 +158,126 @@ def analyse_hero(im, cards, nocards):
     return ret
 
 
+def analyse_commands(im):
+    ret = {"COMMAND1": "", "COMMAND2": "", "COMMAND3": ""}
+
+    for x in range(3):
+        current_command = x + 1
+
+        template_has_command_cv2_hist = get_histogram_from_image(
+            grab_image_from_file(settings['TABLE_SCANNER']['COMMAND_TEST_TEMPLATE{}'.format(current_command)]))
+
+        has_command_cv2_hist = \
+            get_histogram_from_image(grab_image_pos_from_image(
+                im,
+                settings['TABLE_SCANNER']['COMMAND_POS{}'.format(current_command)],
+                settings['TABLE_SCANNER']['COMMAND_TEST_SIZE']))
+        res = cv2.compareHist(template_has_command_cv2_hist, has_command_cv2_hist, 0)
+        if res > settings['TABLE_SCANNER']['COMMAND_TEST_TOLERANCE']:
+            #print("Command {}:found".format(current_command))
+            im_command = grab_image_pos_from_image(
+                im,
+                settings['TABLE_SCANNER']['COMMAND_POS{}'.format(current_command)],
+                settings['TABLE_SCANNER']['COMMAND_SIZE']
+            )
+            command_image_name = 'command{}.jpg'.format(current_command)
+            im_command.save(command_image_name)
+            return_from_tesseract = subprocess.check_output(['tesseract', command_image_name, 'stdout'], shell=False)
+            ret['COMMAND{}'.format(current_command)] = return_from_tesseract.replace('\r\n', ' ').replace('  ', ' ')
+    return ret
+
+
+def analyse_hand(analisys):
+    ret = {}
+    if len(analisys['hero']['HERO_CARDS']) == 0:
+        return ret
+
+    total_villains = 0
+    for x in range(analisys['seats']):
+        current_seat = x + 1
+        if analisys['cards']['PLAYER{}_HASCARD'.format(current_seat)] == 'CARD':
+            total_villains += 1
+    flop_cards = ''
+    if len(analisys['flop'].keys()) > 0:
+        for x in range(5):
+            flop_card_key = 'FLOPCARD{}'.format(x + 1)
+            if flop_card_key in analisys['flop']:
+                flop_cards += analisys['flop'][flop_card_key]
+    current_hand_phase = 'PREFLOP' if len(flop_cards) == 0 else 'FLOP'
+    ret['HAND_PHASE'] = current_hand_phase
+    card_strength = settings['STRATEGY'][current_hand_phase]['PLAYER_STRENGTH'] if len(flop_cards) == 0 else \
+        settings['STRATEGY'][current_hand_phase]['PLAYER_STRENGTH']
+    villains_cards = ":".join([card_strength for x in range(total_villains)])
+    command_to_send = '{} {}'.format(analisys['hero']['HERO_CARDS'] + ':' + villains_cards, flop_cards)
+    ret['COMMAND_TO_SEND'] = command_to_send
+    r = requests.post(settings['STRATEGY']['CALCULATE_URL'], json={"command": command_to_send})
+    if r.status_code == 200:
+        ret['RESULT'] = ast.literal_eval(r.content)
+    else:
+        ret['RESULT'] = ''
+    return ret
+
+
+def generate_decision(analisys):
+    ret = {}
+    confidence_level = settings['STRATEGY'][analisys['hand_analisys']['HAND_PHASE']]['CONFIDENCE_LEVEL']
+    if analisys['hand_analisys']['RESULT'][0][1] >= confidence_level:
+        ret['DECISION'] = 'RAISE'
+    else:
+        ret['DECISION'] = 'FOLD OR CHECK'
+    return ret
+
+
+def has_command_to_execute(analisys):
+    return not (
+        analisys['commands']['COMMAND1'] == '' and analisys['commands']['COMMAND2'] == '' and analisys['commands'][
+            'COMMAND3'] == '')
+
+
+def generate_command(analisys):
+    ret = {'TO_EXECUTE': 0}
+
+    if not has_command_to_execute(analisys):
+        return ret
+
+    if analisys['decision']['DECISION'] == 'FOLD OR CHECK':
+        for x in range(3):
+            if 'CHECK' in analisys['commands']['COMMAND{}'.format(x + 1)].upper():
+                ret['TO_EXECUTE'] = x + 1
+                return ret
+        for x in range(3):
+            if 'FOLD' in analisys['commands']['COMMAND{}'.format(x + 1)].upper():
+                ret['TO_EXECUTE'] = x + 1
+                return ret
+    else:
+        for x in range(3):
+            if 'RAISE' in analisys['commands']['COMMAND{}'.format(x + 1)].upper():
+                ret['TO_EXECUTE'] = x + 1
+                return ret
+        for x in range(3):
+            if 'CALL' in analisys['commands']['COMMAND{}'.format(x + 1)].upper():
+                ret['TO_EXECUTE'] = x + 1
+                return ret
+    return ret
+
+
+def generate_analisys(im):
+    result = {'seats': 6, 'cards': analyse_players_with_cards(im), 'nocards': analyse_players_without_cards(im)}
+    result['hero'] = analyse_hero(im, result['cards'], result['nocards'])
+    result['button'] = analyse_button(im)
+    result['flop'] = analyse_flop_template(im)
+    result['commands'] = analyse_commands(im)
+    result['hand_analisys'] = analyse_hand(result)
+    result['decision'] = generate_decision(result)
+    result['command'] = generate_command(result)
+    return result
+
+
 def execute(args):
     if len(args) < 1:
         print("For this task you need at least 1 arguments: <Image Source> ")
         return
     image_name = args[0]
     im = grab_image_from_file(image_name)
-
-    result = {}
-    result['cards'] = analyse_players_with_cards(im)
-    result['nocards'] = analyse_players_without_cards(im)
-    result['hero'] = analyse_hero(im, result['cards'], result['nocards'])
-    result['button'] = analyse_button(im)
-    result['flop'] = analyse_flop_template(im)
+    result = generate_analisys(im)
     pprint.PrettyPrinter().pprint(result)
