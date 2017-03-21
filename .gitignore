@@ -10,10 +10,11 @@ local/
 share/
 *.pyc
 .idea/
-client/data/test
+client/data/test/
 client/data/*.jpg
 client/data/samples/*.jpg
 logs/
+*.Table.txt
 
 
 

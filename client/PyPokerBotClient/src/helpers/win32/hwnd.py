@@ -1,5 +1,10 @@
 import win32gui
+import pyautogui
 import logging
+from time import sleep
+
+from settings import settings
+
 
 def scan_windows(hwnd_parent=0):
     ret = []
@@ -16,3 +21,17 @@ def scan_windows(hwnd_parent=0):
             scan_windows(current_hwnd)
     return ret
 
+
+def run_command(hwnd, button_to_press):
+    if button_to_press == 0:
+        button_to_press = 1
+    if button_to_press not in [1,2,3]:
+        return
+    x = int((settings['TABLE_SCANNER']['COMMAND_POS{}'.format(button_to_press)][0]+20)/1.25)
+    y = int((settings['TABLE_SCANNER']['COMMAND_POS{}'.format(button_to_press)][1]+20)/1.25)
+    logging.debug('Click on button {}, pos ({},{})'.format(button_to_press, x, y))
+    win32gui.SetForegroundWindow(hwnd)
+    pyautogui.click(x, y)
+    sleep(0.1)
+    pyautogui.moveTo(20, 20)
+    return
