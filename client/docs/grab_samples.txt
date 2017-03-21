@@ -45,7 +45,7 @@ python PyPokerBot.py grab_image "..\..\data\samples\Screenshot.20170319163122.53
 python PyPokerBot.py grab_image "..\..\data\samples\Screenshot.20170319151708.225000.Tautenburg.Table.jpg" FLOPCARD3 FLOPCARD_SIZE 6h.JPG
 python PyPokerBot.py grab_image "..\..\data\samples\Screenshot.20170319164412.531000.Mrkos III.Table.jpg" FLOPCARD2 FLOPCARD_SIZE 6c.JPG
 python PyPokerBot.py grab_image "..\..\data\samples\Screenshot.20170319164257.813000.Mrkos III.Table.jpg" FLOPCARD1 FLOPCARD_SIZE 6d.JPG
-python PyPokerBot.py grab_image "..\..\data\samples\Screenshot.20170319163412.184000.Mrkos III.Table.jpg" PLAYERCARD21_POS FLOPCARD_SIZE 6s.JPG
+python PyPokerBot.py grab_image "..\..\data\samples\Screenshot.20170319090819.315000.Teutonia II.Table.jpg" FLOPCARD3 FLOPCARD_SIZE 6s.JPG
 
 
 

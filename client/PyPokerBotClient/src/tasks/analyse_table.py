@@ -1,6 +1,13 @@
+import ast
 import numpy
 import cv2
 import pprint
+import subprocess
+import requests
+import os
+import logging
+from datetime import datetime
+from time import sleep
 from settings import settings
 from helpers.win32.screenshot import grab_image_from_file, grab_image_pos_from_image
 
@@ -80,45 +87,79 @@ def analyse_flop_hist(Image):
                 if res > selected_card_res:
                     selected_card = current_card + current_suit
                     selected_card_res = res
-                #print("For FLOP{}, Card {} returned {} - WINNER {} ".format(current_flop_pos + 1, current_card + current_suit, res, selected_card))
+                    # print("For FLOP{}, Card {} returned {} - WINNER {} ".format(current_flop_pos + 1, current_card + current_suit, res, selected_card))
         ret[flop_card_key] = selected_card
     return ret
 
 
 def analyse_flop_template(Image):
     ret = {}
-    template_flop_empty_cv2_hist = get_histogram_from_image(
-        grab_image_from_file(settings['TABLE_SCANNER']['FLOPCARD_HAS_NOCARD_TEMPLATE']))
-    template_flop_pos1 = \
-        get_histogram_from_image(grab_image_pos_from_image(
-            Image,
-            settings['TABLE_SCANNER']['FLOPCARD1'],
-            settings['TABLE_SCANNER']['FLOPCARD_SIZE']))
-    res = cv2.compareHist(template_flop_empty_cv2_hist, template_flop_pos1, 0)
-    if res > settings['TABLE_SCANNER']['PLAY_HASCARD_THRESHOLD']:
-        return ret
     for current_flop_pos in range(5):
+        template_flop_empty_cv2_hist = get_histogram_from_image(
+            grab_image_from_file(settings['TABLE_SCANNER']['FLOPCARD_HAS_NOCARD_TEMPLATE']))
+        template_flop_pos1 = \
+            get_histogram_from_image(grab_image_pos_from_image(
+                Image,
+                settings['TABLE_SCANNER']['FLOPCARD{}'.format(current_flop_pos + 1)],
+                settings['TABLE_SCANNER']['FLOPCARD_SIZE']))
+        res = cv2.compareHist(template_flop_empty_cv2_hist, template_flop_pos1, 0)
+        if res > settings['TABLE_SCANNER']['PLAY_HASCARD_THRESHOLD']:
+            return ret
         selected_card = ''
         selected_card_res = 1000000000
         flop_card_key = 'FLOPCARD{}'.format(current_flop_pos + 1)
-        current_flop_image = \
-            numpy.array(
-                grab_image_pos_from_image(
+        image_from_flop_card = grab_image_pos_from_image(
                     Image,
                     settings['TABLE_SCANNER'][flop_card_key],
-                    settings['TABLE_SCANNER']['FLOPCARD_SIZE']))[:, :, ::-1].copy()
+                    settings['TABLE_SCANNER']['FLOPCARD_SIZE'])
+        current_flop_image = numpy.array(image_from_flop_card)[:, :, ::-1].copy()
         for current_suit in ['h', 's', 'c', 'd']:
             for current_card in ['2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K', 'A']:
                 filename = settings['TABLE_SCANNER']['TEMPLATES_FOLDER'] + '\\' + current_card + current_suit + '.jpg'
                 current_card_image = numpy.array(grab_image_from_file(filename))[:, :, ::-1].copy()
                 res = cv2.matchTemplate(current_flop_image, current_card_image, 0)
-                #print("For FLOP{}, Card {} returned {} - WINNER {} ".format(current_flop_pos + 1, current_card + current_suit,res, selected_card))
+                # print("For FLOP{}, Card {} returned {} - WINNER {} ".format(current_flop_pos + 1, current_card + current_suit,res, selected_card))
                 if res < selected_card_res:
                     selected_card = current_card + current_suit
                     selected_card_res = res
-
+        correct_suit = get_suite_from_image(image_from_flop_card)
+        if correct_suit != selected_card[1]:
+            selected_card = selected_card[0] + correct_suit
         ret[flop_card_key] = selected_card
     return ret
+
+
+def get_suite_from_image(selected_image):
+    red = 0
+    blue = 0
+    green = 0
+    black = 0
+    for w in range(selected_image.width):
+        for h in range(selected_image.height):
+            pixel = selected_image.getpixel((w, h))
+            if pixel[0] >= 230 and pixel[1] >= 230 and pixel[2] >= 230:
+                continue
+            if pixel[0] < 20 and pixel[1] < 20 and pixel[2] < 20:
+                black += 1
+                continue
+            if pixel[0] >= pixel[1] and pixel[0] >= pixel[2]:
+                red += 1
+                continue
+            if pixel[1] >= pixel[0] and pixel[1] >= pixel[2]:
+                green += 1
+                continue
+            if pixel[2] >= pixel[0] and pixel[2] >= pixel[1]:
+                blue += 1
+                continue
+    print("red:{} green:{} blue:{} black:{}".format(red, green, blue, black))
+    if black > 200:
+        return 's'
+    if red > green and red > blue and red > black:
+        return 'h'
+    if green > red and green > blue and green > black:
+        return 'c'
+    if blue > red and blue > green and blue > black:
+        return 'd'
 
 
 def analyse_hero(im, cards, nocards):
@@ -128,31 +169,164 @@ def analyse_hero(im, cards, nocards):
         card_key = 'PLAYER{}_HASCARD'.format(seat + 1)
         nocard_key = 'NOCARD{}'.format(seat + 1)
         if len(cards[card_key]) == 0 and len(nocards[nocard_key]) == 0:
-            #print("found hero at {}".format(seat + 1))
+            # print("found hero at {}".format(seat + 1))
             ret['HERO_POS'] = seat + 1
             for current_hero_card in range(2):
                 selected_card = ''
                 selected_card_res = 1000000000
                 flop_card_key = 'PLAYERCARD{}{}_POS'.format(seat + 1, current_hero_card + 1)
-                current_flop_image = \
-                    numpy.array(
-                        grab_image_pos_from_image(
-                            im,
-                            settings['TABLE_SCANNER'][flop_card_key],
-                            settings['TABLE_SCANNER']['FLOPCARD_SIZE']))[:, :, ::-1].copy()
+                image_from_player = grab_image_pos_from_image(
+                    im,
+                    settings['TABLE_SCANNER'][flop_card_key],
+                    settings['TABLE_SCANNER']['FLOPCARD_SIZE'])
+                current_flop_image = numpy.array(image_from_player)[:, :, ::-1].copy()
                 for current_suit in ['h', 's', 'c', 'd']:
                     for current_card in ['2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K', 'A']:
                         filename = settings['TABLE_SCANNER'][
                                        'TEMPLATES_FOLDER'] + '\\' + current_card + current_suit + '.jpg'
-                        current_card_image = numpy.array(grab_image_from_file(filename))[:, :, ::-1].copy()
+                        image_from_file = grab_image_from_file(filename)
+                        current_card_image = numpy.array(image_from_file)[:, :, ::-1].copy()
                         res = cv2.matchTemplate(current_flop_image, current_card_image, 0)
-                        #print('filename:{} res:{}'.format(filename, res))
                         if res < selected_card_res:
                             selected_card = current_card + current_suit
                             selected_card_res = res
+                correct_suit = get_suite_from_image(image_from_player)
+                if correct_suit != selected_card[1]:
+                    selected_card = selected_card[0] + correct_suit
                 ret['HERO_CARDS'] += selected_card
             break
     return ret
+
+
+def analyse_commands(im):
+    ret = {"COMMAND1": "", "COMMAND2": "", "COMMAND3": ""}
+
+    for x in range(3):
+        current_command = x + 1
+
+        template_has_command_cv2_hist = get_histogram_from_image(
+            grab_image_from_file(settings['TABLE_SCANNER']['COMMAND_TEST_TEMPLATE{}'.format(current_command)]))
+
+        has_command_cv2_hist = \
+            get_histogram_from_image(grab_image_pos_from_image(
+                im,
+                settings['TABLE_SCANNER']['COMMAND_POS{}'.format(current_command)],
+                settings['TABLE_SCANNER']['COMMAND_TEST_SIZE']))
+        res = cv2.compareHist(template_has_command_cv2_hist, has_command_cv2_hist, 0)
+        if res > settings['TABLE_SCANNER']['COMMAND_TEST_TOLERANCE']:
+            im_command = grab_image_pos_from_image(
+                im,
+                settings['TABLE_SCANNER']['COMMAND_POS{}'.format(current_command)],
+                settings['TABLE_SCANNER']['COMMAND_SIZE']
+            )
+            command_image_name = 'command{}.jpg'.format(current_command)
+            im_command.save(command_image_name)
+            return_from_tesseract = subprocess.check_output(['tesseract', command_image_name, 'stdout'], shell=False)
+            if len(return_from_tesseract.strip()) == 0:
+                error_filename = command_image_name + '.error.' + datetime.now().strftime("%Y%m%d%H%M%S.%f") + '.jpg'
+                logging.debug("ERROR ON TESSERACT!!! " + error_filename)
+                im_command.save(error_filename)
+            ret['COMMAND{}'.format(current_command)] = return_from_tesseract.replace('\r\n', ' ').replace('  ', ' ')
+            os.remove(command_image_name)
+            sleep(0.2)
+    return ret
+
+
+def analyse_hand(analisys):
+    ret = {}
+    if len(analisys['hero']['HERO_CARDS']) == 0:
+        return ret
+
+    total_villains = 0
+    for x in range(analisys['seats']):
+        current_seat = x + 1
+        if analisys['cards']['PLAYER{}_HASCARD'.format(current_seat)] == 'CARD':
+            total_villains += 1
+    flop_cards = ''
+    if len(analisys['flop'].keys()) > 0:
+        for x in range(5):
+            flop_card_key = 'FLOPCARD{}'.format(x + 1)
+            if flop_card_key in analisys['flop']:
+                flop_cards += analisys['flop'][flop_card_key]
+    current_hand_phase = 'PREFLOP' if len(flop_cards) == 0 else 'FLOP'
+    ret['HAND_PHASE'] = current_hand_phase
+    card_strength = settings['STRATEGY'][current_hand_phase]['PLAYER_STRENGTH'] if len(flop_cards) == 0 else \
+        settings['STRATEGY'][current_hand_phase]['PLAYER_STRENGTH']
+
+    if current_hand_phase == 'PREFLOP' and total_villains > 2:
+        total_villains = 2
+    villains_cards = ":".join([card_strength for x in range(total_villains)])
+
+    command_to_send = '{} {}'.format(analisys['hero']['HERO_CARDS'] + ':' + villains_cards, flop_cards)
+    ret['COMMAND_TO_SEND'] = command_to_send
+    logging.debug('Sent to server:' + command_to_send[:30])
+    r = requests.post(settings['STRATEGY']['CALCULATE_URL'], json={"command": command_to_send})
+    logging.debug('Received from server:' + str(r.content)[:30])
+    if r.status_code == 200:
+        ret['RESULT'] = ast.literal_eval(r.content)
+    else:
+        ret['RESULT'] = ''
+    return ret
+
+
+def generate_decision(analisys):
+    ret = {}
+    try:
+        confidence_level = settings['STRATEGY'][analisys['hand_analisys']['HAND_PHASE']]['CONFIDENCE_LEVEL']
+        if analisys['hand_analisys']['RESULT'][0][1] >= confidence_level:
+            ret['DECISION'] = 'RAISE'
+        else:
+            ret['DECISION'] = 'FOLD OR CHECK'
+    except:
+        ret['DECISION'] = 'FOLD OR CHECK'
+    return ret
+
+
+def has_command_to_execute(analisys):
+    return not (
+        analisys['commands']['COMMAND1'] == '' and analisys['commands']['COMMAND2'] == '' and analisys['commands'][
+            'COMMAND3'] == '')
+
+
+def generate_command(analisys):
+    ret = {'TO_EXECUTE': 0}
+
+    if not has_command_to_execute(analisys):
+        return ret
+
+    if analisys['decision']['DECISION'] == 'FOLD OR CHECK':
+        for x in range(3):
+            if 'CHECK' in analisys['commands']['COMMAND{}'.format(x + 1)].upper():
+                ret['TO_EXECUTE'] = x + 1
+                return ret
+        for x in range(3):
+            if 'FOLD' in analisys['commands']['COMMAND{}'.format(x + 1)].upper():
+                ret['TO_EXECUTE'] = x + 1
+                return ret
+    else:
+        for x in range(3):
+            if 'RAISE' in analisys['commands']['COMMAND{}'.format(x + 1)].upper() or \
+                            'BET' in analisys['commands']['COMMAND{}'.format(x + 1)].upper():
+                ret['TO_EXECUTE'] = x + 1
+                return ret
+        for x in range(3):
+            if 'CALL' in analisys['commands']['COMMAND{}'.format(x + 1)].upper():
+                ret['TO_EXECUTE'] = x + 1
+                return ret
+    return ret
+
+
+def generate_analisys(im):
+    result = {'seats': 6, 'cards': analyse_players_with_cards(im), 'nocards': analyse_players_without_cards(im)}
+    result['hero'] = analyse_hero(im, result['cards'], result['nocards'])
+    result['button'] = analyse_button(im)
+    result['flop'] = analyse_flop_template(im)
+    result['commands'] = analyse_commands(im)
+    if has_command_to_execute(result):
+        result['hand_analisys'] = analyse_hand(result)
+        result['decision'] = generate_decision(result)
+        result['command'] = generate_command(result)
+    return result
 
 
 def execute(args):
@@ -161,11 +335,5 @@ def execute(args):
         return
     image_name = args[0]
     im = grab_image_from_file(image_name)
-
-    result = {}
-    result['cards'] = analyse_players_with_cards(im)
-    result['nocards'] = analyse_players_without_cards(im)
-    result['hero'] = analyse_hero(im, result['cards'], result['nocards'])
-    result['button'] = analyse_button(im)
-    result['flop'] = analyse_flop_template(im)
+    result = generate_analisys(im)
     pprint.PrettyPrinter().pprint(result)

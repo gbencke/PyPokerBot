@@ -3,7 +3,19 @@ settings = {
     "LOG_FORMAT": "%(asctime)-15s %(message)s",
     "LOG_LOCATION": "..\..\logs",
     "SAMPLES_FOLDER": "..\..\data",
-    "SLEEP_TIME_BETWEEN_CAPTURE_MS": 1000,
+    "SLEEP_TIME_BETWEEN_CAPTURE_MS": 100,
+
+    "STRATEGY": {
+        "CALCULATE_URL": "http://192.168.198.134:5000/calculator",
+        "PREFLOP": {
+            "CONFIDENCE_LEVEL": 0.6,
+            "PLAYER_STRENGTH": "XX"
+        },
+        "FLOP": {
+            "CONFIDENCE_LEVEL": 0.6,
+            "PLAYER_STRENGTH": "T5"
+        }
+    },
 
     "TABLE_SCANNER": {
         "TEMPLATES_FOLDER": "..\..\data\\template",
@@ -24,12 +36,12 @@ settings = {
         "PLAYERCARD12_POS": (1138, 176),
         "PLAYERCARD21_POS": (1060, 454),
         "PLAYERCARD22_POS": (1138, 454),
-        "PLAYERCARD31_POS": (575, 610),
+        "PLAYERCARD31_POS": (573, 609),
         "PLAYERCARD32_POS": (651, 610),
         "PLAYERCARD41_POS": (95, 454),
         "PLAYERCARD42_POS": (173, 454),
         "PLAYERCARD51_POS": (95, 176),
-        "PLAYERCARD52_POS": (173 , 176),
+        "PLAYERCARD52_POS": (173, 176),
         "PLAYERCARD61_POS": (575, 79),
         "PLAYERCARD62_POS": (653, 79),
 
@@ -50,5 +62,17 @@ settings = {
         "BUTTON4": (317, 527),
         "BUTTON5": (278, 313),
         "BUTTON6": (537, 228),
+
+        "COMMAND_TEST_SIZE": (20, 20),
+        "COMMAND_SIZE": (180, 65),
+        "COMMAND_TEST_TOLERANCE": 0.90,
+        "COMMAND_POS1": (642, 847),
+        "COMMAND_POS2": (863, 847),
+        "COMMAND_POS3": (1081, 847),
+
+        "COMMAND_TEST_TEMPLATE1": "..\..\data\\template\COMMAND_TEST_TEMPLATE1.jpg",
+        "COMMAND_TEST_TEMPLATE2": "..\..\data\\template\COMMAND_TEST_TEMPLATE2.jpg",
+        "COMMAND_TEST_TEMPLATE3": "..\..\data\\template\COMMAND_TEST_TEMPLATE3.jpg",
+
     }
 }
