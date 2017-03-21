@@ -87,7 +87,7 @@ def grab_screen(bbox=None):
         cleanup()
 
 
-def capture_screenshot(hwnd, file_to_save):
+def capture_screenshot(hwnd, file_to_save, should_save = True):
     logging.debug("Capturing {} to {}".format(hwnd, file_to_save))
     try:
         win32gui.SetForegroundWindow(hwnd)
@@ -96,7 +96,8 @@ def capture_screenshot(hwnd, file_to_save):
         im = grab_screen()
         im = im.crop((rect[0], rect[1], rect[2], rect[3]))
         im = im.resize((int(1303), int(931)), Image.ANTIALIAS)
-        im.save(file_to_save)
+        if should_save:
+            im.save(file_to_save)
         return im
     except Exception as e:
         logging.debug('Error:' + str(e))
