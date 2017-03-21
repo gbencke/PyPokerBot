@@ -108,12 +108,11 @@ def analyse_flop_template(Image):
         selected_card = ''
         selected_card_res = 1000000000
         flop_card_key = 'FLOPCARD{}'.format(current_flop_pos + 1)
-        current_flop_image = \
-            numpy.array(
-                grab_image_pos_from_image(
+        image_from_flop_card = grab_image_pos_from_image(
                     Image,
                     settings['TABLE_SCANNER'][flop_card_key],
-                    settings['TABLE_SCANNER']['FLOPCARD_SIZE']))[:, :, ::-1].copy()
+                    settings['TABLE_SCANNER']['FLOPCARD_SIZE'])
+        current_flop_image = numpy.array(image_from_flop_card)[:, :, ::-1].copy()
         for current_suit in ['h', 's', 'c', 'd']:
             for current_card in ['2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K', 'A']:
                 filename = settings['TABLE_SCANNER']['TEMPLATES_FOLDER'] + '\\' + current_card + current_suit + '.jpg'
@@ -123,9 +122,44 @@ def analyse_flop_template(Image):
                 if res < selected_card_res:
                     selected_card = current_card + current_suit
                     selected_card_res = res
-
+        correct_suit = get_suite_from_image(image_from_flop_card)
+        if correct_suit != selected_card[1]:
+            selected_card = selected_card[0] + correct_suit
         ret[flop_card_key] = selected_card
     return ret
+
+
+def get_suite_from_image(selected_image):
+    red = 0
+    blue = 0
+    green = 0
+    black = 0
+    for w in range(selected_image.width):
+        for h in range(selected_image.height):
+            pixel = selected_image.getpixel((w, h))
+            if pixel[0] >= 230 and pixel[1] >= 230 and pixel[2] >= 230:
+                continue
+            if pixel[0] < 20 and pixel[1] < 20 and pixel[2] < 20:
+                black += 1
+                continue
+            if pixel[0] >= pixel[1] and pixel[0] >= pixel[2]:
+                red += 1
+                continue
+            if pixel[1] >= pixel[0] and pixel[1] >= pixel[2]:
+                green += 1
+                continue
+            if pixel[2] >= pixel[0] and pixel[2] >= pixel[1]:
+                blue += 1
+                continue
+    print("red:{} green:{} blue:{} black:{}".format(red, green, blue, black))
+    if black > 200:
+        return 's'
+    if red > green and red > blue and red > black:
+        return 'h'
+    if green > red and green > blue and green > black:
+        return 'c'
+    if blue > red and blue > green and blue > black:
+        return 'd'
 
 
 def analyse_hero(im, cards, nocards):
@@ -141,22 +175,24 @@ def analyse_hero(im, cards, nocards):
                 selected_card = ''
                 selected_card_res = 1000000000
                 flop_card_key = 'PLAYERCARD{}{}_POS'.format(seat + 1, current_hero_card + 1)
-                current_flop_image = \
-                    numpy.array(
-                        grab_image_pos_from_image(
-                            im,
-                            settings['TABLE_SCANNER'][flop_card_key],
-                            settings['TABLE_SCANNER']['FLOPCARD_SIZE']))[:, :, ::-1].copy()
+                image_from_player = grab_image_pos_from_image(
+                    im,
+                    settings['TABLE_SCANNER'][flop_card_key],
+                    settings['TABLE_SCANNER']['FLOPCARD_SIZE'])
+                current_flop_image = numpy.array(image_from_player)[:, :, ::-1].copy()
                 for current_suit in ['h', 's', 'c', 'd']:
                     for current_card in ['2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K', 'A']:
                         filename = settings['TABLE_SCANNER'][
                                        'TEMPLATES_FOLDER'] + '\\' + current_card + current_suit + '.jpg'
-                        current_card_image = numpy.array(grab_image_from_file(filename))[:, :, ::-1].copy()
+                        image_from_file = grab_image_from_file(filename)
+                        current_card_image = numpy.array(image_from_file)[:, :, ::-1].copy()
                         res = cv2.matchTemplate(current_flop_image, current_card_image, 0)
-                        # print('filename:{} res:{}'.format(filename, res))
                         if res < selected_card_res:
                             selected_card = current_card + current_suit
                             selected_card_res = res
+                correct_suit = get_suite_from_image(image_from_player)
+                if correct_suit != selected_card[1]:
+                    selected_card = selected_card[0] + correct_suit
                 ret['HERO_CARDS'] += selected_card
             break
     return ret
