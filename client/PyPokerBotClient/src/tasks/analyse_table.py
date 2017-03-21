@@ -5,6 +5,9 @@ import pprint
 import subprocess
 import requests
 import os
+import logging
+from datetime import datetime
+from time import sleep
 from settings import settings
 from helpers.win32.screenshot import grab_image_from_file, grab_image_pos_from_image
 
@@ -175,7 +178,6 @@ def analyse_commands(im):
                 settings['TABLE_SCANNER']['COMMAND_TEST_SIZE']))
         res = cv2.compareHist(template_has_command_cv2_hist, has_command_cv2_hist, 0)
         if res > settings['TABLE_SCANNER']['COMMAND_TEST_TOLERANCE']:
-            #print("Command {}:found".format(current_command))
             im_command = grab_image_pos_from_image(
                 im,
                 settings['TABLE_SCANNER']['COMMAND_POS{}'.format(current_command)],
@@ -184,8 +186,13 @@ def analyse_commands(im):
             command_image_name = 'command{}.jpg'.format(current_command)
             im_command.save(command_image_name)
             return_from_tesseract = subprocess.check_output(['tesseract', command_image_name, 'stdout'], shell=False)
+            if len(return_from_tesseract.strip()) == 0:
+                error_filename = command_image_name + '.error.' + datetime.now().strftime("%Y%m%d%H%M%S.%f") + '.jpg'
+                logging.debug("ERROR ON TESSERACT!!! " + error_filename)
+                im_command.save(error_filename)
             ret['COMMAND{}'.format(current_command)] = return_from_tesseract.replace('\r\n', ' ').replace('  ', ' ')
             os.remove(command_image_name)
+            sleep(0.2)
     return ret
 
 
@@ -209,10 +216,16 @@ def analyse_hand(analisys):
     ret['HAND_PHASE'] = current_hand_phase
     card_strength = settings['STRATEGY'][current_hand_phase]['PLAYER_STRENGTH'] if len(flop_cards) == 0 else \
         settings['STRATEGY'][current_hand_phase]['PLAYER_STRENGTH']
+
+    if current_hand_phase == 'PREFLOP' and total_villains > 2:
+        total_villains = 2
     villains_cards = ":".join([card_strength for x in range(total_villains)])
+
     command_to_send = '{} {}'.format(analisys['hero']['HERO_CARDS'] + ':' + villains_cards, flop_cards)
     ret['COMMAND_TO_SEND'] = command_to_send
+    logging.debug('Sent to server:' + command_to_send[:30])
     r = requests.post(settings['STRATEGY']['CALCULATE_URL'], json={"command": command_to_send})
+    logging.debug('Received from server:' + str(r.content)[:30])
     if r.status_code == 200:
         ret['RESULT'] = ast.literal_eval(r.content)
     else:
@@ -222,10 +235,13 @@ def analyse_hand(analisys):
 
 def generate_decision(analisys):
     ret = {}
-    confidence_level = settings['STRATEGY'][analisys['hand_analisys']['HAND_PHASE']]['CONFIDENCE_LEVEL']
-    if analisys['hand_analisys']['RESULT'][0][1] >= confidence_level:
-        ret['DECISION'] = 'RAISE'
-    else:
+    try:
+        confidence_level = settings['STRATEGY'][analisys['hand_analisys']['HAND_PHASE']]['CONFIDENCE_LEVEL']
+        if analisys['hand_analisys']['RESULT'][0][1] >= confidence_level:
+            ret['DECISION'] = 'RAISE'
+        else:
+            ret['DECISION'] = 'FOLD OR CHECK'
+    except:
         ret['DECISION'] = 'FOLD OR CHECK'
     return ret
 
@@ -253,7 +269,8 @@ def generate_command(analisys):
                 return ret
     else:
         for x in range(3):
-            if 'RAISE' in analisys['commands']['COMMAND{}'.format(x + 1)].upper():
+            if 'RAISE' in analisys['commands']['COMMAND{}'.format(x + 1)].upper() or \
+                            'BET' in analisys['commands']['COMMAND{}'.format(x + 1)].upper():
                 ret['TO_EXECUTE'] = x + 1
                 return ret
         for x in range(3):

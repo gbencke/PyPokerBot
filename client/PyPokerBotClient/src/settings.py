@@ -3,7 +3,7 @@ settings = {
     "LOG_FORMAT": "%(asctime)-15s %(message)s",
     "LOG_LOCATION": "..\..\logs",
     "SAMPLES_FOLDER": "..\..\data",
-    "SLEEP_TIME_BETWEEN_CAPTURE_MS": 1000,
+    "SLEEP_TIME_BETWEEN_CAPTURE_MS": 100,
 
     "STRATEGY": {
         "CALCULATE_URL": "http://192.168.198.134:5000/calculator",
