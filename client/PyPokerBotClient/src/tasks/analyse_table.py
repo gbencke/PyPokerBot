@@ -289,10 +289,15 @@ def generate_decision(analisys):
     try:
         phase = analisys['hand_analisys']['HAND_PHASE']
         confidence_level = settings['STRATEGY'][phase][get_confidence_level(analisys, phase)]
-        if analisys['hand_analisys']['RESULT'][0][1] >= confidence_level:
+        if analisys['hand_analisys']['RESULT'][0][1] >= (confidence_level + 0.2):
             ret['DECISION'] = 'RAISE'
+            return ret
+        if analisys['hand_analisys']['RESULT'][0][1] >= (confidence_level):
+            ret['DECISION'] = 'CALL'
+            return ret
         else:
             ret['DECISION'] = 'FOLD OR CHECK'
+            return ret
     except:
         ret['DECISION'] = 'FOLD OR CHECK'
     return ret
@@ -319,16 +324,32 @@ def generate_command(analisys):
             if 'FOLD' in analisys['commands']['COMMAND{}'.format(x + 1)].upper():
                 ret['TO_EXECUTE'] = x + 1
                 return ret
-    else:
+
+    if analisys['decision']['DECISION'] == 'RAISE':
         for x in range(3):
-            if 'RAISE' in analisys['commands']['COMMAND{}'.format(x + 1)].upper() or \
-                            'BET' in analisys['commands']['COMMAND{}'.format(x + 1)].upper():
+            if ('RAISE' in analisys['commands']['COMMAND{}'.format(x + 1)].upper() or
+                            'BET' in analisys['commands']['COMMAND{}'.format(x + 1)].upper()):
                 ret['TO_EXECUTE'] = x + 1
                 return ret
         for x in range(3):
             if 'CALL' in analisys['commands']['COMMAND{}'.format(x + 1)].upper():
                 ret['TO_EXECUTE'] = x + 1
                 return ret
+        for x in range(3):
+            if 'CHECK' in analisys['commands']['COMMAND{}'.format(x + 1)].upper():
+                ret['TO_EXECUTE'] = x + 1
+                return ret
+
+    if analisys['decision']['DECISION'] == 'CALL':
+        for x in range(3):
+            if 'CALL' in analisys['commands']['COMMAND{}'.format(x + 1)].upper():
+                ret['TO_EXECUTE'] = x + 1
+                return ret
+        for x in range(3):
+            if 'CHECK' in analisys['commands']['COMMAND{}'.format(x + 1)].upper():
+                ret['TO_EXECUTE'] = x + 1
+                return ret
+
     return ret
 
 
