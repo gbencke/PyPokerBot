@@ -94,17 +94,17 @@ def analyse_flop_hist(Image):
 
 def analyse_flop_template(Image):
     ret = {}
-    template_flop_empty_cv2_hist = get_histogram_from_image(
-        grab_image_from_file(settings['TABLE_SCANNER']['FLOPCARD_HAS_NOCARD_TEMPLATE']))
-    template_flop_pos1 = \
-        get_histogram_from_image(grab_image_pos_from_image(
-            Image,
-            settings['TABLE_SCANNER']['FLOPCARD1'],
-            settings['TABLE_SCANNER']['FLOPCARD_SIZE']))
-    res = cv2.compareHist(template_flop_empty_cv2_hist, template_flop_pos1, 0)
-    if res > settings['TABLE_SCANNER']['PLAY_HASCARD_THRESHOLD']:
-        return ret
     for current_flop_pos in range(5):
+        template_flop_empty_cv2_hist = get_histogram_from_image(
+            grab_image_from_file(settings['TABLE_SCANNER']['FLOPCARD_HAS_NOCARD_TEMPLATE']))
+        template_flop_pos1 = \
+            get_histogram_from_image(grab_image_pos_from_image(
+                Image,
+                settings['TABLE_SCANNER']['FLOPCARD{}'.format(current_flop_pos + 1)],
+                settings['TABLE_SCANNER']['FLOPCARD_SIZE']))
+        res = cv2.compareHist(template_flop_empty_cv2_hist, template_flop_pos1, 0)
+        if res > settings['TABLE_SCANNER']['PLAY_HASCARD_THRESHOLD']:
+            return ret
         selected_card = ''
         selected_card_res = 1000000000
         flop_card_key = 'FLOPCARD{}'.format(current_flop_pos + 1)
