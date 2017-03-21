@@ -109,9 +109,9 @@ def analyse_flop_template(Image):
         selected_card_res = 1000000000
         flop_card_key = 'FLOPCARD{}'.format(current_flop_pos + 1)
         image_from_flop_card = grab_image_pos_from_image(
-                    Image,
-                    settings['TABLE_SCANNER'][flop_card_key],
-                    settings['TABLE_SCANNER']['FLOPCARD_SIZE'])
+            Image,
+            settings['TABLE_SCANNER'][flop_card_key],
+            settings['TABLE_SCANNER']['FLOPCARD_SIZE'])
         current_flop_image = numpy.array(image_from_flop_card)[:, :, ::-1].copy()
         for current_suit in ['h', 's', 'c', 'd']:
             for current_card in ['2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K', 'A']:
@@ -151,7 +151,7 @@ def get_suite_from_image(selected_image):
             if pixel[2] >= pixel[0] and pixel[2] >= pixel[1]:
                 blue += 1
                 continue
-    #print("red:{} green:{} blue:{} black:{}".format(red, green, blue, black))
+    # print("red:{} green:{} blue:{} black:{}".format(red, green, blue, black))
     if black > 200:
         return 's'
     if red > green and red > blue and red > black:
@@ -269,10 +269,26 @@ def analyse_hand(analisys):
     return ret
 
 
+def get_confidence_level(analisys, phase):
+    if phase == 'FLOP':
+        return 'CONFIDENCE_LEVEL'
+
+    total_villains = 0
+    for x in range(analisys['seats']):
+        current_seat = x + 1
+        if analisys['cards']['PLAYER{}_HASCARD'.format(current_seat)] == 'CARD':
+            total_villains += 1
+    if total_villains == 1:
+        return 'CONFIDENCE_LEVEL_HEADS_UP'
+    else:
+        return 'CONFIDENCE_LEVEL'
+
+
 def generate_decision(analisys):
     ret = {}
     try:
-        confidence_level = settings['STRATEGY'][analisys['hand_analisys']['HAND_PHASE']]['CONFIDENCE_LEVEL']
+        phase = analisys['hand_analisys']['HAND_PHASE']
+        confidence_level = settings['STRATEGY'][phase][get_confidence_level(analisys, phase)]
         if analisys['hand_analisys']['RESULT'][0][1] >= confidence_level:
             ret['DECISION'] = 'RAISE'
         else:
