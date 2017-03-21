@@ -1,7 +1,8 @@
 import win32gui
 import pyautogui
-
 import logging
+from time import sleep
+
 from settings import settings
 
 
@@ -31,4 +32,6 @@ def run_command(hwnd, button_to_press):
     logging.debug('Click on button {}, pos ({},{})'.format(button_to_press, x, y))
     win32gui.SetForegroundWindow(hwnd)
     pyautogui.click(x, y)
+    sleep(0.1)
+    pyautogui.moveTo(20, 20)
     return
