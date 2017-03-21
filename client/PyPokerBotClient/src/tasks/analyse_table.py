@@ -267,9 +267,10 @@ def generate_analisys(im):
     result['button'] = analyse_button(im)
     result['flop'] = analyse_flop_template(im)
     result['commands'] = analyse_commands(im)
-    result['hand_analisys'] = analyse_hand(result)
-    result['decision'] = generate_decision(result)
-    result['command'] = generate_command(result)
+    if has_command_to_execute(result):
+        result['hand_analisys'] = analyse_hand(result)
+        result['decision'] = generate_decision(result)
+        result['command'] = generate_command(result)
     return result
 
 
