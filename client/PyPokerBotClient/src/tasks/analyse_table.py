@@ -4,6 +4,7 @@ import cv2
 import pprint
 import subprocess
 import requests
+import os
 from settings import settings
 from helpers.win32.screenshot import grab_image_from_file, grab_image_pos_from_image
 
@@ -184,6 +185,7 @@ def analyse_commands(im):
             im_command.save(command_image_name)
             return_from_tesseract = subprocess.check_output(['tesseract', command_image_name, 'stdout'], shell=False)
             ret['COMMAND{}'.format(current_command)] = return_from_tesseract.replace('\r\n', ' ').replace('  ', ' ')
+            os.remove(command_image_name)
     return ret
 
 
