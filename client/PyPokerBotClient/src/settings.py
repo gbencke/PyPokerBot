@@ -8,13 +8,15 @@ settings = {
     "STRATEGY": {
         "CALCULATE_URL": "http://192.168.198.134:5000/calculator",
         "PREFLOP": {
-            "CONFIDENCE_LEVEL": 0.4,
-            "CONFIDENCE_LEVEL_HEADS_UP": 0.5,
-            "PLAYER_STRENGTH": "XX"
+            "CONFIDENCE_LEVEL": 0.5,
+            "CONFIDENCE_LEVEL_HEADS_UP": 0.6,
+            "PLAYER_STRENGTH": "XX",
+            "CONFIDENCE_DIFFERENCE_RAISE": 0.1
         },
         "FLOP": {
-            "CONFIDENCE_LEVEL": 0.5,
-            "PLAYER_STRENGTH": "XX"
+            "CONFIDENCE_LEVEL": 0.6,
+            "PLAYER_STRENGTH": "XX",
+            "CONFIDENCE_DIFFERENCE_RAISE": 0.1
         }
     },
 

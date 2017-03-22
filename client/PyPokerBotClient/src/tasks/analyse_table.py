@@ -289,7 +289,8 @@ def generate_decision(analisys):
     try:
         phase = analisys['hand_analisys']['HAND_PHASE']
         confidence_level = settings['STRATEGY'][phase][get_confidence_level(analisys, phase)]
-        if analisys['hand_analisys']['RESULT'][0][1] >= (confidence_level + 0.2):
+        confidence_level_raise = settings['STRATEGY'][phase]['CONFIDENCE_DIFFERENCE_RAISE']
+        if analisys['hand_analisys']['RESULT'][0][1] >= (confidence_level + confidence_level_raise):
             ret['DECISION'] = 'RAISE'
             return ret
         if analisys['hand_analisys']['RESULT'][0][1] >= (confidence_level):
