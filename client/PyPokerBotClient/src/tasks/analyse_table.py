@@ -290,6 +290,8 @@ def generate_decision(analisys):
         phase = analisys['hand_analisys']['HAND_PHASE']
         confidence_level = settings['STRATEGY'][phase][get_confidence_level(analisys, phase)]
         confidence_level_raise = settings['STRATEGY'][phase]['CONFIDENCE_DIFFERENCE_RAISE']
+
+
         if analisys['hand_analisys']['RESULT'][0][1] >= (confidence_level + confidence_level_raise):
             ret['DECISION'] = 'RAISE'
             return ret
@@ -298,9 +300,18 @@ def generate_decision(analisys):
             return ret
         else:
             ret['DECISION'] = 'FOLD OR CHECK'
-            return ret
     except:
         ret['DECISION'] = 'FOLD OR CHECK'
+
+        #ANALISYS FOR BLUFFING ON BUTTON
+        if analisys['button']['BUTTON{}'.format(analisys['hero']['HERO_POS'])] == 'BUTTON': # If I am on button
+            logging.debug('I am on Button!!!!')
+            if len(analisys['flop']['FLOPCARD1']) > 0: # If I have seeing the flop
+                logging.debug('I am on FLOP!!!!')
+                for x in range(3):
+                    if 'CHECK' in analisys['commands']['COMMAND{}'.format(x + 1)].upper(): # if check is available then bluff
+                        ret['DECISION'] = 'RAISE' #BLUFF
+                        logging.debug('There is check button!!! BLUFFINNNNGG!!!!')
     return ret
 
 
