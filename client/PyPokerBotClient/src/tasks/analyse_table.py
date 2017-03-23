@@ -162,7 +162,21 @@ def get_suite_from_image(selected_image):
         return 'd'
 
 
-def analyse_hero(im, cards, nocards):
+def get_hero_position(hero_pos, cards, button):
+    if button['BUTTON{}'.format(hero_pos)] == 'BUTTON':
+        return 'BUTTON'
+    current_pos_analysed = hero_pos + 1
+    while True:
+        if current_pos_analysed > 6:
+            current_pos_analysed = 1
+        if cards['PLAYER{}_HASCARD'.format(current_pos_analysed)] == 'CARD':
+            return ''
+        if button['BUTTON{}'.format(current_pos_analysed)] == 'BUTTON':
+            return 'BUTTON'
+        current_pos_analysed += 1
+
+
+def analyse_hero(im, cards, nocards, button):
     ret = {}
     ret['HERO_CARDS'] = ''
     for seat in range(6):
@@ -195,6 +209,7 @@ def analyse_hero(im, cards, nocards):
                     selected_card = selected_card[0] + correct_suit
                 ret['HERO_CARDS'] += selected_card
             break
+    ret['POSITION'] = get_hero_position(ret['HERO_POS'], cards, button)
     return ret
 
 
@@ -284,34 +299,74 @@ def get_confidence_level(analisys, phase):
         return 'CONFIDENCE_LEVEL'
 
 
+def generate_decision_preflop(analisys):
+    ret = {}
+    phase = 'PREFLOP'
+
+    confidence_level = settings['STRATEGY'][phase][get_confidence_level(analisys, phase)]
+    confidence_level_raise = settings['STRATEGY'][phase]['CONFIDENCE_DIFFERENCE_RAISE']
+    hand_equity = analisys['hand_analisys']['RESULT'][0][1]
+
+    logging.debug('generate_decision_preflop({},{},{})'.format(confidence_level, confidence_level_raise, hand_equity))
+
+    if hand_equity >= (confidence_level + confidence_level_raise):
+        ret['DECISION'] = 'RAISE'
+        return ret
+    if hand_equity >= (confidence_level):
+        ret['DECISION'] = 'CALL'
+        return ret
+    else:
+        ret['DECISION'] = 'FOLD OR CHECK'
+    return ret
+
+
+def verify_check_command(analisys):
+    for x in range(3):
+        if 'CHECK' in analisys['commands']['COMMAND{}'.format(x + 1)].upper():
+            return True
+    return False
+
+
+def generate_decision_flop(analisys):
+    ret = {}
+    phase = 'FLOP'
+
+    confidence_level = settings['STRATEGY'][phase][get_confidence_level(analisys, phase)]
+    confidence_level_raise = settings['STRATEGY'][phase]['CONFIDENCE_DIFFERENCE_RAISE']
+    hand_equity = analisys['hand_analisys']['RESULT'][0][1]
+    is_hero_in_button = (analisys['hero']['POSITION'] == 'BUTTON')
+    check_button_available = verify_check_command(analisys)
+
+    logging.debug('generate_decision_flop({},{},{}), button:{} check:{}'.format(confidence_level, confidence_level_raise
+                                                                                , hand_equity, is_hero_in_button,
+                                                                                check_button_available))
+
+    if hand_equity >= (confidence_level + confidence_level_raise):
+        ret['DECISION'] = 'RAISE'
+        return ret
+    if hand_equity >= (confidence_level):
+        ret['DECISION'] = 'CALL'
+        return ret
+    else:
+        if is_hero_in_button and check_button_available:
+            ret['DECISION'] = 'RAISE'
+        else:
+            ret['DECISION'] = 'FOLD OR CHECK'
+
+    return ret
+
+
 def generate_decision(analisys):
     ret = {}
     try:
         phase = analisys['hand_analisys']['HAND_PHASE']
-        confidence_level = settings['STRATEGY'][phase][get_confidence_level(analisys, phase)]
-        confidence_level_raise = settings['STRATEGY'][phase]['CONFIDENCE_DIFFERENCE_RAISE']
-
-
-        if analisys['hand_analisys']['RESULT'][0][1] >= (confidence_level + confidence_level_raise):
-            ret['DECISION'] = 'RAISE'
-            return ret
-        if analisys['hand_analisys']['RESULT'][0][1] >= (confidence_level):
-            ret['DECISION'] = 'CALL'
-            return ret
+        if phase == 'PREFLOP':
+            return generate_decision_preflop(analisys)
         else:
-            ret['DECISION'] = 'FOLD OR CHECK'
+            return generate_decision_flop(analisys)
     except:
         ret['DECISION'] = 'FOLD OR CHECK'
 
-        #ANALISYS FOR BLUFFING ON BUTTON
-        if analisys['button']['BUTTON{}'.format(analisys['hero']['HERO_POS'])] == 'BUTTON': # If I am on button
-            logging.debug('I am on Button!!!!')
-            if len(analisys['flop']['FLOPCARD1']) > 0: # If I have seeing the flop
-                logging.debug('I am on FLOP!!!!')
-                for x in range(3):
-                    if 'CHECK' in analisys['commands']['COMMAND{}'.format(x + 1)].upper(): # if check is available then bluff
-                        ret['DECISION'] = 'RAISE' #BLUFF
-                        logging.debug('There is check button!!! BLUFFINNNNGG!!!!')
     return ret
 
 
@@ -340,7 +395,7 @@ def generate_command(analisys):
     if analisys['decision']['DECISION'] == 'RAISE':
         for x in range(3):
             if ('RAISE' in analisys['commands']['COMMAND{}'.format(x + 1)].upper() or
-                            'BET' in analisys['commands']['COMMAND{}'.format(x + 1)].upper()):
+                        'BET' in analisys['commands']['COMMAND{}'.format(x + 1)].upper()):
                 ret['TO_EXECUTE'] = x + 1
                 return ret
         for x in range(3):
@@ -367,8 +422,8 @@ def generate_command(analisys):
 
 def generate_analisys(im):
     result = {'seats': 6, 'cards': analyse_players_with_cards(im), 'nocards': analyse_players_without_cards(im)}
-    result['hero'] = analyse_hero(im, result['cards'], result['nocards'])
     result['button'] = analyse_button(im)
+    result['hero'] = analyse_hero(im, result['cards'], result['nocards'], result['button'])
     result['flop'] = analyse_flop_template(im)
     result['commands'] = analyse_commands(im)
     if has_command_to_execute(result):
