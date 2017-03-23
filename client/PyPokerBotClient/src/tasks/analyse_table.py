@@ -209,7 +209,10 @@ def analyse_hero(im, cards, nocards, button):
                     selected_card = selected_card[0] + correct_suit
                 ret['HERO_CARDS'] += selected_card
             break
-    ret['POSITION'] = get_hero_position(ret['HERO_POS'], cards, button)
+    hero_position = ''
+    if 'HERO_POS' in ret:
+        hero_position = get_hero_position(ret['HERO_POS'], cards, button)
+    ret['POSITION'] = hero_position
     return ret
 
 
