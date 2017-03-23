@@ -9,7 +9,7 @@ settings = {
         "CALCULATE_URL": "http://192.168.198.134:5000/calculator",
         "PREFLOP": {
 
-            "CONFIDENCE_LEVEL": 0.45,
+            "CONFIDENCE_LEVEL": 0.44,
             "CONFIDENCE_LEVEL_POSITION": 0.40,
             "CONFIDENCE_LEVEL_HEADS_UP": 0.6,
             "PLAYER_STRENGTH": "XX",
