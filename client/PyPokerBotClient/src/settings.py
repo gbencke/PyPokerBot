@@ -59,7 +59,7 @@ settings = {
         "FLOPCARD5": (779, 356),
 
         "BUTTON_SIZE": (39, 34),
-        "BUTTON_THRESHOLD": 0.90,
+        "BUTTON_THRESHOLD": 0.85,
         "BUTTON_TEMPLATE": "..\..\data\\template\BUTTON.jpg",
         "BUTTON1": (999, 321),
         "BUTTON2": (944, 527),
