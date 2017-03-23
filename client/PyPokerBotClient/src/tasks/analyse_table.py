@@ -65,7 +65,7 @@ def analyse_button(Image):
             settings['TABLE_SCANNER']['BUTTON_SIZE']))
         res = cv2.compareHist(template_has_card_cv2_hist, current_seat_cv2_hist, 0)
         ret[button_name_key] = 'BUTTON' if res > settings['TABLE_SCANNER']['BUTTON_THRESHOLD'] else ''
-        #logging.debug("For method {} button pos {}:{} {}".format('Histogram', current_seat_index + 1, ret[button_name_key], res))
+        # logging.debug("For method {} button pos {}:{} {}".format('Histogram', current_seat_index + 1, ret[button_name_key], res))
     return ret
 
 
@@ -312,8 +312,11 @@ def generate_decision_preflop(analisys):
     confidence_level = settings['STRATEGY'][phase][get_confidence_level(analisys, phase)]
     confidence_level_raise = settings['STRATEGY'][phase]['CONFIDENCE_DIFFERENCE_RAISE']
     hand_equity = analisys['hand_analisys']['RESULT'][0][1]
+    is_hero_in_button = (analisys['hero']['POSITION'] == 'BUTTON')
 
-    logging.debug('generate_decision_preflop({},{},{})'.format(confidence_level, confidence_level_raise, hand_equity))
+    logging.debug(
+        'generate_decision_preflop({},{},{}) button:{}'.format(confidence_level, confidence_level_raise, hand_equity,
+                                                               is_hero_in_button))
 
     ret['RAISE_STRATEGY'] = settings['STRATEGY']['FLOP']['RAISE_STRATEGY']
     if hand_equity >= (confidence_level + confidence_level_raise):
