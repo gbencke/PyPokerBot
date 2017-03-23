@@ -65,7 +65,7 @@ def analyse_button(Image):
             settings['TABLE_SCANNER']['BUTTON_SIZE']))
         res = cv2.compareHist(template_has_card_cv2_hist, current_seat_cv2_hist, 0)
         ret[button_name_key] = 'BUTTON' if res > settings['TABLE_SCANNER']['BUTTON_THRESHOLD'] else ''
-        # print "For method {} button pos {}:{}".format('Histogram', current_seat_index + 1, ret[button_name_key])
+        #logging.debug("For method {} button pos {}:{} {}".format('Histogram', current_seat_index + 1, ret[button_name_key], res))
     return ret
 
 
@@ -299,7 +299,10 @@ def get_confidence_level(analisys, phase):
     if total_villains == 1:
         return 'CONFIDENCE_LEVEL_HEADS_UP'
     else:
-        return 'CONFIDENCE_LEVEL'
+        if analisys['hero']['POSITION'] == 'BUTTON':
+            return 'CONFIDENCE_LEVEL_POSITION'
+        else:
+            return 'CONFIDENCE_LEVEL'
 
 
 def generate_decision_preflop(analisys):
