@@ -309,6 +309,7 @@ def generate_decision_preflop(analisys):
 
     logging.debug('generate_decision_preflop({},{},{})'.format(confidence_level, confidence_level_raise, hand_equity))
 
+    ret['RAISE_STRATEGY'] = settings['STRATEGY']['FLOP']['RAISE_STRATEGY']
     if hand_equity >= (confidence_level + confidence_level_raise):
         ret['DECISION'] = 'RAISE'
         return ret
@@ -341,6 +342,7 @@ def generate_decision_flop(analisys):
                                                                                 , hand_equity, is_hero_in_button,
                                                                                 check_button_available))
 
+    ret['RAISE_STRATEGY'] = settings['STRATEGY']['FLOP']['RAISE_STRATEGY']
     if hand_equity >= (confidence_level + confidence_level_raise):
         ret['DECISION'] = 'RAISE'
         return ret
@@ -349,6 +351,7 @@ def generate_decision_flop(analisys):
         return ret
     else:
         if is_hero_in_button and check_button_available:
+            logging.debug('BLUFFING!!! BLUFFING!!! BLUFFING!!! BLUFFING!!! BLUFFING!!!')
             ret['DECISION'] = 'RAISE'
         else:
             ret['DECISION'] = 'FOLD OR CHECK'
