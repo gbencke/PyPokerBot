@@ -12,13 +12,13 @@ settings = {
             "CONFIDENCE_LEVEL_HEADS_UP": 0.7,
             "PLAYER_STRENGTH": "XX",
             "CONFIDENCE_DIFFERENCE_RAISE": 0.2,
-            "RAISE_STRATEGY": 'POT'
+            "RAISE_STRATEGY": ''
         },
         "FLOP": {
             "CONFIDENCE_LEVEL": 0.85,
             "PLAYER_STRENGTH": "XX",
             "CONFIDENCE_DIFFERENCE_RAISE": 0.00,
-            "RAISE_STRATEGY": ''
+            "RAISE_STRATEGY": 'POT'
         }
     },
 
@@ -78,6 +78,8 @@ settings = {
         "COMMAND_TEST_TEMPLATE1": "..\..\data\\template\COMMAND_TEST_TEMPLATE1.jpg",
         "COMMAND_TEST_TEMPLATE2": "..\..\data\\template\COMMAND_TEST_TEMPLATE2.jpg",
         "COMMAND_TEST_TEMPLATE3": "..\..\data\\template\COMMAND_TEST_TEMPLATE3.jpg",
+
+        "SET_RAISE_TO_POT": (1100, 750)
 
     }
 }

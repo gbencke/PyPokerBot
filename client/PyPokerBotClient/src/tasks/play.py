@@ -45,7 +45,7 @@ def execute(args):
                 logging.debug('Command     : ' + str(res['command']))
                 logging.debug('-------------')
                 im.save(os.path.join(settings['SAMPLES_FOLDER'], current_table.get_screenshot_name()))
-                run_command(current_table.hwnd, res['command']['TO_EXECUTE'])
+                run_command(current_table.hwnd, res['command']['TO_EXECUTE'], res)
 
             time.sleep(settings['SLEEP_TIME_BETWEEN_CAPTURE_MS'] / 1000)
 
