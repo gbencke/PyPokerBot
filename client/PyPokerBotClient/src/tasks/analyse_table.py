@@ -353,7 +353,7 @@ def generate_decision_flop(analisys):
         ret['DECISION'] = 'CALL'
         return ret
     else:
-        if is_hero_in_button and check_button_available:
+        if is_hero_in_button and check_button_available and hand_equity > 0.5:
             logging.debug('BLUFFING!!! BLUFFING!!! BLUFFING!!! BLUFFING!!! BLUFFING!!!')
             ret['DECISION'] = 'RAISE'
         else:
