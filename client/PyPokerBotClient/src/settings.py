@@ -11,12 +11,14 @@ settings = {
             "CONFIDENCE_LEVEL": 0.45,
             "CONFIDENCE_LEVEL_HEADS_UP": 0.7,
             "PLAYER_STRENGTH": "XX",
-            "CONFIDENCE_DIFFERENCE_RAISE": 0.2
+            "CONFIDENCE_DIFFERENCE_RAISE": 0.2,
+            "RAISE_STRATEGY": 'POT'
         },
         "FLOP": {
             "CONFIDENCE_LEVEL": 0.85,
             "PLAYER_STRENGTH": "XX",
-            "CONFIDENCE_DIFFERENCE_RAISE": 0.00
+            "CONFIDENCE_DIFFERENCE_RAISE": 0.00,
+            "RAISE_STRATEGY": ''
         }
     },
 
