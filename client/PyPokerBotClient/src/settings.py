@@ -10,11 +10,11 @@ settings = {
         "PREFLOP": {
 
             "CONFIDENCE_LEVEL": 0.45,
-            "CONFIDENCE_LEVEL_POSITION": 0.42,
-            "CONFIDENCE_LEVEL_HEADS_UP": 0.7,
+            "CONFIDENCE_LEVEL_POSITION": 0.40,
+            "CONFIDENCE_LEVEL_HEADS_UP": 0.6,
             "PLAYER_STRENGTH": "XX",
-            "CONFIDENCE_DIFFERENCE_RAISE": 0.2,
-            "RAISE_STRATEGY": ''
+            "CONFIDENCE_DIFFERENCE_RAISE": 0.1,
+            "RAISE_STRATEGY": 'POT'
         },
         "FLOP": {
             "CONFIDENCE_LEVEL": 0.85,
