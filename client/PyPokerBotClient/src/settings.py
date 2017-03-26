@@ -17,6 +17,7 @@ settings = {
                 "PLAYERCARD_HAS_NOCARD_TEMPLATE": "",
                 "PLAYERCARD_HAS_UNKNOWN_CARD_TEMPLATE": "..\..\data\\template\PLAYER_HASCARD.jpg",
                 "6-SEATS": {
+                    "NUMBER_OF_SEATS": 6,
                     "PLAYERHASCARD_SIZE": (162, 42),
                     "PLAY_HASCARD_THRESHOLD": 0.90,
                     "PLAYER1_HASCARD": (1056, 194),
