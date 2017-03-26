@@ -11,8 +11,11 @@ from custom_exceptions.NeedToSpecifyTableTypeException import NeedToSpecifyTable
 
 class PokerTableScannerPokerStars(PokerTableScanner):
     def __init__(self, TableType=None, NumberOfSeats=None):
+        self.Platform = 'POKERSTARS'
         self.TableType = TableType
         self.NumberOfSeats = NumberOfSeats
+        self.player_has_card_histogram = None
+        self.player_has_card_threshold = None
 
     def set_table_type(self, table_type):
         self.TableType = table_type
@@ -20,35 +23,38 @@ class PokerTableScannerPokerStars(PokerTableScanner):
     def set_number_of_seats(self, number_of_seats):
         self.NumberOfSeats = number_of_seats
 
-    def analyse_players_with_cards(self, Image):
-        ret = {}
-        template_has_card_cv2_hist = get_histogram_from_image(
-            grab_image_from_file(settings['TABLE_SCANNER']['PLAYERCARD_HAS_UNKNOWN_CARD_TEMPLATE']))
-        for current_seat_index in range(6):
-            player_hascard_key = 'PLAYER{}_HASCARD'.format(current_seat_index + 1)
-            current_seat_cv2_hist = get_histogram_from_image(grab_image_pos_from_image(
-                Image, settings['TABLE_SCANNER'][player_hascard_key],
-                settings['TABLE_SCANNER']['PLAYERHASCARD_SIZE']))
-            ret[player_hascard_key] = 'CARD' if cv2.compareHist(
-                template_has_card_cv2_hist,
-                current_seat_cv2_hist, 0) > settings['TABLE_SCANNER'][
-                                                    'PLAY_HASCARD_THRESHOLD'] else ''
-            # print "For method {} seat {}:{}".format('Histogram', current_seat_index + 1, ret[player_hascard_key])
-        return ret
+    def create_list_boolean_with_number_seats(self):
+        return [False] * self.NumberOfSeats
 
-    def analyse_players_without_cards(self, Image):
-        ret = {}
-        for current_seat_index in range(6):
-            empty_card_key = settings['TABLE_SCANNER']['TEMPLATES_FOLDER'] + '\\' + 'PLAYER{}_HASNOCARD'.format(
-                current_seat_index + 1) + '.jpg'
-            empty_card_hst = get_histogram_from_image(grab_image_from_file(empty_card_key))
-            current_pos_key = 'PLAYER{}_HASCARD'.format(current_seat_index + 1)
-            current_pos_hst = get_histogram_from_image(grab_image_pos_from_image(
-                Image, settings['TABLE_SCANNER'][current_pos_key],
-                settings['TABLE_SCANNER']['PLAYERHASCARD_SIZE']))
-            res = cv2.compareHist(empty_card_hst, current_pos_hst, 0)
-            ret['NOCARD{}'.format(current_seat_index + 1)] = 'NOCARD' if res > settings['TABLE_SCANNER'][
-                'PLAY_HASCARD_THRESHOLD'] else ''
+    def get_player_hascard_histogram(self):
+        if self.player_has_card_histogram is None:
+            self.player_has_card_histogram = get_histogram_from_image(
+                grab_image_from_file(
+                    settings[self.Platform]['TABLE_SCANNER'][self.TableType]['PLAYERCARD_HAS_UNKNOWN_CARD_TEMPLATE']))
+        return self.player_has_card_histogram
+
+    def get_player_has_card_threshold(self):
+        if self.player_has_card_histogram is None:
+            self.player_has_card_histogram = \
+                settings[self.Platform]['TABLE_SCANNER'][self.TableType]['PLAY_HASCARD_THRESHOLD']
+        return self.player_has_card_histogram
+
+    def get_player_has_card_in_position_histogram(self, index, Image):
+        return \
+            get_histogram_from_image(
+                grab_image_pos_from_image(
+                    Image,
+                    settings[self.Platform]['TABLE_SCANNER'][self.TableType]['PLAYER{}_HASCARD'.format(index + 1)],
+                    settings[self.Platform]['TABLE_SCANNER'][self.TableType]['PLAYERHASCARD_SIZE']))
+
+    def analyse_players_with_cards(self, Image):
+        ret = self.create_list_boolean_with_number_seats()
+        for current_seat_index in range(self.NumberOfSeats):
+            ret[current_seat_index] = True if \
+                cv2.compareHist(
+                    self.get_player_hascard_histogram(),
+                    self.get_player_has_card_in_position_histogram(current_seat_index, Image), 0) > \
+                self.get_player_has_card_threshold() else False
         return ret
 
     def analyse_button(self, Image):
@@ -86,7 +92,6 @@ class PokerTableScannerPokerStars(PokerTableScanner):
                     if res > selected_card_res:
                         selected_card = current_card + current_suit
                         selected_card_res = res
-                        # print("For FLOP{}, Card {} returned {} - WINNER {} ".format(current_flop_pos + 1, current_card + current_suit, res, selected_card))
             ret[flop_card_key] = selected_card
         return ret
 
@@ -172,7 +177,6 @@ class PokerTableScannerPokerStars(PokerTableScanner):
                 return 'BUTTON'
             current_pos_analysed += 1
 
-
     def analyse_hero(self, im, cards, nocards, button):
         ret = {}
         ret['HERO_CARDS'] = ''
@@ -212,16 +216,32 @@ class PokerTableScannerPokerStars(PokerTableScanner):
         ret['POSITION'] = hero_position
         return ret
 
+    def analyse_players_without_cards(self, Image):
+        ret = {}
+        for current_seat_index in range(6):
+            empty_card_key = settings['TABLE_SCANNER']['TEMPLATES_FOLDER'] + '\\' + 'PLAYER{}_HASNOCARD'.format(
+                current_seat_index + 1) + '.jpg'
+            empty_card_hst = get_histogram_from_image(grab_image_from_file(empty_card_key))
+            current_pos_key = 'PLAYER{}_HASCARD'.format(current_seat_index + 1)
+            current_pos_hst = get_histogram_from_image(grab_image_pos_from_image(
+                Image, settings['TABLE_SCANNER'][current_pos_key],
+                settings['TABLE_SCANNER']['PLAYERHASCARD_SIZE']))
+            res = cv2.compareHist(empty_card_hst, current_pos_hst, 0)
+            ret['NOCARD{}'.format(current_seat_index + 1)] = 'NOCARD' if res > settings['TABLE_SCANNER'][
+                'PLAY_HASCARD_THRESHOLD'] else ''
+        return ret
+
     def analyze_from_image(self, im):
         if self.NumberOfSeats is None:
             raise NeedToSpecifySeatsException('You need to specify the number of seats prior to start analisys')
         if self.TableType is None:
             raise NeedToSpecifyTableTypeException('You need to specify the table type prior to start analisys')
-        result = {}
-        result['seats'] = self.NumberOfSeats
-        result['cards'] = self.analyse_players_with_cards(im)
-        result['nocards'] = self.analyse_players_without_cards(im)
-        result['button'] = self.analyse_button(im)
-        result['hero'] = self.analyse_hero(im, result['cards'], result['nocards'], result['button'])
-        result['flop'] = self.analyse_flop_template(im)
+        result = {
+            'seats': self.NumberOfSeats,
+            'cards': self.analyse_players_with_cards(im),
+            'nocards': self.analyse_players_without_cards(im),
+            'button': self.analyse_button(im),
+            'flop': self.analyse_flop_template(im)
+        }
+        result['hero'] = self.analyse_hero(im, result['cards'], result['nocards'], result['button']),
         return result
