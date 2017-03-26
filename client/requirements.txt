@@ -4,8 +4,14 @@ numpy==1.11.3+mkl
 olefile==0.44
 packaging==16.8
 Pillow==4.0.0
+PyAutoGUI==0.9.35
+PyMsgBox==1.0.6
 pyparsing==2.2.0
 pyscreenshot==0.4.2
+PyScreeze==0.1.9
+pytesseract==0.1.6
+PyTweening==1.0.3
 pywin32==220.1
+requests==2.13.0
 scipy==0.18.1
 six==1.10.0

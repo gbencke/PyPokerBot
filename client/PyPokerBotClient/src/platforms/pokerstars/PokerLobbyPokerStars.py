@@ -4,6 +4,7 @@ from model.PokerTable import PokerTable
 
 class PokerLobbyPokerStars(PokerLobby):
     def __init__(self, hwnd, lobby_name):
+        PokerLobby.__init__(self)
         self.hwnd = hwnd
         self.lobby_name = lobby_name
         self.tables = []

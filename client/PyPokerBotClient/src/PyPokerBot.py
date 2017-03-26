@@ -1,10 +1,13 @@
 import sys
 import os
 import logging
+import pkgutil
 
 from datetime import datetime
 from importlib import import_module
+
 from settings import settings
+import tasks
 
 
 def general_configuration():
@@ -18,7 +21,13 @@ def general_configuration():
 
 
 def show_usage():
-    pass
+    print("Welcome to PyPokerBot")
+    print("=====================")
+    print("Please execute: python PyPokerBot.py <task to run> [arguments]* ")
+    print("Currently available tasks:")
+    tasks_available = [modname for importer, modname, ispkg in pkgutil.iter_modules(tasks.__path__)]
+    for current_task in tasks_available:
+        print("-{}".format(current_task))
 
 
 def process_command(args):

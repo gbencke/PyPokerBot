@@ -1,39 +1,26 @@
-import ast
-import numpy
-import cv2
-import pprint
-import subprocess
-import requests
-import os
-import logging
-from datetime import datetime
-from time import sleep
+import importlib
 from settings import settings
-from os.win32.screenshot import grab_image_from_file, grab_image_pos_from_image
+import pprint
+from osinterface.win32.screenshot import grab_image_from_file
 
 
-
-
-
-
-def generate_analisys(im):
-    result = {'seats': 6, 'cards': analyse_players_with_cards(im), 'nocards': analyse_players_without_cards(im)}
-    result['button'] = analyse_button(im)
-    result['hero'] = analyse_hero(im, result['cards'], result['nocards'], result['button'])
-    result['flop'] = analyse_flop_template(im)
-    result['commands'] = analyse_commands(im)
-    if has_command_to_execute(result):
-        result['hand_analisys'] = analyse_hand(result)
-        result['decision'] = generate_decision(result)
-        result['command'] = generate_command(result)
-    return result
+def get_instance(classname):
+    return getattr(importlib.import_module(classname), classname.split('.')[-1])
 
 
 def execute(args):
     if len(args) < 1:
-        print("For this task you need at least 1 arguments: <Image Source> ")
+        print("For this task you need at least 1 arguments: <Image Source> <Platform> <TableType> ")
         return
     image_name = args[0]
+    image_platform = args[1]
+    image_tabletype = args[2]
+    table_scanner_class = get_instance(settings['PLATFORMS'][image_platform]['POKER_TABLE_SCANNER_CLASS'])
+    table_strategy_class = get_instance(settings['PLATFORMS'][image_platform]['POKER_STRATEGY_CLASS'])
+    table_scanner = table_scanner_class(image_tabletype)
+    table_strategy = table_strategy_class()
+
     im = grab_image_from_file(image_name)
-    result = generate_analisys(im)
+    result = table_scanner.analyze_from_image(im)
+    result = table_strategy.run_strategy(result)
     pprint.PrettyPrinter().pprint(result)
