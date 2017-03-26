@@ -3,10 +3,10 @@ import os
 import time
 import logging
 from settings import settings
-from helpers.win32.hwnd import scan_windows, set_raise_to_pot
-from helpers.win32.screenshot import capture_screenshot
-from platforms.pokerstarts.detection import is_pokerstars_lobby, is_pokerstars_table
-from platforms.pokerstarts.helpers import get_table_name, get_table_stakes, get_table_format
+from os.win32.scan_hwnd import scan_windows, set_raise_to_pot
+from os.win32.screenshot import capture_screenshot
+from platforms.pokerstars.detection import is_pokerstars_lobby, is_pokerstars_table
+from platforms.pokerstars.helpers import get_table_name, get_table_stakes, get_table_format
 from model.PokerLobby import PokerLobby
 from model.PokerTable import PokerTable
 

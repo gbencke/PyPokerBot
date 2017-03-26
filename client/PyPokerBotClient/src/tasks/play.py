@@ -3,10 +3,10 @@ import os
 import time
 from settings import settings
 from analyse_table import generate_analisys,has_command_to_execute
-from helpers.win32.hwnd import scan_windows, run_command
-from helpers.win32.screenshot import capture_screenshot
-from platforms.pokerstarts.detection import is_pokerstars_lobby, is_pokerstars_table
-from platforms.pokerstarts.helpers import get_table_name, get_table_stakes, get_table_format
+from os.win32.scan_hwnd import scan_windows, run_command
+from os.win32.screenshot import capture_screenshot
+from platforms.pokerstars.detection import is_pokerstars_lobby, is_pokerstars_table
+from platforms.pokerstars.helpers import get_table_name, get_table_stakes, get_table_format
 from model.PokerLobby import PokerLobby
 from model.PokerTable import PokerTable
 

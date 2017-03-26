@@ -1,5 +1,5 @@
 from settings import settings
-from helpers.win32.screenshot import grab_image_pos_from_file
+from os.win32.screenshot import grab_image_pos_from_file
 
 
 def execute(args):
