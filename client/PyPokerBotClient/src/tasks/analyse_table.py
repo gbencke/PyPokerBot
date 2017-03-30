@@ -17,11 +17,11 @@ def execute(args):
     image_tabletype = args[2]
     table_scanner_class = get_instance(settings['PLATFORMS'][image_platform]['POKER_TABLE_SCANNER_CLASS'])
     table_strategy_class = get_instance(settings['PLATFORMS'][image_platform]['POKER_STRATEGY_CLASS'])
-    table_scanner = table_scanner_class(image_tabletype)
-    table_scanner.set_number_of_seats(settings['PLATFORMS'][image_platform]['TABLE_SCANNER'][image_tabletype]['NUMBER_OF_SEATS'])
+    number_of_seats = (settings['PLATFORMS'][image_platform]['TABLE_SCANNER'][image_tabletype]['NUMBER_OF_SEATS'])
+    table_scanner = table_scanner_class(image_tabletype, number_of_seats)
     table_strategy = table_strategy_class()
 
     im = grab_image_from_file(image_name)
     result = table_scanner.analyze_from_image(im)
-    result = table_strategy.run_strategy(result)
+    #result = table_strategy.run_strategy(result)
     pprint.PrettyPrinter().pprint(result)
