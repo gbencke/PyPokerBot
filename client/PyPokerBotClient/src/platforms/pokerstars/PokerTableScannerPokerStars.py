@@ -26,7 +26,8 @@ class PokerTableScannerPokerStars(PokerTableScanner):
     def create_list_string_with_number_seats(self):
         return [''] * self.NumberOfSeats
 
-    def __init__(self, TableType=None, NumberOfSeats=None):
+    def __init__(self, TableType, NumberOfSeats):
+        PokerTableScanner.__init__(self)
         self.Platform = 'POKERSTARS'
         self.TableType = TableType
         self.NumberOfSeats = NumberOfSeats
