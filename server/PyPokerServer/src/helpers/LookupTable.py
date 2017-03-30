@@ -1,3 +1,4 @@
+import sys
 import pprint
 import pbots_calc
 
@@ -23,10 +24,12 @@ class LookupTable:
         pass
 
     def rearrange_cards(self,current_card_set):
-        if current_card_set[1] > current_card_set[3]:
-            current_card_set = current_card_set[0:1] + current_card_set[3:] + current_card_set[2:3] + current_card_set[1:2]
         if LookupTable.cards[current_card_set[2]] > LookupTable.cards[current_card_set[0]]:
-            current_card_set = current_card_set[2:3] + current_card_set[1:2] + current_card_set[0:1] + current_card_set[3:]
+            current_card_set = current_card_set[2:3] + current_card_set[3:4] + current_card_set[0:1] + current_card_set[1:2]
+            return current_card_set
+        if current_card_set[1] > current_card_set[3] and current_card_set[0] == current_card_set[2]:
+            current_card_set = current_card_set[2:3] + current_card_set[3:4] + current_card_set[0:1] + current_card_set[1:2]
+            return current_card_set
         return current_card_set
 
 
@@ -54,6 +57,8 @@ class LookupTable:
                         current_cards = self.rearrange_cards(current_cards)
                         if current_cards in ret:
                             continue
+                        print('#{}'.format(current_cards))
+                        sys.stdout.flush()
                         ret[current_cards] = \
                             { "cards" : current_cards + ":" + villains, 
                               "equity": pbots_calc.calc(current_cards + ":" + villains, "", "", 1000000).ev[0] }
