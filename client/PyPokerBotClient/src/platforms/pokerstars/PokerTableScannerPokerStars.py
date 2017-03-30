@@ -1,5 +1,13 @@
+import logging
+import os
 import numpy
 import cv2
+import ast
+import datetime
+import subprocess
+import requests
+from time import sleep
+from datetime import datetime
 from settings import settings
 from model.PokerTableScanner import PokerTableScanner
 from platforms.utils import get_histogram_from_image
@@ -263,6 +271,72 @@ class PokerTableScannerPokerStars(PokerTableScanner):
                 else False
         return ret
 
+    def analyse_commands(self, im):
+        ret = ['', '', '']
+
+        for x in range(3):
+            current_command = x + 1
+
+            template_has_command_cv2_hist = \
+                get_histogram_from_image(
+                    grab_image_from_file(
+                        settings['PLATFORMS'][self.Platform]['TABLE_SCANNER'][self.TableType] \
+                            ['COMMAND_TEST_TEMPLATE{}'.format(current_command)]))
+
+            has_command_cv2_hist = \
+                get_histogram_from_image(grab_image_pos_from_image(
+                    im,
+                    settings['PLATFORMS'][self.Platform]['TABLE_SCANNER'][self.TableType][
+                        'COMMAND_POS{}'.format(current_command)],
+                    settings['PLATFORMS'][self.Platform]['TABLE_SCANNER'][self.TableType]['COMMAND_TEST_SIZE']))
+            res = cv2.compareHist(template_has_command_cv2_hist, has_command_cv2_hist, 0)
+            if res > settings['PLATFORMS'][self.Platform]['TABLE_SCANNER'][self.TableType]['COMMAND_TEST_TOLERANCE']:
+                im_command = grab_image_pos_from_image(
+                    im,
+                    settings['PLATFORMS'][self.Platform]['TABLE_SCANNER'][self.TableType][
+                        'COMMAND_POS{}'.format(current_command)],
+                    settings['PLATFORMS'][self.Platform]['TABLE_SCANNER'][self.TableType]['COMMAND_SIZE']
+                )
+                command_image_name = 'command{}.jpg'.format(current_command)
+                im_command.save(command_image_name)
+                return_from_tesseract = subprocess.check_output(['tesseract', command_image_name, 'stdout'],
+                                                                shell=False)
+                if len(return_from_tesseract.strip()) == 0:
+                    error_filename = command_image_name + '.error.' + datetime.now().strftime(
+                        "%Y%m%d%H%M%S.%f") + '.jpg'
+                    logging.debug("ERROR ON TESSERACT!!! " + error_filename)
+                    im_command.save(error_filename)
+                ret[x] = return_from_tesseract.replace('\r\n', ' ').replace('  ', ' ')
+                os.remove(command_image_name)
+                sleep(0.2)
+        return ret
+
+    def analyse_hand_phase(self, analisys):
+        return 'PREFLOP' if len(self.get_flop_cards(analisys)) == 0 else 'FLOP'
+
+    def get_flop_cards(self, analisys):
+        return "".join([analisys['flop'][x] for x in range(5)])
+
+    def send_hands_to_server(self, pocket_cards, flop_cards):
+        command_to_send = '{} {}'.format(pocket_cards + ':XX', flop_cards)
+        logging.debug('Sent to server:' + command_to_send[:30])
+        r = requests.post(settings['STRATEGIES']['SIMPLE']['CALCULATE_URL'], json={"command": command_to_send})
+        logging.debug('Received from server:' + str(r.content)[:30])
+        if r.status_code == 200:
+            return command_to_send, ast.literal_eval(r.content)
+        else:
+            return command_to_send, ''
+
+    def analyse_hand(self, analisys):
+        ret = {}
+        if len(analisys['hero']['HERO_CARDS']) == 0:
+            return ret
+        flop_cards = self.get_flop_cards(analisys)
+        ret['HAND_PHASE'] = self.analyse_hand_phase(analisys)
+        command, result = self.send_hands_to_server(analisys['hero']['HERO_CARDS'], flop_cards)
+        ret['RESULT'] = result
+        return ret
+
     def analyze_from_image(self, im):
         if self.NumberOfSeats is None:
             raise NeedToSpecifySeatsException('You need to specify the number of seats prior to start analisys')
@@ -275,5 +349,7 @@ class PokerTableScannerPokerStars(PokerTableScanner):
             'button': self.analyse_button(im),
             'flop': self.analyse_flop_template(im)
         }
-        result['hero'] = self.analyse_hero(im, result['cards'], result['nocards'], result['button']),
+        result['hero'] = self.analyse_hero(im, result['cards'], result['nocards'], result['button'])
+        result['commands'] = self.analyse_commands(im)
+        result['hand_analisys'] = self.analyse_hand(result)
         return result
