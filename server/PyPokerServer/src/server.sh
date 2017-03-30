@@ -1,5 +1,6 @@
 #!/bin/bash
 
+sudo ldconfig
 source /home/gbencke/git/2017.03.14.PyPokerBot/server/PyPokerServer/bin/activate
 cd /home/gbencke/git/2017.03.14.PyPokerBot/server/PyPokerServer/src 
 export LD_LIBRARY_PATH=/home/gbencke/git/pbots_calc/export/linux2/lib:$LD_LIBRARY_PATH

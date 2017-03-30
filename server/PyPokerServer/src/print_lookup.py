@@ -7,6 +7,7 @@ lookup = LT.LookupTable()
 XX = lookup.create_lookup("XX")
 print('lookup_table = { "XX" : \\')
 pprint.PrettyPrinter().pprint(XX)
+print(' } ')
 exit(0)
 
 print(lookup.create_lookup("XX:XX"))
