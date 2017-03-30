@@ -1,6 +1,5 @@
 import numpy
 import cv2
-
 from settings import settings
 from model.PokerTableScanner import PokerTableScanner
 from platforms.utils import get_histogram_from_image
@@ -10,12 +9,20 @@ from custom_exceptions.NeedToSpecifyTableTypeException import NeedToSpecifyTable
 
 
 class PokerTableScannerPokerStars(PokerTableScanner):
+    def create_list_none_with_number_seats(self):
+        return [None] * self.NumberOfSeats
+
+    def create_list_boolean_with_number_seats(self):
+        return [False] * self.NumberOfSeats
+
     def __init__(self, TableType=None, NumberOfSeats=None):
         self.Platform = 'POKERSTARS'
         self.TableType = TableType
         self.NumberOfSeats = NumberOfSeats
         self.player_has_card_histogram = None
         self.player_has_card_threshold = None
+        self.button_template_histogram = self.create_list_none_with_number_seats()
+        self.player_button_threshold = None
 
     def set_table_type(self, table_type):
         self.TableType = table_type
@@ -23,8 +30,13 @@ class PokerTableScannerPokerStars(PokerTableScanner):
     def set_number_of_seats(self, number_of_seats):
         self.NumberOfSeats = number_of_seats
 
-    def create_list_boolean_with_number_seats(self):
-        return [False] * self.NumberOfSeats
+    def get_player_hasbutton_histogram(self, index):
+        if self.button_template_histogram[index] is None:
+            self.button_template_histogram[index] = get_histogram_from_image(
+                grab_image_pos_from_image(
+                    settings[self.Platform]['TABLE_SCANNER'][self.TableType]['TEMPLATES_FOLDER'] + \
+                    '\\' + 'BUTTON{}_TEMPLATE'.format(index + 1) + '.jpg'))
+        return self.button_template_histogram[index]
 
     def get_player_hascard_histogram(self):
         if self.player_has_card_histogram is None:
@@ -38,6 +50,12 @@ class PokerTableScannerPokerStars(PokerTableScanner):
             self.player_has_card_histogram = \
                 settings[self.Platform]['TABLE_SCANNER'][self.TableType]['PLAY_HASCARD_THRESHOLD']
         return self.player_has_card_histogram
+
+    def get_player_button_threshold(self):
+        if self.player_button_threshold is None:
+            self.player_button_threshold = \
+                settings[self.Platform]['TABLE_SCANNER'][self.TableType]['BUTTON_THRESHOLD']
+        return self.player_button_threshold
 
     def get_player_has_card_in_position_histogram(self, index, Image):
         return \
@@ -58,41 +76,15 @@ class PokerTableScannerPokerStars(PokerTableScanner):
         return ret
 
     def analyse_button(self, Image):
-        ret = {}
-
-        for current_seat_index in range(6):
-            empty_card_key = settings['TABLE_SCANNER']['TEMPLATES_FOLDER'] + '\\' + 'BUTTON{}_TEMPLATE'.format(
-                current_seat_index + 1) + '.jpg'
-            template_has_card_cv2_hist = get_histogram_from_image(grab_image_from_file(empty_card_key))
-            button_name_key = 'BUTTON{}'.format(current_seat_index + 1)
-            current_seat_cv2_hist = get_histogram_from_image(grab_image_pos_from_image(
-                Image, settings['TABLE_SCANNER'][button_name_key],
-                settings['TABLE_SCANNER']['BUTTON_SIZE']))
-            res = cv2.compareHist(template_has_card_cv2_hist, current_seat_cv2_hist, 0)
-            ret[button_name_key] = 'BUTTON' if res > settings['TABLE_SCANNER']['BUTTON_THRESHOLD'] else ''
-            # logging.debug("For method {} button pos {}:{} {}".format('Histogram', current_seat_index + 1, ret[button_name_key], res))
-        return ret
-
-    def analyse_flop_hist(self, Image):
-        ret = {}
-        for current_flop_pos in range(5):
-            selected_card = ''
-            selected_card_res = 0
-            flop_card_key = 'FLOPCARD{}'.format(current_flop_pos + 1)
-            current_flop_hst = get_histogram_from_image(grab_image_pos_from_image(
-                Image,
-                settings['TABLE_SCANNER']['FLOPCARD{}'.format(current_flop_pos + 1)],
-                settings['TABLE_SCANNER']['FLOPCARD_SIZE']))
-            for current_suit in ['h', 's', 'c', 'd']:
-                for current_card in ['2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K', 'A']:
-                    filename = settings['TABLE_SCANNER'][
-                                   'TEMPLATES_FOLDER'] + '\\' + current_card + current_suit + '.jpg'
-                    current_card_image_hst = get_histogram_from_image(grab_image_from_file(filename))
-                    res = cv2.compareHist(current_flop_hst, current_card_image_hst, 2)
-                    if res > selected_card_res:
-                        selected_card = current_card + current_suit
-                        selected_card_res = res
-            ret[flop_card_key] = selected_card
+        ret = self.create_list_boolean_with_number_seats()
+        for index in range(self.NumberOfSeats):
+            current_seat_cv2_hist = get_histogram_from_image(
+                grab_image_pos_from_image(
+                    Image,
+                    settings[self.Platform]['TABLE_SCANNER'][self.TableType]['BUTTON{}'.format(index + 1)],
+                    settings[self.Platform]['TABLE_SCANNER'][self.TableType]['BUTTON_SIZE']))
+            res = cv2.compareHist(self.get_player_hasbutton_histogram(index), current_seat_cv2_hist, 0)
+            ret[index] = True if res > settings['TABLE_SCANNER']['BUTTON_THRESHOLD'] else False
         return ret
 
     def analyse_flop_template(self, Image):
