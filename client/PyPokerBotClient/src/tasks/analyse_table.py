@@ -23,5 +23,5 @@ def execute(args):
 
     im = grab_image_from_file(image_name)
     result = table_scanner.analyze_from_image(im)
-    #result = table_strategy.run_strategy(result)
+    result = table_strategy.run_strategy(result)
     pprint.PrettyPrinter().pprint(result)

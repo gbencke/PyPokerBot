@@ -219,10 +219,10 @@ class PokerTableScannerPokerStars(PokerTableScanner):
         return image_from_player, current_flop_image
 
     def analyse_hero(self, im, cards, nocards, button):
-        ret = {'HERO_CARDS': '', 'POSITION': ''}
+        ret = {'hero_cards': '', 'position': ''}
         for seat in range(self.NumberOfSeats):
             if cards[seat] == False and nocards[seat] == False:
-                ret['HERO_POS'] = seat + 1
+                ret['hero_pos'] = seat + 1
                 for current_hero_card in range(2):
                     selected_card = ''
                     selected_card_res = 1000000000
@@ -237,12 +237,12 @@ class PokerTableScannerPokerStars(PokerTableScanner):
                     correct_suit = self.get_suite_from_image(image_from_player)
                     if correct_suit != selected_card[1]:
                         selected_card = selected_card[0] + correct_suit
-                    ret['HERO_CARDS'] += selected_card
+                    ret['hero_cards'] += selected_card
                 break
         hero_position = ''
-        if 'HERO_POS' in ret:
-            hero_position = self.get_hero_position(ret['HERO_POS'], cards, button)
-        ret['POSITION'] = hero_position
+        if 'hero_pos' in ret:
+            hero_position = self.get_hero_position(ret['hero_pos'], cards, button)
+        ret['position'] = hero_position
         return ret
 
     def get_player_hasnocard_histogram(self):
@@ -330,12 +330,12 @@ class PokerTableScannerPokerStars(PokerTableScanner):
 
     def analyse_hand(self, analisys):
         ret = {}
-        if len(analisys['hero']['HERO_CARDS']) == 0:
+        if len(analisys['hero']['hero_cards']) == 0:
             return ret
         flop_cards = self.get_flop_cards(analisys)
-        ret['HAND_PHASE'] = self.analyse_hand_phase(analisys)
-        command, result = self.send_hands_to_server(analisys['hero']['HERO_CARDS'], flop_cards)
-        ret['RESULT'] = result
+        ret['hand_phase'] = self.analyse_hand_phase(analisys)
+        command, result = self.send_hands_to_server(analisys['hero']['hero_cards'], flop_cards)
+        ret['result'] = result
         return ret
 
     def analyze_from_image(self, im):
