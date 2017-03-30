@@ -1,17 +1,5 @@
-import ast
 import logging
-import os
-import numpy
-import cv2
-import datetime
-import subprocess
-import requests
-
-from time import sleep
-from datetime import datetime
 from settings import settings
-from platforms.utils import get_histogram_from_image
-from osinterface.win32.screenshot import grab_image_from_file, grab_image_pos_from_image
 from model.PokerStrategy import PokerStrategy
 
 
@@ -159,76 +147,7 @@ class PokerStrategySimple(PokerStrategy):
 
         return ret
 
-    def analyse_commands(self, im):
-        ret = {"COMMAND1": "", "COMMAND2": "", "COMMAND3": ""}
 
-        for x in range(3):
-            current_command = x + 1
-
-            template_has_command_cv2_hist = get_histogram_from_image(
-                grab_image_from_file(settings['TABLE_SCANNER']['COMMAND_TEST_TEMPLATE{}'.format(current_command)]))
-
-            has_command_cv2_hist = \
-                get_histogram_from_image(grab_image_pos_from_image(
-                    im,
-                    settings['TABLE_SCANNER']['COMMAND_POS{}'.format(current_command)],
-                    settings['TABLE_SCANNER']['COMMAND_TEST_SIZE']))
-            res = cv2.compareHist(template_has_command_cv2_hist, has_command_cv2_hist, 0)
-            if res > settings['TABLE_SCANNER']['COMMAND_TEST_TOLERANCE']:
-                im_command = grab_image_pos_from_image(
-                    im,
-                    settings['TABLE_SCANNER']['COMMAND_POS{}'.format(current_command)],
-                    settings['TABLE_SCANNER']['COMMAND_SIZE']
-                )
-                command_image_name = 'command{}.jpg'.format(current_command)
-                im_command.save(command_image_name)
-                return_from_tesseract = subprocess.check_output(['tesseract', command_image_name, 'stdout'],
-                                                                shell=False)
-                if len(return_from_tesseract.strip()) == 0:
-                    error_filename = command_image_name + '.error.' + datetime.now().strftime(
-                        "%Y%m%d%H%M%S.%f") + '.jpg'
-                    logging.debug("ERROR ON TESSERACT!!! " + error_filename)
-                    im_command.save(error_filename)
-                ret['COMMAND{}'.format(current_command)] = return_from_tesseract.replace('\r\n', ' ').replace('  ', ' ')
-                os.remove(command_image_name)
-                sleep(0.2)
-        return ret
-
-    def analyse_hand(self, analisys):
-        ret = {}
-        if len(analisys['hero']['HERO_CARDS']) == 0:
-            return ret
-
-        total_villains = 0
-        for x in range(analisys['seats']):
-            current_seat = x + 1
-            if analisys['cards']['PLAYER{}_HASCARD'.format(current_seat)] == 'CARD':
-                total_villains += 1
-        flop_cards = ''
-        if len(analisys['flop'].keys()) > 0:
-            for x in range(5):
-                flop_card_key = 'FLOPCARD{}'.format(x + 1)
-                if flop_card_key in analisys['flop']:
-                    flop_cards += analisys['flop'][flop_card_key]
-        current_hand_phase = 'PREFLOP' if len(flop_cards) == 0 else 'FLOP'
-        ret['HAND_PHASE'] = current_hand_phase
-        card_strength = settings['STRATEGY'][current_hand_phase]['PLAYER_STRENGTH'] if len(flop_cards) == 0 else \
-            settings['STRATEGY'][current_hand_phase]['PLAYER_STRENGTH']
-
-        if current_hand_phase == 'PREFLOP' and total_villains > 2:
-            total_villains = 2
-        villains_cards = ":".join([card_strength for x in range(total_villains)])
-
-        command_to_send = '{} {}'.format(analisys['hero']['HERO_CARDS'] + ':' + villains_cards, flop_cards)
-        ret['COMMAND_TO_SEND'] = command_to_send
-        logging.debug('Sent to server:' + command_to_send[:30])
-        r = requests.post(settings['STRATEGY']['CALCULATE_URL'], json={"command": command_to_send})
-        logging.debug('Received from server:' + str(r.content)[:30])
-        if r.status_code == 200:
-            ret['RESULT'] = ast.literal_eval(r.content)
-        else:
-            ret['RESULT'] = ''
-        return ret
 
     def run_strategy(self, result):
         if self.has_command_to_execute(result):
