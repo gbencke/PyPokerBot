@@ -363,12 +363,12 @@ class PokerTableScannerPokerStars(PokerTableScanner):
     def analyse_bets(self, im):
         returned_list = self.create_list_none_with_number_seats()
         for x in range(self.NumberOfSeats):
-            for test in range(50):
+            for test in range(100):
                 coords = settings['PLATFORMS'][self.Platform]['TABLE_SCANNER'][self.TableType]['BET{}'.format(x + 1)]
                 if x in [0, 1, 2]:
-                    coords = (coords[0] - (test * 2), coords[1])
+                    coords = (coords[0] - (test * 1), coords[1])
                 else:
-                    coords = (coords[0] + (test * 2), coords[1])
+                    coords = (coords[0] + (test * 1), coords[1])
                 im_command = grab_image_pos_from_image(
                     im,
                     coords,
@@ -388,7 +388,7 @@ class PokerTableScannerPokerStars(PokerTableScanner):
                 ret = self.non_decimal.sub('', ret)
                 returned_string = ret
                 ret = float(ret) / self.BB
-                if ((float(int(ret)) - float(ret)) !=0) and (not (ret == 0.5)):
+                if ((float(int(ret)) - float(ret)) != 0) and (not (ret == 0.5)) or ret > 200:
                     continue
                 returned_list[x] = (ret, returned_string, return_from_tesseract)
                 break
