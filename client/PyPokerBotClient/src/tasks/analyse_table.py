@@ -19,7 +19,7 @@ def execute(args):
     table_scanner_class = get_instance(settings['PLATFORMS'][image_platform]['POKER_TABLE_SCANNER_CLASS'])
     table_strategy_class = get_instance(settings['PLATFORMS'][image_platform]['POKER_STRATEGY_CLASS'])
     number_of_seats = (settings['PLATFORMS'][image_platform]['TABLE_SCANNER'][image_tabletype]['NUMBER_OF_SEATS'])
-    table_scanner = table_scanner_class(image_tabletype, number_of_seats)
+    table_scanner = table_scanner_class(image_tabletype, number_of_seats, 0.02, 0.01)
     table_strategy = table_strategy_class()
 
     im = grab_image_from_file(image_name)
