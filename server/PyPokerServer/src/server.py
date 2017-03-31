@@ -19,7 +19,7 @@ def normalize_cards(tokens):
 def calculator():
     command = request.get_json()['command']
     tokens = command.split(' ')
-    start_cards = normalize_cards(tokens)
+    start_cards = tokens[0] 
     board = ""
     dead = ""
     if len(tokens) > 1:
@@ -30,13 +30,16 @@ def calculator():
         dead = tokens[2]
     else:
         dead = ''
-    for x in lookup_table.lookup_table.keys():
-        print(str(lookup_table.lookup_table[x])[:80])
-        card_found = filter(lambda card: card['cards'] == start_cards, lookup_table.lookup_table[x])
-        print(card_found)
-        if len(card_found) > 0:
-            return str([(start_cards,card_found[0]['equity'])])
-    print("{} not found in lookup_tables".format(start_cards))
+    if board == "":
+        start_cards = normalize_cards(tokens)
+        for x in lookup_table.lookup_table.keys():
+            print(str(lookup_table.lookup_table[x])[:80])
+            card_found = filter(lambda card: card['cards'] == start_cards, lookup_table.lookup_table[x])
+            print(card_found)
+            if len(card_found) > 0:
+               return str([(start_cards,card_found[0]['equity'])])
+        print("{} not found in lookup_tables".format(start_cards))
+    print("{} {} {} will be calculated".format(start_cards,board,dead))
     r = pbots_calc.calc(start_cards, board, dead, 1000000)
     if r:
         return str(zip(r.hands, r.ev))
