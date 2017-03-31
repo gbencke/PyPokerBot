@@ -6,6 +6,7 @@ import ast
 import datetime
 import subprocess
 import requests
+import re
 from time import sleep
 from datetime import datetime
 from settings import settings
@@ -26,17 +27,16 @@ class PokerTableScannerPokerStars(PokerTableScanner):
     def create_list_string_with_number_seats(self):
         return [''] * self.NumberOfSeats
 
-    def __init__(self, TableType, NumberOfSeats):
-        PokerTableScanner.__init__(self)
+    def __init__(self, TableType, NumberOfSeats, BB, SB):
+        PokerTableScanner.__init__(self, TableType, NumberOfSeats, BB, SB)
         self.Platform = 'POKERSTARS'
-        self.TableType = TableType
-        self.NumberOfSeats = NumberOfSeats
         self.player_has_card_histogram = None
         self.player_has_card_threshold = None
         self.button_template_histogram = self.create_list_none_with_number_seats()
         self.player_button_threshold = None
         self.flop_has_card_histogram = self.create_list_none_with_number_seats()
         self.flop_has_card_threshold = None
+        self.non_decimal = re.compile(r'[^\d.]+')
 
     def set_table_type(self, table_type):
         self.TableType = table_type
@@ -337,6 +337,63 @@ class PokerTableScannerPokerStars(PokerTableScanner):
         ret['result'] = result
         return ret
 
+    def analyse_pot(self, im):
+        im_command = grab_image_pos_from_image(
+            im,
+            settings['PLATFORMS'][self.Platform]['TABLE_SCANNER'][self.TableType]['POT'],
+            settings['PLATFORMS'][self.Platform]['TABLE_SCANNER'][self.TableType]['POT_SIZE']
+        )
+        command_image_name = 'command_pot.jpg'
+        im_command.save(command_image_name)
+        return_from_tesseract = subprocess.check_output(['tesseract', command_image_name, 'stdout'],
+                                                        shell=False)
+        if len(return_from_tesseract.strip()) == 0:
+            error_filename = command_image_name + '.error.' + datetime.now().strftime(
+                "%Y%m%d%H%M%S.%f") + '.jpg'
+            logging.debug("ERROR ON TESSERACT!!! " + error_filename)
+            im_command.save(error_filename)
+        os.remove(command_image_name)
+        sleep(0.2)
+        ret = return_from_tesseract.replace('\r', '').replace('\n', '').replace(' ', '')
+        returned_string = ret
+        ret = ret.split("$")[1]
+        ret = float(ret) / self.BB
+        return ret, returned_string
+
+    def analyse_bets(self, im):
+        returned_list = self.create_list_none_with_number_seats()
+        for x in range(self.NumberOfSeats):
+            for test in range(50):
+                coords = settings['PLATFORMS'][self.Platform]['TABLE_SCANNER'][self.TableType]['BET{}'.format(x + 1)]
+                if x in [0, 1, 2]:
+                    coords = (coords[0] - (test * 2), coords[1])
+                else:
+                    coords = (coords[0] + (test * 2), coords[1])
+                im_command = grab_image_pos_from_image(
+                    im,
+                    coords,
+                    settings['PLATFORMS'][self.Platform]['TABLE_SCANNER'][self.TableType]['BET_SIZE']
+                )
+                command_image_name = 'command_bet.jpg'
+                im_command.save(command_image_name)
+                return_from_tesseract = subprocess.check_output(['tesseract', command_image_name, 'stdout'],
+                                                                shell=False)
+                if len(return_from_tesseract) == 0:
+                    break
+                if not (('$' in return_from_tesseract) and ('.' in return_from_tesseract)):
+                    continue
+                os.remove(command_image_name)
+                ret = return_from_tesseract.replace('\r', '').replace('\n', '').replace(' ', '').replace('\'', '')
+                ret = ret.split("$")[1]
+                ret = self.non_decimal.sub('', ret)
+                returned_string = ret
+                ret = float(ret) / self.BB
+                if ((float(int(ret)) - float(ret)) !=0) and (not (ret == 0.5)):
+                    continue
+                returned_list[x] = (ret, returned_string, return_from_tesseract)
+                break
+        return returned_list
+
     def analyze_from_image(self, im):
         if self.NumberOfSeats is None:
             raise NeedToSpecifySeatsException('You need to specify the number of seats prior to start analisys')
@@ -347,8 +404,12 @@ class PokerTableScannerPokerStars(PokerTableScanner):
             'cards': self.analyse_players_with_cards(im),
             'nocards': self.analyse_players_without_cards(im),
             'button': self.analyse_button(im),
-            'flop': self.analyse_flop_template(im)
+            'flop': self.analyse_flop_template(im),
+
         }
+        pot, pot_str = self.analyse_pot(im)
+        result['pot'] = (pot, pot_str)
+        result['bet'] = self.analyse_bets(im)
         result['hero'] = self.analyse_hero(im, result['cards'], result['nocards'], result['button'])
         result['commands'] = self.analyse_commands(im)
         result['hand_analisys'] = self.analyse_hand(result)

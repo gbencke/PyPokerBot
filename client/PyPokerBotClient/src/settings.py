@@ -69,7 +69,19 @@ settings = {
                     "COMMAND_TEST_TEMPLATE2": "..\..\data\\template\COMMAND_TEST_TEMPLATE2.jpg",
                     "COMMAND_TEST_TEMPLATE3": "..\..\data\\template\COMMAND_TEST_TEMPLATE3.jpg",
 
-                    "SET_RAISE_TO_POT": (1100, 750)
+                    "SET_RAISE_TO_POT": (1100, 750),
+
+                    "POT": (590,300),
+                    "POT_SIZE": (120,35),
+
+                    "BET_SIZE": (135,50),
+                    "BET1": (855,280),
+                    "BET2": (850,475),
+                    "BET3": (625,520),
+                    "BET4": (280,480),
+                    "BET5": (340,280),
+                    "BET6": (576,225),
+
                 }
             }
         }
