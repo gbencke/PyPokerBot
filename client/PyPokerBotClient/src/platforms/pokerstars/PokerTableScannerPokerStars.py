@@ -30,6 +30,7 @@ class PokerTableScannerPokerStars(PokerTableScanner):
     def __init__(self, TableType, NumberOfSeats, BB, SB):
         PokerTableScanner.__init__(self, TableType, NumberOfSeats, BB, SB)
         self.Platform = 'POKERSTARS'
+        self.FlopSize = 5
         self.player_has_card_histogram = None
         self.player_has_card_threshold = None
         self.button_template_histogram = self.create_list_none_with_number_seats()
@@ -145,7 +146,7 @@ class PokerTableScannerPokerStars(PokerTableScanner):
 
     def analyse_flop_template(self, Image):
         ret = self.create_list_string_with_number_seats()
-        for index in range(5):
+        for index in range(self.FlopSize):
             if self.check_if_flop_pos_is_empty(Image, index):
                 return ret
             selected_card = ''
@@ -301,7 +302,7 @@ class PokerTableScannerPokerStars(PokerTableScanner):
         return 'PREFLOP' if len(self.get_flop_cards(analisys)) == 0 else 'FLOP'
 
     def get_flop_cards(self, analisys):
-        return "".join([analisys['flop'][x] for x in range(5)])
+        return "".join([analisys['flop'][x] for x in range(self.FlopSize)])
 
     def send_hands_to_server(self, pocket_cards, flop_cards):
         command_to_send = '{} {}'.format(pocket_cards + ':XX', flop_cards)
