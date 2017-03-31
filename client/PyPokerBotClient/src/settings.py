@@ -74,9 +74,10 @@ settings = {
                     "POT": (590, 300),
                     "POT_SIZE": (120, 35),
 
+                    "NOBET_TEMPLATE": "..\..\data\\template\NOBET_TEMPLATE.jpg",
                     "BET_SIZE": (135, 25),
-                    "BET1": (855, 280),
-                    "BET2": (850, 475),
+                    "BET1": (835, 295),
+                    "BET2": (850, 495),
                     "BET3": (595, 540),
                     "BET4": (280, 495),
                     "BET5": (340, 295),

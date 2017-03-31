@@ -88,36 +88,35 @@ class PokerStrategySimple(PokerStrategy):
 
         if analisys['decision']['decision'] == 'FOLD OR CHECK':
             for x in range(3):
-                if 'CHECK' in analisys['commands'][x].upper():
+                if 'CHECK' == analisys['commands'][x][0]:
                     ret['to_execute'] = x + 1
                     return ret
             for x in range(3):
-                if 'FOLD' in analisys['commands'][x].upper():
+                if 'FOLD' == analisys['commands'][x][0]:
                     ret['to_execute'] = x + 1
                     return ret
 
         if analisys['decision']['decision'] == 'RAISE':
             for x in range(3):
-                if ('RAISE' in analisys['commands'][x].upper() or
-                            'BET' in analisys['commands'][x].upper()):
+                if 'RAISE' == analisys['commands'][x][0] or 'BET' == analisys['commands'][x][0]:
                     ret['to_execute'] = x + 1
                     return ret
             for x in range(3):
-                if 'CALL' in analisys['commands'][x].upper():
+                if 'CALL' == analisys['commands'][x][0]:
                     ret['to_execute'] = x + 1
                     return ret
             for x in range(3):
-                if 'CHECK' in analisys['commands'][x].upper():
+                if 'CHECK' == analisys['commands'][x][0]:
                     ret['to_execute'] = x + 1
                     return ret
 
         if analisys['decision']['decision'] == 'CALL':
             for x in range(3):
-                if 'CALL' in analisys['commands'][x].upper():
+                if 'CALL' in analisys['commands'][x][0]:
                     ret['to_execute'] = x + 1
                     return ret
             for x in range(3):
-                if 'CHECK' in analisys['commands'][x].upper():
+                if 'CHECK' in analisys['commands'][x][0]:
                     ret['to_execute'] = x + 1
                     return ret
 
