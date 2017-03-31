@@ -14,6 +14,6 @@ def execute(args):
     image_filename_to_save = args[5]
     im = grab_image_pos_from_file(
         image_source,
-        settings[image_platform]['TABLE_SCANNER'][image_tabletype][image_pos],
-        settings[image_platform]['TABLE_SCANNER'][image_tabletype][image_size])
+        settings['PLATFORMS'][image_platform]['TABLE_SCANNER'][image_tabletype][image_pos],
+        settings['PLATFORMS'][image_platform]['TABLE_SCANNER'][image_tabletype][image_size])
     im.save(image_filename_to_save)
