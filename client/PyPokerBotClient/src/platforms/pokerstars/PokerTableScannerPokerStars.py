@@ -111,10 +111,10 @@ class PokerTableScannerPokerStars(PokerTableScanner):
         return self.flop_has_card_histogram[index]
 
     def get_flop_has_card_threshold(self):
-        if self.flop_has_card_histogram is None:
-            self.flop_has_card_histogram = \
+        if self.flop_has_card_threshold is None:
+            self.flop_has_card_threshold = \
                 settings['PLATFORMS'][self.Platform]['TABLE_SCANNER'][self.TableType]['PLAY_HASCARD_THRESHOLD']
-        return self.flop_has_card_histogram
+        return self.flop_has_card_threshold
 
     def check_if_flop_pos_is_empty(self, Image, index):
         template_flop_empty_cv2_hist = self.get_flop_hascard_histogram(index)
@@ -145,8 +145,8 @@ class PokerTableScannerPokerStars(PokerTableScanner):
 
     def analyse_flop_template(self, Image):
         ret = self.create_list_string_with_number_seats()
-        for index in range(self.NumberOfSeats):
-            if not self.check_if_flop_pos_is_empty(Image, index):
+        for index in range(5):
+            if self.check_if_flop_pos_is_empty(Image, index):
                 return ret
             selected_card = ''
             selected_card_res = 1000000000
@@ -389,7 +389,6 @@ class PokerTableScannerPokerStars(PokerTableScanner):
                 return_from_tesseract = return_from_tesseract.replace('$11','$0.')
                 if len(return_from_tesseract) == 0:
                     break
-                logging.debug(return_from_tesseract)
                 if not (('$' in return_from_tesseract) and ('.' in return_from_tesseract)):
                     continue
                 os.remove(command_image_name)

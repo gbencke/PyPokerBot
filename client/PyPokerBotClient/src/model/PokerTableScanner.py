@@ -84,7 +84,6 @@ class PokerTableScanner:
                 continued_green += 1
             else:
                 continued_green = 0
-            logging.debug("({}) white:{} green:{},{}".format(w, white, green, continued_green))
             offset += 1
             if continued_green >= 4:
                 return offset-3, selected_image.width - 1, 1
