@@ -1,6 +1,7 @@
 import importlib
-from settings import settings
 import pprint
+import logging
+from settings import settings
 from osinterface.win32.screenshot import grab_image_from_file
 
 
@@ -24,4 +25,4 @@ def execute(args):
     im = grab_image_from_file(image_name)
     result = table_scanner.analyze_from_image(im)
     result = table_strategy.run_strategy(result)
-    pprint.PrettyPrinter().pprint(result)
+    logging.debug(pprint.pformat(result))
