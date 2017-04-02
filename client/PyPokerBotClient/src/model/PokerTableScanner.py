@@ -88,3 +88,8 @@ class PokerTableScanner:
             if continued_green >= 4:
                 return offset-3, selected_image.width - 1, 1
         return 0
+
+    @staticmethod
+    def generate_analisys_summary(message):
+        for x in message.split('\n'):
+            logging.debug(x)
