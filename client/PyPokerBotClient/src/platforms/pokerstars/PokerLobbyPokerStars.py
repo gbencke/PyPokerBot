@@ -46,10 +46,19 @@ class PokerLobbyPokerStars(PokerLobby):
     def get_tables(self):
         return self.tables
 
+    def get_table_bb(self, title):
+        str = self.get_table_stakes(title).replace(' USD', '').replace('$', '').strip()
+        return float(str.split('/')[1])
+
+    def get_table_sb(self,  title):
+        str = self.get_table_stakes(title).replace(' USD', '').replace('$', '').strip()
+        return float(str.split('/')[0])
+
     def scan_for_tables(self, hwnd_to_scan, scanner, strategy, lobby):
         return [PokerTable(x['hwnd'], PokerLobbyPokerStars.get_table_name(x['title']),
                            PokerLobbyPokerStars.get_table_stakes(x['title']),
                            PokerLobbyPokerStars.get_table_format(x['title']),
-                           scanner(), strategy(), lobby)
+                           scanner('6-SEATS', 6, self.get_table_bb(x['title']), self.get_table_sb(x['title'])),
+                           strategy(), lobby)
                 for x in hwnd_to_scan if
                 PokerLobbyPokerStars.is_pokerstars_table(x['class'], x['title'])]

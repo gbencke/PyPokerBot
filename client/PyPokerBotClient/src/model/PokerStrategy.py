@@ -4,7 +4,7 @@ class PokerStrategy:
 
     def has_command_to_execute(self, analisys):
         return not (
-            analisys['commands'][0] == '' and analisys['commands'][1] == '' and analisys['commands'][2] == '')
+            analisys['commands'][0][0] == '' and analisys['commands'][1][0] == '' and analisys['commands'][2][0] == '')
 
 
     def verify_check_command(self, analisys):

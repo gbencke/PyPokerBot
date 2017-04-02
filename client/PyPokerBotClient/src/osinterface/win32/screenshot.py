@@ -1,3 +1,4 @@
+from time import sleep
 import logging
 import win32gui
 from PIL import Image
@@ -88,20 +89,21 @@ def grab_screen(bbox=None):
 
 
 def capture_screenshot(hwnd, file_to_save, should_save = True):
-    logging.debug("Capturing {} to {}".format(hwnd, file_to_save))
-    try:
-        win32gui.SetForegroundWindow(hwnd)
-        win32gui.MoveWindow(hwnd, 0, 0, 1042, 745, True)
-        rect = win32gui.GetWindowRect(hwnd)
-        im = grab_screen()
-        im = im.crop((rect[0], rect[1], rect[2], rect[3]))
-        im = im.resize((int(1303), int(931)), Image.ANTIALIAS)
-        if should_save:
-            im.save(file_to_save)
+    while True:
+        try:
+            if not hwnd == win32gui.GetForegroundWindow():
+                win32gui.SetForegroundWindow(hwnd)
+            win32gui.MoveWindow(hwnd, 0, 0, 1042, 745, True)
+            rect = win32gui.GetWindowRect(hwnd)
+            im = grab_screen()
+            im = im.crop((rect[0], rect[1], rect[2], rect[3]))
+            im = im.resize((int(1303), int(931)), Image.ANTIALIAS)
+            if should_save:
+                im.save(file_to_save)
+        except Exception as e:
+            sleep(0.2)
+            continue
         return im
-    except Exception as e:
-        logging.debug('Error:' + str(e))
-        return None
 
 
 def grab_image_from_file(image):
