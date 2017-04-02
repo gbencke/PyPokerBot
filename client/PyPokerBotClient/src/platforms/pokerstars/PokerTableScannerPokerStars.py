@@ -257,7 +257,6 @@ class PokerTableScannerPokerStars(PokerTableScanner):
             value = float(value) / self.BB
         return (command, value, str)
 
-
     def analyse_commands(self, im):
         ret = ['', '', '']
 
@@ -296,19 +295,25 @@ class PokerTableScannerPokerStars(PokerTableScanner):
                 ret[x] = self.generate_command_tuple(return_from_tesseract.replace('\r\n', ' ').replace('  ', ' '))
                 os.remove(command_image_name)
                 sleep(0.2)
+            else:
+                ret[x] = ('', 0, '')
         return ret
 
     def analyse_hand_phase(self, analisys):
-        return 'PREFLOP' if len(self.get_flop_cards(analisys)) == 0 else 'FLOP'
+        number_cards_on_flop = len(self.get_flop_cards(analisys)) / 2
+        if number_cards_on_flop == 0:
+            return 'PREFLOP'
+        else:
+            return 'FLOP{}'.format(number_cards_on_flop)
 
     def get_flop_cards(self, analisys):
         return "".join([analisys['flop'][x] for x in range(self.FlopSize)])
 
     def send_hands_to_server(self, pocket_cards, flop_cards):
         command_to_send = '{} {}'.format(pocket_cards + ':XX', flop_cards)
-        logging.debug('Sent to server:' + command_to_send[:30])
+        #logging.debug('Sent to server:' + command_to_send[:30])
         r = requests.post(settings['STRATEGIES']['SIMPLE']['CALCULATE_URL'], json={"command": command_to_send})
-        logging.debug('Received from server:' + str(r.content)[:30])
+        #logging.debug('Received from server:' + str(r.content)[:30])
         if r.status_code == 200:
             return command_to_send, ast.literal_eval(r.content)
         else:
@@ -347,10 +352,17 @@ class PokerTableScannerPokerStars(PokerTableScanner):
         ret = float(ret) / self.BB
         return ret, returned_string
 
-    def check_if_bet_is_present(self,index, im):
+    def check_if_bet_is_present(self, index, im):
         player_has_bet_histogram = get_histogram_from_image(grab_image_pos_from_image(im,
-            settings['PLATFORMS'][self.Platform]['TABLE_SCANNER'][self.TableType]['BET{}'.format(index + 1)],
-            settings['PLATFORMS'][self.Platform]['TABLE_SCANNER'][self.TableType]['BET_SIZE']))
+                                                                                      settings['PLATFORMS'][
+                                                                                          self.Platform][
+                                                                                          'TABLE_SCANNER'][
+                                                                                          self.TableType][
+                                                                                          'BET{}'.format(index + 1)],
+                                                                                      settings['PLATFORMS'][
+                                                                                          self.Platform][
+                                                                                          'TABLE_SCANNER'][
+                                                                                          self.TableType]['BET_SIZE']))
         nobet_histogram = get_histogram_from_image(grab_image_from_file(
             settings['PLATFORMS'][self.Platform]['TABLE_SCANNER'][self.TableType]['NOBET_TEMPLATE']))
         res = cv2.compareHist(player_has_bet_histogram, nobet_histogram, 0)
@@ -362,7 +374,7 @@ class PokerTableScannerPokerStars(PokerTableScanner):
     def analyse_bets(self, im):
         returned_list = self.create_list_none_with_number_seats()
         for x in range(self.NumberOfSeats):
-            if not self.check_if_bet_is_present(x,im):
+            if not self.check_if_bet_is_present(x, im):
                 continue
             im_command = grab_image_pos_from_image(
                 im,
@@ -387,7 +399,7 @@ class PokerTableScannerPokerStars(PokerTableScanner):
                 im_command.save(command_image_name)
                 return_from_tesseract = subprocess.check_output(['tesseract', command_image_name, 'stdout'],
                                                                 shell=False)
-                return_from_tesseract = return_from_tesseract.replace('$11','$0.')
+                return_from_tesseract = return_from_tesseract.replace('$11', '$0.')
                 if len(return_from_tesseract) == 0:
                     break
                 if not (('$' in return_from_tesseract) and ('.' in return_from_tesseract)):
@@ -418,8 +430,8 @@ class PokerTableScannerPokerStars(PokerTableScanner):
 
         }
         pot, pot_str = self.analyse_pot(im)
-        result['pot'] = (pot, pot_str)
-        result['bet'] = self.analyse_bets(im)
+        # result['pot'] = (pot, pot_str)
+        # result['bet'] = self.analyse_bets(im)
         result['hero'] = self.analyse_hero(im, result['cards'], result['nocards'], result['button'])
         result['commands'] = self.analyse_commands(im)
         result['hand_analisys'] = self.analyse_hand(result)
