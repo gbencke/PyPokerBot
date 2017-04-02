@@ -165,15 +165,38 @@ class PokerTableScannerPokerStars(PokerTableScanner):
             ret[index] = selected_card
         return ret
 
-    def get_hero_position(self, hero_pos, cards, button):
-        if button[hero_pos]:
+    def get_absoulute_hero_pos(self, hero_pos, button):
+        distance = 0
+        current_pos_analysed = hero_pos
+        while True:
+            distance += 1
+            if current_pos_analysed == self.NumberOfSeats:
+                current_pos_analysed = 0
+            if button[current_pos_analysed]:
+                break
+            current_pos_analysed += 1
+        if distance == 0:
             return 'BUTTON'
-        current_pos_analysed = hero_pos + 1
+        if distance == 1:
+            return 'EP'
+        if distance == 2:
+            return 'MP'
+        if distance == 3:
+            return 'MP'
+        if distance == 4:
+            return 'BB'
+        if distance == 5:
+            return 'SB'
+
+    def get_hero_position(self, hero_pos, cards, button):
+        if button[hero_pos-1]:
+            return 'BUTTON'
+        current_pos_analysed = hero_pos
         while True:
             if current_pos_analysed == self.NumberOfSeats:
-                current_pos_analysed = 1
+                current_pos_analysed = 0
             if cards[current_pos_analysed]:
-                return ''
+                return self.get_absoulute_hero_pos(hero_pos, button)
             if button[current_pos_analysed]:
                 return 'BUTTON'
             current_pos_analysed += 1
@@ -311,9 +334,9 @@ class PokerTableScannerPokerStars(PokerTableScanner):
 
     def send_hands_to_server(self, pocket_cards, flop_cards):
         command_to_send = '{} {}'.format(pocket_cards + ':XX', flop_cards)
-        #logging.debug('Sent to server:' + command_to_send[:30])
+        # logging.debug('Sent to server:' + command_to_send[:30])
         r = requests.post(settings['STRATEGIES']['SIMPLE']['CALCULATE_URL'], json={"command": command_to_send})
-        #logging.debug('Received from server:' + str(r.content)[:30])
+        # logging.debug('Received from server:' + str(r.content)[:30])
         if r.status_code == 200:
             return command_to_send, ast.literal_eval(r.content)
         else:
@@ -429,7 +452,7 @@ class PokerTableScannerPokerStars(PokerTableScanner):
             'flop': self.analyse_flop_template(im),
 
         }
-        pot, pot_str = self.analyse_pot(im)
+        # pot, pot_str = self.analyse_pot(im)
         # result['pot'] = (pot, pot_str)
         # result['bet'] = self.analyse_bets(im)
         result['hero'] = self.analyse_hero(im, result['cards'], result['nocards'], result['button'])
