@@ -29,15 +29,16 @@ def execute(args):
                                                          current_table.get_screenshot_name()))
                     result = current_table.refresh_from_image(im)
                     result = current_table.generate_decision(result)
-                    if True or current_table.has_command_to_execute(result):
+                    if current_table.has_command_to_execute(result):
                         final_analisys = ''
                         final_analisys += '==========================================================\n'
                         final_analisys += '==========================================================\n'
-                        if current_table.has_command_to_execute(result):
-                            final_analisys += 'Command           :{}\n'.format(
-                                result['commands'][result['command']['to_execute'] - 1])
-                            final_analisys += 'Decision          :{}\n'.format(result['decision']['decision'])
-                            final_analisys += 'Equity            :{}'.format(result['hand_analisys']['result'])
+                        final_analisys += 'Command           :{}\n'.format(
+                            result['commands'][result['command']['to_execute'] - 1])
+                        final_analisys += 'Decision          :{}({})\n'.format(
+                            result['decision']['decision'],
+                            result['decision']['raise_strategy'])
+                        final_analisys += 'Equity            :{}'.format(result['hand_analisys']['result'])
                         final_analisys += '----------------------------------------------------------\n'
                         final_analisys += 'Number of Villains:{}\n'.format(len([x for x in result['cards'] if x]))
                         final_analisys += 'Flop              :{}\n'.format("".join(result['flop']))

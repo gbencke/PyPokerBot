@@ -333,7 +333,7 @@ class PokerTableScannerPokerStars(PokerTableScanner):
         return "".join([analisys['flop'][x] for x in range(self.FlopSize)])
 
     def send_hands_to_server(self, pocket_cards, flop_cards):
-        command_to_send = '{} {}'.format(pocket_cards + ':XX', flop_cards)
+        command_to_send = '{} {}'.format(pocket_cards, flop_cards)
         # logging.debug('Sent to server:' + command_to_send[:30])
         r = requests.post(settings['STRATEGIES']['SIMPLE']['CALCULATE_URL'], json={"command": command_to_send})
         # logging.debug('Received from server:' + str(r.content)[:30])
@@ -348,7 +348,12 @@ class PokerTableScannerPokerStars(PokerTableScanner):
             return ret
         flop_cards = self.get_flop_cards(analisys)
         ret['hand_phase'] = self.analyse_hand_phase(analisys)
-        command, result = self.send_hands_to_server(analisys['hero']['hero_cards'], flop_cards)
+        if ret['hand_phase'] == 'PREFLOP':
+            pocket_cards_to_server = analisys['hero']['hero_cards'] + ":XX"
+        else:
+            total_villains = len([x for x in analisys['cards'] if x == True])
+            pocket_cards_to_server = analisys['hero']['hero_cards'] + ":" + ":".join(['XX'] * total_villains)
+        command, result = self.send_hands_to_server(pocket_cards_to_server, flop_cards)
         ret['result'] = result
         return ret
 

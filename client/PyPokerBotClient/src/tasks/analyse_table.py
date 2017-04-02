@@ -27,7 +27,8 @@ def execute(args):
     final_analisys = ''
     final_analisys += '====================================\n'
     final_analisys += 'Command           :{}\n'.format(result['commands'][result['command']['to_execute'] - 1])
-    final_analisys += 'Decision          :{}\n'.format(result['decision']['decision'])
+    final_analisys += 'Decision          :{}({})\n'.format(result['decision']['decision'],
+                                                           result['decision']['raise_strategy'])
     final_analisys += '------------------------------------\n'
     final_analisys += 'Number of Villains:{}\n'.format(len([x for x in result['cards'] if x]))
     final_analisys += 'Flop              :{}\n'.format("".join(result['flop']))
@@ -35,6 +36,3 @@ def execute(args):
     final_analisys += 'Position          :{}\n'.format(result['hero']['position'])
     final_analisys += 'Equity            :{}'.format(result['hand_analisys']['result'])
     PokerTableScanner.generate_analisys_summary(final_analisys)
-
-
-
