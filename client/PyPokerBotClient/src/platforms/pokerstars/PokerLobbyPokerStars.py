@@ -46,12 +46,15 @@ class PokerLobbyPokerStars(PokerLobby):
     def get_tables(self):
         return self.tables
 
+    def sanitize_string(self, str):
+        return str.replace(' USD', '').replace('$', '').replace('Play Money', '').strip()
+
     def get_table_bb(self, title):
-        str = self.get_table_stakes(title).replace(' USD', '').replace('$', '').strip()
+        str = self.get_table_stakes(self.sanitize_string(title))
         return float(str.split('/')[1])
 
-    def get_table_sb(self,  title):
-        str = self.get_table_stakes(title).replace(' USD', '').replace('$', '').strip()
+    def get_table_sb(self, title):
+        str = self.get_table_stakes(self.sanitize_string(title))
         return float(str.split('/')[0])
 
     def scan_for_tables(self, hwnd_to_scan, scanner, strategy, lobby):
