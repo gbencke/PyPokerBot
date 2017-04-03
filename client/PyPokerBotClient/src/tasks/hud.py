@@ -13,6 +13,7 @@ def get_time_to_sleep():
 
 
 def execute(args):
+    logging.info("Starting HUD....")
     analisys = ''
     while True:
         try:
@@ -36,7 +37,7 @@ def execute(args):
                         final_analisys += 'Decision          :{}({})\n'.format(
                             result['decision']['decision'],
                             result['decision']['raise_strategy'])
-                        final_analisys += 'Equity            :{}\n'.format(result['hand_analisys']['result'])
+                        final_analisys += 'Equity            :{}\n'.format(int(result['hand_analisys']['result'][0][1]*100))
                         final_analisys += '----------------------------------------------------------\n'
                         final_analisys += 'Number of Villains:{}\n'.format(len([x for x in result['cards'] if x]))
                         final_analisys += 'Flop              :{}\n'.format("".join(result['flop']))
