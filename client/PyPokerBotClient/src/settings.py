@@ -1,5 +1,5 @@
 settings = {
-    "LOG_LEVEL": "DEBUG",
+    "LOG_LEVEL": "INFO",
     "LOG_FORMAT": "%(asctime)-15s %(message)s",
     "LOG_LOCATION": "Z:\\Shared\\test\\logs",
     "SAMPLES_FOLDER": "Z:\\Shared\\test\\images",

@@ -33,12 +33,10 @@ def execute(args):
                         final_analisys = ''
                         final_analisys += '==========================================================\n'
                         final_analisys += '==========================================================\n'
-                        final_analisys += 'Command           :{}\n'.format(
-                            result['commands'][result['command']['to_execute'] - 1])
                         final_analisys += 'Decision          :{}({})\n'.format(
                             result['decision']['decision'],
                             result['decision']['raise_strategy'])
-                        final_analisys += 'Equity            :{}'.format(result['hand_analisys']['result'])
+                        final_analisys += 'Equity            :{}\n'.format(result['hand_analisys']['result'])
                         final_analisys += '----------------------------------------------------------\n'
                         final_analisys += 'Number of Villains:{}\n'.format(len([x for x in result['cards'] if x]))
                         final_analisys += 'Flop              :{}\n'.format("".join(result['flop']))
@@ -47,19 +45,18 @@ def execute(args):
                         if final_analisys == analisys:
                             continue
                         analisys = final_analisys
-                        PokerTableScanner.generate_analisys_summary(final_analisys.strip())
+                        PokerTableScanner.generate_analisys_summary_info(final_analisys.strip())
                         im.save(os.path.join(settings['SAMPLES_FOLDER'], current_table.get_screenshot_name()))
             if len(lobbies) == 0:
-                logging.debug('No Lobbies, sleeping 1 sec')
-                sleep(1)
-                continue
+                logging.error('No Lobbies, exiting...')
+                exit(0)
             else:
                 if len(lobbies[0].get_tables()) == 0:
-                    logging.debug('No Tables, sleeping 1 sec')
+                    logging.error('No Tables, sleeping 1 sec')
                     sleep(1)
                     continue
         except Exception as e:
-            logging.debug('error:' + str(e))
+            logging.error('error:' + str(e))
 
 
 
