@@ -166,6 +166,8 @@ class PokerTableScannerPokerStars(PokerTableScanner):
         return ret
 
     def get_absoulute_hero_pos(self, hero_pos, button):
+        if len([x for x in button if x == True]) == 0:
+            return 'MP'
         distance = 0
         current_pos_analysed = hero_pos
         while True:
@@ -189,13 +191,15 @@ class PokerTableScannerPokerStars(PokerTableScanner):
             return 'SB'
 
     def get_hero_position(self, hero_pos, cards, button):
-        if button[hero_pos-1]:
+        loop_total = 0
+        if button[hero_pos - 1]:
             return 'BUTTON'
         current_pos_analysed = hero_pos
         while True:
+            loop_total += 1
             if current_pos_analysed == self.NumberOfSeats:
                 current_pos_analysed = 0
-            if cards[current_pos_analysed]:
+            if cards[current_pos_analysed] or loop_total > 3:
                 return self.get_absoulute_hero_pos(hero_pos, button)
             if button[current_pos_analysed]:
                 return 'BUTTON'
