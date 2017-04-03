@@ -90,6 +90,11 @@ class PokerTableScanner:
         return 0
 
     @staticmethod
-    def generate_analisys_summary(message):
+    def generate_analisys_summary_debug(message):
         for x in message.split('\n'):
             logging.debug(x)
+
+    @staticmethod
+    def generate_analisys_summary_info(message):
+        for x in message.split('\n'):
+            logging.info(x)
