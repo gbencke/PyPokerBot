@@ -356,7 +356,10 @@ class PokerTableScannerPokerStars(PokerTableScanner):
             pocket_cards_to_server = analisys['hero']['hero_cards'] + ":XX"
         else:
             total_villains = len([x for x in analisys['cards'] if x == True])
+            # We don't have performance for more than 2 villains so...
+            total_villains = 2 if total_villains > 2 else total_villains
             pocket_cards_to_server = analisys['hero']['hero_cards'] + ":" + ":".join(['XX'] * total_villains)
+
         command, result = self.send_hands_to_server(pocket_cards_to_server, flop_cards)
         ret['result'] = result
         return ret
