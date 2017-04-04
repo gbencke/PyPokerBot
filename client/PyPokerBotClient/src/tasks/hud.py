@@ -14,6 +14,8 @@ def get_time_to_sleep():
 
 def execute(args):
     logging.info("Starting HUD....")
+    if len(args) > 0:
+        sleep(int(args[0]))
     analisys = ''
     while True:
         try:
