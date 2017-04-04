@@ -23,4 +23,4 @@ class PokerTable:
         return self.strategy.run_strategy(analisys)
 
     def has_command_to_execute(self, analisys):
-        return self.strategy.has_command_to_execute(analisys)
+        return self.scanner.has_command_to_execute(analisys)

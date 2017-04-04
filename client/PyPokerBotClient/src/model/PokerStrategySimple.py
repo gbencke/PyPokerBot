@@ -1,6 +1,7 @@
 import logging
 from settings import settings
 from model.PokerStrategy import PokerStrategy
+from model.PokerTableScanner import has_command_to_execute
 
 
 class PokerStrategySimple(PokerStrategy):
@@ -10,7 +11,7 @@ class PokerStrategySimple(PokerStrategy):
     def generate_command(self, analisys):
         ret = {'to_execute': 0}
 
-        if not self.has_command_to_execute(analisys):
+        if not has_command_to_execute(analisys):
             return ret
         number_of_commands = len(analisys['commands'])
 
@@ -61,10 +62,10 @@ class PokerStrategySimple(PokerStrategy):
         return len([x for x in analisys['commands'] if x[0] == 'CHECK']) > 0
 
     def position_button(self, analisys):
-        return analisys['hero']['position'] == 'BUTTON' or analisys['hero']['position'] == 'EP'
+        return analisys['hero']['position'] == 'BUTTON' or analisys['hero']['position'] == 'LP'
 
     def position_out_position(self, analisys):
-        return not ((analisys['hero']['position'] == 'BUTTON') or (analisys['hero']['position'] == 'EP'))
+        return not ((analisys['hero']['position'] == 'BUTTON') or (analisys['hero']['position'] == 'LP'))
 
     def position_bb_check(self, analisys):
         return analisys['hero']['position'] == 'BB' and self.is_check_button_available(analisys)
@@ -186,7 +187,7 @@ class PokerStrategySimple(PokerStrategy):
         return {'decision': 'FOLD OR CHECK', 'raise_strategy': '0'}
 
     def run_strategy(self, result):
-        if self.has_command_to_execute(result):
+        if has_command_to_execute(result):
             result['decision'] = self.generate_decision(result)
             result['command'] = self.generate_command(result)
         return result
