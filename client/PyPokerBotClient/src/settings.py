@@ -69,6 +69,9 @@ settings = {
                     "COMMAND_TEST_TEMPLATE2": "..\..\data\\template\COMMAND_TEST_TEMPLATE2.jpg",
                     "COMMAND_TEST_TEMPLATE3": "..\..\data\\template\COMMAND_TEST_TEMPLATE3.jpg",
 
+                    "CHECK_TEMPLATE" : "..\..\data\\template\CHECK_TEMPLATE.jpg",
+                    "FOLD_TEMPLATE" : "..\..\data\\template\FOLD_TEMPLATE.jpg",
+
                     "SET_RAISE_TO_POT": (1100, 750),
 
                     "POT": (590, 300),

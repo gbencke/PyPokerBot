@@ -10,7 +10,7 @@ import re
 from time import sleep
 from datetime import datetime
 from settings import settings
-from model.PokerTableScanner import PokerTableScanner
+from model.PokerTableScanner import PokerTableScanner, has_command_to_execute
 from platforms.utils import get_histogram_from_image
 from osinterface.win32.screenshot import grab_image_from_file, grab_image_pos_from_image
 from custom_exceptions.NeedToSpecifySeatsException import NeedToSpecifySeatsException
@@ -180,7 +180,7 @@ class PokerTableScannerPokerStars(PokerTableScanner):
         if distance == 0:
             return 'BUTTON'
         if distance == 1:
-            return 'EP'
+            return 'LP'
         if distance == 2:
             return 'MP'
         if distance == 3:
@@ -284,6 +284,29 @@ class PokerTableScannerPokerStars(PokerTableScanner):
             value = float(value) / self.BB
         return (command, value, str)
 
+    def check_for_button_template(self, im, template, pos):
+        template_has_command_cv2_hist = \
+            get_histogram_from_image(
+                grab_image_from_file(
+                    settings['PLATFORMS'][self.Platform]['TABLE_SCANNER'][self.TableType] \
+                        ['{}_TEMPLATE'.format(template)]))
+
+        has_command_cv2_hist = \
+            get_histogram_from_image(grab_image_pos_from_image(
+                im,
+                settings['PLATFORMS'][self.Platform]['TABLE_SCANNER'][self.TableType] \
+                    ['COMMAND_POS{}'.format(pos + 1)],
+                settings['PLATFORMS'][self.Platform]['TABLE_SCANNER'][self.TableType]['COMMAND_TEST_SIZE']))
+        res = cv2.compareHist(template_has_command_cv2_hist, has_command_cv2_hist, 0)
+        if res > settings['PLATFORMS'][self.Platform]['TABLE_SCANNER'][self.TableType]['COMMAND_TEST_TOLERANCE']:
+            return True, (template, 0, template)
+
+    def check_for_check_button(self, im):
+        return self.check_for_button_template(im, 'CHECK', 1)
+
+    def check_for_fold_button(self, im):
+        return self.check_for_button_template(im, 'FOLD', 0)
+
     def analyse_commands(self, im):
         ret = ['', '', '']
 
@@ -304,6 +327,12 @@ class PokerTableScannerPokerStars(PokerTableScanner):
                     settings['PLATFORMS'][self.Platform]['TABLE_SCANNER'][self.TableType]['COMMAND_TEST_SIZE']))
             res = cv2.compareHist(template_has_command_cv2_hist, has_command_cv2_hist, 0)
             if res > settings['PLATFORMS'][self.Platform]['TABLE_SCANNER'][self.TableType]['COMMAND_TEST_TOLERANCE']:
+
+                if x == 0:
+                    result, ret[x] = self.check_for_fold_button(im)
+                    if result:
+                        continue
+
                 im_command = grab_image_pos_from_image(
                     im,
                     settings['PLATFORMS'][self.Platform]['TABLE_SCANNER'][self.TableType][
@@ -313,7 +342,7 @@ class PokerTableScannerPokerStars(PokerTableScanner):
                 command_image_name = 'command{}.jpg'.format(current_command)
                 im_command.save(command_image_name)
                 return_from_tesseract = subprocess.check_output(['tesseract', command_image_name, 'stdout'],
-                                                                shell=False)
+                                                                shell=True)
                 if len(return_from_tesseract.strip()) == 0:
                     error_filename = command_image_name + '.error.' + datetime.now().strftime(
                         "%Y%m%d%H%M%S.%f") + '.jpg'
@@ -456,18 +485,17 @@ class PokerTableScannerPokerStars(PokerTableScanner):
             raise NeedToSpecifySeatsException('You need to specify the number of seats prior to start analisys')
         if self.TableType is None:
             raise NeedToSpecifyTableTypeException('You need to specify the table type prior to start analisys')
-        result = {
-            'seats': self.NumberOfSeats,
-            'cards': self.analyse_players_with_cards(im),
-            'nocards': self.analyse_players_without_cards(im),
-            'button': self.analyse_button(im),
-            'flop': self.analyse_flop_template(im),
-
-        }
-        # pot, pot_str = self.analyse_pot(im)
-        # result['pot'] = (pot, pot_str)
-        # result['bet'] = self.analyse_bets(im)
-        result['hero'] = self.analyse_hero(im, result['cards'], result['nocards'], result['button'])
+        result = {}
         result['commands'] = self.analyse_commands(im)
-        result['hand_analisys'] = self.analyse_hand(result)
+        if has_command_to_execute(result):
+            result['seats'] = self.NumberOfSeats
+            result['cards'] = self.analyse_players_with_cards(im)
+            result['nocards'] = self.analyse_players_without_cards(im)
+            result['button'] = self.analyse_button(im)
+            result['flop'] = self.analyse_flop_template(im)
+            # pot, pot_str = self.analyse_pot(im)
+            # result['pot'] = (pot, pot_str)
+            # result['bet'] = self.analyse_bets(im)
+            result['hero'] = self.analyse_hero(im, result['cards'], result['nocards'], result['button'])
+            result['hand_analisys'] = self.analyse_hand(result)
         return result
