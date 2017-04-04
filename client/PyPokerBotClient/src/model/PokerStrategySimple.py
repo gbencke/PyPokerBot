@@ -174,6 +174,8 @@ class PokerStrategySimple(PokerStrategy):
     def generate_decision(self, analisys):
         decision = self.generate_pre_decision(analisys)
         current_call_value = self.get_current_call_value(analisys)
+        if current_call_value == '':
+            current_call_value = 0
         if decision[0] == 'RAISE OR CALL':
             if current_call_value > decision[1]:
                 return {'decision': 'CALL', 'raise_strategy': '0'}
