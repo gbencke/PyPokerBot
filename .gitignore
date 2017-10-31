@@ -15,6 +15,4 @@ client/data/*.jpg
 client/data/samples/*.jpg
 logs/
 *.Table.txt
-
-
-
+tags
