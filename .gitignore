@@ -16,3 +16,4 @@ client/data/samples/*.jpg
 logs/
 *.Table.txt
 tags
+env/
