@@ -1,0 +1,6 @@
+[submodule "server/pbots_calc"]
+	path = server/pbots_calc
+	url = https://github.com/mitpokerbots/pbots_calc.git
+[submodule "server/poker-eval"]
+	path = server/poker-eval
+	url = https://github.com/v2k/poker-eval.git
