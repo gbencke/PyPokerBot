@@ -1,1 +1,1 @@
-./server/PyPokerServer/src/server.sh
+./server/server.sh
