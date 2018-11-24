@@ -9,7 +9,6 @@ numpy==1.15.4
 olefile==0.44
 packaging==16.8
 Pillow==4.0.0
-PyAutoGUI==0.9.35
 PyMsgBox==1.0.6
 pyparsing==2.2.0
 pyscreenshot==0.4.2
