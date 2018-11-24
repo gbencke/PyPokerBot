@@ -5,7 +5,7 @@ then echo "Please run as root"
         exit
 fi
 
-cd src
+cd server/src
 export FLASK_APP=server.py
 export FLASK_DEBUG=1
 flask run --host=0.0.0.0
