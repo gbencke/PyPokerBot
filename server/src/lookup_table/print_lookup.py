@@ -1,5 +1,5 @@
 import pprint
-import helpers.LookupTable as LT
+import ..helpers.LookupTable as LT
 
 
 lookup = LT.LookupTable()
