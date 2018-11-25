@@ -1,8 +1,12 @@
+import sys
 from flask import Flask, request
-from .calculator.pbots_calc import pbots_calc
+
+sys.path.insert(0, ".")
+
+from calculator.pbots_calc import calc
 from helpers.RangeHelper import RangeHelper
 from helpers.LookupTable import LookupTable
-from .lookup_table.lookup_table import lookup_table
+from lookup_table.lookup_table import lookup_table
 
 app = Flask(__name__)
 lookup_table_utils = LookupTable()
@@ -34,15 +38,17 @@ def calculator():
         dead = ''
     if board == "":
         start_cards = normalize_cards(tokens)
-        for x in lookup_table.lookup_table.keys():
-            print(str(lookup_table.lookup_table[x])[:80])
+        for x in lookup_table.keys():
+            print(str(lookup_table[x])[:80])
             card_found = filter(lambda card: card['cards'] == start_cards,
-                                lookup_table.lookup_table[x])
+                                lookup_table[x])
             print(card_found)
             if len(card_found) > 0:
+                print("Found {} in lookup_table".format(start_cards))
                 return str([(start_cards, card_found[0]['equity'])])
         print("{} not found in lookup_tables".format(start_cards))
     print("{} {} {} will be calculated".format(start_cards, board, dead))
-    r = pbots_calc.calc(start_cards, board, dead, 1000000)
+    r = calc(start_cards, board, dead, 1000000)
     if r:
+        print("{} calculated equity:{}".format(start_cards, str(r)))
         return str(zip(r.hands, r.ev))

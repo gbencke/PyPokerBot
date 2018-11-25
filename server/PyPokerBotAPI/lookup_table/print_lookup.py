@@ -1,5 +1,9 @@
 import pprint
-from ..helpers.LookupTable import LookupTable
+import sys
+
+sys.path.insert(0,"..")
+
+from helpers.LookupTable import LookupTable
 
 
 lookup = LookupTable()

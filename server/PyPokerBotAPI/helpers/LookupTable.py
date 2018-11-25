@@ -1,6 +1,6 @@
 import sys
 import pprint
-import pbots_calc
+from calculator.pbots_calc import calc
 
 class LookupTable:
 
@@ -61,7 +61,7 @@ class LookupTable:
                         sys.stdout.flush()
                         ret[current_cards] = \
                             { "cards" : current_cards + ":" + villains, 
-                              "equity": pbots_calc.calc(current_cards + ":" + villains, "", "", 1000000).ev[0] }
+                              "equity": calc(current_cards + ":" + villains, "", "", 1000000).ev[0] }
         ret_list = [ {'cards': ret[x]['cards'], 'equity': ret[x]['equity']} for x in ret.keys()]
         ret_list = sorted(ret_list, key=lambda k:k['equity'], reverse = True)
         return self.calculate_total_stats(ret_list)
