@@ -1,8 +1,8 @@
 import pprint
-import ..helpers.LookupTable as LT
+from ..helpers.LookupTable import LookupTable
 
 
-lookup = LT.LookupTable()
+lookup = LookupTable()
 
 XX = lookup.create_lookup("XX")
 print('lookup_table = { "XX" : \\')
