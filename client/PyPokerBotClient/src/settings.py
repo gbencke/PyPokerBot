@@ -1,8 +1,8 @@
 settings = {
-    "LOG_LEVEL": "INFO",
+    "LOG_LEVEL": "DEBUG",
     "LOG_FORMAT": "%(asctime)-15s %(message)s",
-    "LOG_LOCATION": "Z:\\Shared\\test\\logs",
-    "SAMPLES_FOLDER": "Z:\\Shared\\test\\images",
+    "LOG_LOCATION": "..\\..\\logs",
+    "SAMPLES_FOLDER": "..\\..\\images",
     "SLEEP_TIME_BETWEEN_CAPTURE_MS": 100,
 
     "PLATFORMS": {

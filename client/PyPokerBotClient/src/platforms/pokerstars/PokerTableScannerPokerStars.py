@@ -480,6 +480,9 @@ class PokerTableScannerPokerStars(PokerTableScanner):
                 break
         return returned_list
 
+    def has_command_to_execute(self, analisys):
+        return has_command_to_execute(analisys)
+
     def analyze_from_image(self, im):
         if self.NumberOfSeats is None:
             raise NeedToSpecifySeatsException('You need to specify the number of seats prior to start analisys')
@@ -487,15 +490,12 @@ class PokerTableScannerPokerStars(PokerTableScanner):
             raise NeedToSpecifyTableTypeException('You need to specify the table type prior to start analisys')
         result = {}
         result['commands'] = self.analyse_commands(im)
+        result['seats'] = self.NumberOfSeats
+        result['cards'] = self.analyse_players_with_cards(im)
+        result['nocards'] = self.analyse_players_without_cards(im)
+        result['button'] = self.analyse_button(im)
+        result['flop'] = self.analyse_flop_template(im)
         if has_command_to_execute(result):
-            result['seats'] = self.NumberOfSeats
-            result['cards'] = self.analyse_players_with_cards(im)
-            result['nocards'] = self.analyse_players_without_cards(im)
-            result['button'] = self.analyse_button(im)
-            result['flop'] = self.analyse_flop_template(im)
-            # pot, pot_str = self.analyse_pot(im)
-            # result['pot'] = (pot, pot_str)
-            # result['bet'] = self.analyse_bets(im)
             result['hero'] = self.analyse_hero(im, result['cards'], result['nocards'], result['button'])
             result['hand_analisys'] = self.analyse_hand(result)
         return result
