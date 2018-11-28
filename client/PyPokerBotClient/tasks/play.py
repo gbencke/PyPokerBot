@@ -12,6 +12,8 @@ def get_time_to_sleep():
 
 
 def execute(args):
+    logging.debug("Starting the Play Task...")
+    res_last = {}
     while True:
         lobbies = PokerBot.scan_for_lobbies()
         for current_lobby in lobbies:
@@ -21,19 +23,22 @@ def execute(args):
                                                      current_table.get_screenshot_name()))
                 res = current_table.refresh_from_image(im)
                 res = current_table.generate_decision(res)
-                if current_table.has_command_to_execute(res):
-                    logging.debug('-------------')
-                    logging.debug('Seats       :' + str(res['seats']))
-                    logging.debug('Cards       :' + str(res['cards']))
-                    logging.debug('Hero        : ' + str(res['hero']))
-                    logging.debug('Flop        : ' + str(res['flop']))
-                    logging.debug('Button      : ' + str(res['button']))
-                    logging.debug('-------------')
-                    logging.debug('Commands    : ' + str(res['commands']))
-                    logging.debug('-------------')
-                    logging.debug('Decision    : ' + str(res['decision']))
-                    logging.debug('Command     : ' + str(res['command']))
-                    logging.debug('-------------')
-                    im.save(os.path.join(settings['SAMPLES_FOLDER'], current_table.get_screenshot_name()))
-                    run_command(current_table.hwnd, res['command']['TO_EXECUTE'], res)
-        sleep(get_time_to_sleep())
+
+                if str(res) != str(res_last):
+                    logging.debug('--------------')
+                    logging.debug('Seats       : {}'.format(str(res['seats'])))
+                    logging.debug('Cards       : {}'.format(str(res['cards'])))
+                    logging.debug('Flop        : {}'.format(str(res['flop'])))
+                    logging.debug('Button      : {}'.format(str(res['button'])))
+                    if 'hero' in res:
+                        logging.debug('Hero        : {}'.format(str(res['hero'])))
+                    logging.debug('--------------')
+                    if current_table.has_command_to_execute(res):
+                        logging.debug('Commands    : {}'.format(str(res['commands'])))
+                        logging.debug('--------------')
+                        logging.debug('Decision    : {}'.format(str(res['decision'])))
+                        logging.debug('Command     : {}'.format(str(res['command'])))
+                        im.save(os.path.join(settings['SAMPLES_FOLDER'], current_table.get_screenshot_name()))
+                        run_command(current_table.hwnd, res['command']['to_execute'], res)
+                res_last = res
+            sleep(get_time_to_sleep())
