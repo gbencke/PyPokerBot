@@ -7,7 +7,7 @@ from datetime import datetime
 from importlib import import_module
 
 from settings import settings
-import tasks
+import PyPokerBotClient.tasks as tasks
 
 
 def general_configuration():
