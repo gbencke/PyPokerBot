@@ -31,7 +31,7 @@ def show_usage():
 
 
 def process_command(args):
-    module_to_import = "tasks." + args[0]
+    module_to_import = "PyPokerBotClient.tasks." + args[0]
     try:
         mod = import_module(module_to_import)
     except ImportError, e:
