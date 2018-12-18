@@ -6,16 +6,16 @@ import pkgutil
 from datetime import datetime
 from importlib import import_module
 
-from settings import settings
+from PyPokerBotClient.settings import GlobalSettings as Settings
 import PyPokerBotClient.tasks as tasks
 
 
 def general_configuration():
     current_path = os.getcwd()
     sys.path.append(current_path)
-    logging.basicConfig(format=settings['LOG_FORMAT'],
-                        level=settings['LOG_LEVEL'],
-                        filename=os.path.join(settings['LOG_LOCATION'],
+    logging.basicConfig(format=Settings.get_log_format(),
+                        level=Settings.get_log_level(),
+                        filename=os.path.join(Settings.get_log_location(),
                                               'log.' + datetime.now().strftime("%Y%m%d%H%M%S.%f") + '.log'))
     logging.getLogger().addHandler(logging.StreamHandler())
 

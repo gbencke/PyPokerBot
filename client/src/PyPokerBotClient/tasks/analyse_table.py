@@ -1,10 +1,7 @@
-import importlib
-from settings import settings
-from osinterface.win32.screenshot import grab_image_from_file
-from model.PokerTableScanner import PokerTableScanner, has_command_to_execute
-
-def get_instance(classname):
-    return getattr(importlib.import_module(classname), classname.split('.')[-1])
+from PyPokerBotClient.utils import get_instance
+from PyPokerBotClient.settings import GlobalSettings as Settings
+from PyPokerBotClient.osinterface.win32.screenshot import grab_image_from_file
+from PyPokerBotClient.model.PokerTableScanner import PokerTableScanner, has_command_to_execute
 
 
 def execute(args):
@@ -14,9 +11,9 @@ def execute(args):
     image_name = args[0]
     image_platform = args[1]
     image_tabletype = args[2]
-    table_scanner_class = get_instance(settings['PLATFORMS'][image_platform]['POKER_TABLE_SCANNER_CLASS'])
-    table_strategy_class = get_instance(settings['PLATFORMS'][image_platform]['POKER_STRATEGY_CLASS'])
-    number_of_seats = (settings['PLATFORMS'][image_platform]['TABLE_SCANNER'][image_tabletype]['NUMBER_OF_SEATS'])
+    table_scanner_class = get_instance(Settings.get_table_scanner_class(image_platform))
+    table_strategy_class = get_instance(Settings.get_table_strategy_class(image_platform))
+    number_of_seats = Settings.get_number_of_seats(image_platform, image_tabletype)
     table_scanner = table_scanner_class(image_tabletype, number_of_seats, 0.02, 0.01)
     table_strategy = table_strategy_class()
 
