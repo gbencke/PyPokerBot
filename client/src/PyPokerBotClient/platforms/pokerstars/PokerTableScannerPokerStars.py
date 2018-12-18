@@ -9,12 +9,12 @@ import requests
 import re
 from time import sleep
 from datetime import datetime
-from settings import settings
-from model.PokerTableScanner import PokerTableScanner, has_command_to_execute
-from platforms.utils import get_histogram_from_image
-from osinterface.win32.screenshot import grab_image_from_file, grab_image_pos_from_image
-from custom_exceptions.NeedToSpecifySeatsException import NeedToSpecifySeatsException
-from custom_exceptions.NeedToSpecifyTableTypeException import NeedToSpecifyTableTypeException
+from PyPokerBotClient.settings import GlobalSettings as Settings
+from PyPokerBotClient.model.PokerTableScanner import PokerTableScanner, has_command_to_execute
+from PyPokerBotClient.platforms.utils import get_histogram_from_image
+from PyPokerBotClient.osinterface.win32.screenshot import grab_image_from_file, grab_image_pos_from_image
+from PyPokerBotClient.custom_exceptions.NeedToSpecifySeatsException import NeedToSpecifySeatsException
+from PyPokerBotClient.custom_exceptions.NeedToSpecifyTableTypeException import NeedToSpecifyTableTypeException
 
 
 class PokerTableScannerPokerStars(PokerTableScanner):
@@ -48,28 +48,24 @@ class PokerTableScannerPokerStars(PokerTableScanner):
     def get_player_hasbutton_histogram(self, index):
         if self.button_template_histogram[index] is None:
             self.button_template_histogram[index] = get_histogram_from_image(
-                grab_image_from_file(
-                    settings['PLATFORMS'][self.Platform]['TABLE_SCANNER']['TEMPLATES_FOLDER'] + \
-                    '\\' + 'BUTTON{}_TEMPLATE'.format(index + 1) + '.jpg'))
+                grab_image_from_file(Settings.get_button_template(self.Platform, index)))
         return self.button_template_histogram[index]
 
     def get_player_hascard_histogram(self):
         if self.player_has_card_histogram is None:
             self.player_has_card_histogram = get_histogram_from_image(
                 grab_image_from_file(
-                    settings['PLATFORMS'][self.Platform]['TABLE_SCANNER']['PLAYERCARD_HAS_UNKNOWN_CARD_TEMPLATE']))
+                    Settings.get_player_has_unknown_card_template(self.Platform)))
         return self.player_has_card_histogram
 
     def get_player_has_card_threshold(self):
         if self.player_has_card_threshold is None:
-            self.player_has_card_threshold = \
-                settings['PLATFORMS'][self.Platform]['TABLE_SCANNER'][self.TableType]['PLAY_HASCARD_THRESHOLD']
+            self.player_has_card_threshold = Settings.get_play_hascard_threshold(self.Platform, self.TableType)
         return self.player_has_card_threshold
 
     def get_player_button_threshold(self):
         if self.player_button_threshold is None:
-            self.player_button_threshold = \
-                settings['PLATFORMS'][self.Platform]['TABLE_SCANNER'][self.TableType]['BUTTON_THRESHOLD']
+            self.player_button_threshold = Settings.get_button_threshold(self.Platform, self.TableType)
         return self.player_button_threshold
 
     def get_player_has_card_in_position_histogram(self, index, Image):
@@ -77,9 +73,8 @@ class PokerTableScannerPokerStars(PokerTableScanner):
             get_histogram_from_image(
                 grab_image_pos_from_image(
                     Image,
-                    settings['PLATFORMS'][self.Platform]['TABLE_SCANNER'][self.TableType][
-                        'PLAYER{}_HASCARD'.format(index + 1)],
-                    settings['PLATFORMS'][self.Platform]['TABLE_SCANNER'][self.TableType]['PLAYERHASCARD_SIZE']))
+                    Settings.get_player_hascard(self.Platform, self.TableType, index),
+                    Settings.get_playerhascard_size(self.Platform, self.TableType)))
 
     def analyse_players_with_cards(self, Image):
         ret = self.create_list_boolean_with_number_seats()
@@ -96,10 +91,10 @@ class PokerTableScannerPokerStars(PokerTableScanner):
             current_seat_cv2_hist = get_histogram_from_image(
                 grab_image_pos_from_image(
                     Image,
-                    settings['PLATFORMS'][self.Platform]['TABLE_SCANNER'][self.TableType]['BUTTON{}'.format(index + 1)],
-                    settings['PLATFORMS'][self.Platform]['TABLE_SCANNER'][self.TableType]['BUTTON_SIZE']))
+                    Settings.get_button_template(self.Platform, self.TableType),
+                    Settings.get_button_size(self.Platform, self.TableType)))
             res = cv2.compareHist(self.get_player_hasbutton_histogram(index), current_seat_cv2_hist, 0)
-            button_threshold = settings['PLATFORMS'][self.Platform]['TABLE_SCANNER'][self.TableType]['BUTTON_THRESHOLD']
+            button_threshold = Settings.get_button_threshold(self.Platform, self.TableType)
             ret[index] = True if res > button_threshold else False
         return ret
 
@@ -107,14 +102,13 @@ class PokerTableScannerPokerStars(PokerTableScanner):
         if self.flop_has_card_histogram[index] is None:
             self.flop_has_card_histogram[index] = get_histogram_from_image(
                 grab_image_from_file(
-                    settings['PLATFORMS'][self.Platform]['TABLE_SCANNER'][self.TableType][
-                        'FLOPCARD_HAS_NOCARD_TEMPLATE']))
+                    Settings.get_flop_has_nocard_template(self.Platform, self.TableType)))
         return self.flop_has_card_histogram[index]
 
     def get_flop_has_card_threshold(self):
         if self.flop_has_card_threshold is None:
             self.flop_has_card_threshold = \
-                settings['PLATFORMS'][self.Platform]['TABLE_SCANNER'][self.TableType]['PLAY_HASCARD_THRESHOLD']
+                Settings.get_play_hascard_threshold(self.Platform, self.TableType)
         return self.flop_has_card_threshold
 
     def check_if_flop_pos_is_empty(self, Image, index):
@@ -122,8 +116,8 @@ class PokerTableScannerPokerStars(PokerTableScanner):
         template_flop_pos1 = \
             get_histogram_from_image(grab_image_pos_from_image(
                 Image,
-                settings['PLATFORMS'][self.Platform]['TABLE_SCANNER'][self.TableType]['FLOPCARD{}'.format(index + 1)],
-                settings['PLATFORMS'][self.Platform]['TABLE_SCANNER'][self.TableType]['FLOPCARD_SIZE']))
+                Settings.get_flopcard(self.Platform, self.TableType, index),
+                Settings.get_flopcard_size(self.Platform, self.TableType)))
         res = cv2.compareHist(template_flop_empty_cv2_hist, template_flop_pos1, 0)
         if res > self.get_flop_has_card_threshold():
             return True
@@ -134,13 +128,12 @@ class PokerTableScannerPokerStars(PokerTableScanner):
         flop_card_key = 'FLOPCARD{}'.format(index + 1)
         image_from_flop_card = grab_image_pos_from_image(
             Image,
-            settings['PLATFORMS'][self.Platform]['TABLE_SCANNER'][self.TableType][flop_card_key],
-            settings['PLATFORMS'][self.Platform]['TABLE_SCANNER'][self.TableType]['FLOPCARD_SIZE'])
+            Settings.get_flop_card_key(self.Platform, self.TableType),
+            Settings.get_flopcard_size(self.Platform, self.TableType))
         return image_from_flop_card, numpy.array(image_from_flop_card)[:, :, ::-1].copy()
 
     def get_card_template(self, current_card, current_suit):
-        filename = settings['PLATFORMS'][self.Platform]['TABLE_SCANNER']['TEMPLATES_FOLDER'] + '\\' + \
-                   current_card + current_suit + '.jpg'
+        filename = Settings.get_card_template(self.Platform, current_card, current_suit)
         Image_template = grab_image_from_file(filename)
         return Image_template, numpy.array(Image_template)[:, :, ::-1].copy()
 
@@ -209,8 +202,8 @@ class PokerTableScannerPokerStars(PokerTableScanner):
         flop_card_key = 'PLAYERCARD{}{}_POS'.format(seat + 1, current_hero_card + 1)
         image_from_player = grab_image_pos_from_image(
             Image,
-            settings['PLATFORMS'][self.Platform]['TABLE_SCANNER'][self.TableType][flop_card_key],
-            settings['PLATFORMS'][self.Platform]['TABLE_SCANNER'][self.TableType]['FLOPCARD_SIZE'])
+            Settings.get_flop_card_key(self.Platform, self.TableType, flop_card_key),
+            Settings.get_flopcard_size(self.Platform, self.TableType))
         current_flop_image = numpy.array(image_from_player)[:, :, ::-1].copy()
         return image_from_player, current_flop_image
 
@@ -245,27 +238,22 @@ class PokerTableScannerPokerStars(PokerTableScanner):
         if self.player_has_card_histogram is None:
             self.player_has_card_histogram = get_histogram_from_image(
                 grab_image_from_file(
-                    settings['PLATFORMS'][self.Platform]['TABLE_SCANNER'][self.TableType][
-                        'PLAYERCARD_HAS_UNKNOWN_CARD_TEMPLATE']))
+                    Settings.get_player_has_unknown_card_template(self.Platform)))
         return self.player_has_card_histogram
 
     def analyse_players_without_cards(self, Image):
         ret = self.create_list_boolean_with_number_seats()
         for index in range(self.NumberOfSeats):
-            empty_card_key = settings['PLATFORMS'][self.Platform]['TABLE_SCANNER']['TEMPLATES_FOLDER'] + '\\' + \
-                             'PLAYER{}_HASNOCARD'.format(index + 1) + '.jpg'
+            empty_card_key = Settings.get_player_hasnocard_template(self.Platform, index)
             empty_card_hst = get_histogram_from_image(grab_image_from_file(empty_card_key))
 
             current_pos_key = 'PLAYER{}_HASCARD'.format(index + 1)
             current_pos_hst = get_histogram_from_image(grab_image_pos_from_image(
                 Image,
-                settings['PLATFORMS'][self.Platform]['TABLE_SCANNER'][self.TableType][current_pos_key],
-                settings['PLATFORMS'][self.Platform]['TABLE_SCANNER'][self.TableType]['PLAYERHASCARD_SIZE']))
+                Settings.get_command_current_pos_key(self.Platform, self.TableType, current_pos_key),
+                Settings.get_playerhascard_size(self.Platform, self.TableType)))
             res = cv2.compareHist(empty_card_hst, current_pos_hst, 0)
-            ret[index] = True if res > \
-                                 settings['PLATFORMS'][self.Platform]['TABLE_SCANNER'][self.TableType][
-                                     'PLAY_HASCARD_THRESHOLD'] \
-                else False
+            ret[index] = True if res > Settings.get_play_hascard_threshold(self.Platform, self.TableType) else False
         return ret
 
     def generate_command_tuple(self, str):
@@ -288,17 +276,16 @@ class PokerTableScannerPokerStars(PokerTableScanner):
         template_has_command_cv2_hist = \
             get_histogram_from_image(
                 grab_image_from_file(
-                    settings['PLATFORMS'][self.Platform]['TABLE_SCANNER'][self.TableType] \
-                        ['{}_TEMPLATE'.format(template)]))
+                    Settings.get_template(self.Platform, self.TableType, template)))
 
         has_command_cv2_hist = \
             get_histogram_from_image(grab_image_pos_from_image(
                 im,
-                settings['PLATFORMS'][self.Platform]['TABLE_SCANNER'][self.TableType] \
-                    ['COMMAND_POS{}'.format(pos + 1)],
-                settings['PLATFORMS'][self.Platform]['TABLE_SCANNER'][self.TableType]['COMMAND_TEST_SIZE']))
+                Settings.get_command_pos(self.Platform, self.TableType, pos),
+                Settings.get_command_test_size(self.Platform, self.TableType)))
+
         res = cv2.compareHist(template_has_command_cv2_hist, has_command_cv2_hist, 0)
-        if res > settings['PLATFORMS'][self.Platform]['TABLE_SCANNER'][self.TableType]['COMMAND_TEST_TOLERANCE']:
+        if res > Settings.get_command_test_tolerance(self.Platform, self.TableType):
             return True, (template, 0, template)
 
     def check_for_check_button(self, im):
@@ -316,29 +303,20 @@ class PokerTableScannerPokerStars(PokerTableScanner):
             template_has_command_cv2_hist = \
                 get_histogram_from_image(
                     grab_image_from_file(
-                        settings['PLATFORMS'][self.Platform]['TABLE_SCANNER'][self.TableType] \
-                            ['COMMAND_TEST_TEMPLATE{}'.format(current_command)]))
+                        Settings.get_command_test_template(self.Platform, self.TableType, current_command)))
 
             has_command_cv2_hist = \
                 get_histogram_from_image(grab_image_pos_from_image(
                     im,
-                    settings['PLATFORMS'][self.Platform]['TABLE_SCANNER'][self.TableType][
-                        'COMMAND_POS{}'.format(current_command)],
-                    settings['PLATFORMS'][self.Platform]['TABLE_SCANNER'][self.TableType]['COMMAND_TEST_SIZE']))
+                    Settings.get_comand_pos(self.Platform, self.TableType, current_command),
+                    Settings.get_command_test_size(self.Platform, self.TableType)))
+
             res = cv2.compareHist(template_has_command_cv2_hist, has_command_cv2_hist, 0)
-            if res > settings['PLATFORMS'][self.Platform]['TABLE_SCANNER'][self.TableType]['COMMAND_TEST_TOLERANCE']:
-
-                if x == 0:
-                    result, ret[x] = self.check_for_fold_button(im)
-                    if result:
-                        continue
-
+            if res > Settings.get_command_test_tolerance(self.Platform, self.TableType):
                 im_command = grab_image_pos_from_image(
                     im,
-                    settings['PLATFORMS'][self.Platform]['TABLE_SCANNER'][self.TableType][
-                        'COMMAND_POS{}'.format(current_command)],
-                    settings['PLATFORMS'][self.Platform]['TABLE_SCANNER'][self.TableType]['COMMAND_SIZE']
-                )
+                    Settings.get_command_pos(self.Platform, self.TableType, current_command),
+                    Settings.get_command_size(self.Platform, self.TableType))
                 command_image_name = 'command{}.jpg'.format(current_command)
                 im_command.save(command_image_name)
                 return_from_tesseract = subprocess.check_output(['tesseract', command_image_name, 'stdout'],
@@ -368,7 +346,7 @@ class PokerTableScannerPokerStars(PokerTableScanner):
     def send_hands_to_server(self, pocket_cards, flop_cards):
         command_to_send = '{} {}'.format(pocket_cards, flop_cards)
         # logging.debug('Sent to server:' + command_to_send[:30])
-        r = requests.post(settings['STRATEGIES']['SIMPLE']['CALCULATE_URL'], json={"command": command_to_send})
+        r = requests.post(Settings.get_calculate_url(), json={"command": command_to_send})
         # logging.debug('Received from server:' + str(r.content)[:30])
         if r.status_code == 200:
             return command_to_send, ast.literal_eval(r.content)
@@ -396,9 +374,8 @@ class PokerTableScannerPokerStars(PokerTableScanner):
     def analyse_pot(self, im):
         im_command = grab_image_pos_from_image(
             im,
-            settings['PLATFORMS'][self.Platform]['TABLE_SCANNER'][self.TableType]['POT'],
-            settings['PLATFORMS'][self.Platform]['TABLE_SCANNER'][self.TableType]['POT_SIZE']
-        )
+            Settings.get_pot(self.Platform, self.TableType),
+            Settings.get_pot_size(self.Platform, self.TableType))
         command_image_name = 'command_pot.jpg'
         im_command.save(command_image_name)
         return_from_tesseract = subprocess.check_output(['tesseract', command_image_name, 'stdout'],
@@ -417,18 +394,12 @@ class PokerTableScannerPokerStars(PokerTableScanner):
         return ret, returned_string
 
     def check_if_bet_is_present(self, index, im):
-        player_has_bet_histogram = get_histogram_from_image(grab_image_pos_from_image(im,
-                                                                                      settings['PLATFORMS'][
-                                                                                          self.Platform][
-                                                                                          'TABLE_SCANNER'][
-                                                                                          self.TableType][
-                                                                                          'BET{}'.format(index + 1)],
-                                                                                      settings['PLATFORMS'][
-                                                                                          self.Platform][
-                                                                                          'TABLE_SCANNER'][
-                                                                                          self.TableType]['BET_SIZE']))
-        nobet_histogram = get_histogram_from_image(grab_image_from_file(
-            settings['PLATFORMS'][self.Platform]['TABLE_SCANNER'][self.TableType]['NOBET_TEMPLATE']))
+        player_has_bet_histogram = get_histogram_from_image(
+            grab_image_pos_from_image(im, Settings.get_bet(self.Platform, self.TableType, index),
+                                      Settings.get_bet_size(self.Platform, self.TableType)))
+        nobet_histogram = get_histogram_from_image(
+            grab_image_from_file(Settings.get_nobet_template(self.Platform, self.TableType)))
+
         res = cv2.compareHist(player_has_bet_histogram, nobet_histogram, 0)
         if res > 0.9:
             return False
@@ -442,14 +413,14 @@ class PokerTableScannerPokerStars(PokerTableScanner):
                 continue
             im_command = grab_image_pos_from_image(
                 im,
-                settings['PLATFORMS'][self.Platform]['TABLE_SCANNER'][self.TableType]['BET{}'.format(x + 1)],
-                settings['PLATFORMS'][self.Platform]['TABLE_SCANNER'][self.TableType]['BET_SIZE']
+                Settings.get_bet(self.Platform, self.TableType, x),
+                Settings.get_bet_size(self.Platform, self.TableType)
             )
             command_image_name = 'command_bet.jpg'
             im_command.save(command_image_name)
             start, stop, step = self.get_offset_for_numbers(im_command, x in [0, 1, 2])
             for test in range(start, stop, step):
-                coords = settings['PLATFORMS'][self.Platform]['TABLE_SCANNER'][self.TableType]['BET{}'.format(x + 1)]
+                coords = Settings.get_bet(self.Platform, self.TableType, x)
                 if x in [0, 1, 2]:
                     coords = (coords[0] - (test * 1), coords[1])
                 else:
@@ -457,7 +428,7 @@ class PokerTableScannerPokerStars(PokerTableScanner):
                 im_command = grab_image_pos_from_image(
                     im,
                     coords,
-                    settings['PLATFORMS'][self.Platform]['TABLE_SCANNER'][self.TableType]['BET_SIZE']
+                    Settings.get_bet_size(self.Platform, self.TableType, x)
                 )
                 command_image_name = 'command_bet.jpg'
                 im_command.save(command_image_name)

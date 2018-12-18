@@ -8,9 +8,9 @@ settings = {
     "PLATFORMS": {
         "POKERSTARS": {
             "PLATFORM_NAME": "Poker Stars",
-            "POKER_LOBBY_CLASS": "platforms.pokerstars.PokerLobbyPokerStars",
-            "POKER_TABLE_SCANNER_CLASS": "platforms.pokerstars.PokerTableScannerPokerStars",
-            "POKER_STRATEGY_CLASS": "model.PokerStrategySimple",
+            "POKER_LOBBY_CLASS": "PyPokerBotClient.platforms.pokerstars.PokerLobbyPokerStars",
+            "POKER_TABLE_SCANNER_CLASS": "PyPokerBotClient.platforms.pokerstars.PokerTableScannerPokerStars",
+            "POKER_STRATEGY_CLASS": "PyPokerBotClient.model.PokerStrategySimple",
             "TABLE_SCANNER": {
                 "TEMPLATES_FOLDER": "..\..\data\\template",
                 "TABLE_SIZE": (614, 456),

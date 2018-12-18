@@ -11,6 +11,7 @@ def execute(args):
     image_name = args[0]
     image_platform = args[1]
     image_tabletype = args[2]
+
     table_scanner_class = get_instance(Settings.get_table_scanner_class(image_platform))
     table_strategy_class = get_instance(Settings.get_table_strategy_class(image_platform))
     number_of_seats = Settings.get_number_of_seats(image_platform, image_tabletype)
