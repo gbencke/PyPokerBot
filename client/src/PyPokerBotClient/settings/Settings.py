@@ -32,9 +32,13 @@ class Settings:
         return default_setting['PLATFORMS'][platform]['TABLE_SCANNER'][
                    'TEMPLATES_FOLDER'] + '\\' + 'PLAYER{}_HASNOCARD'.format(index + 1) + '.jpg'
 
-    def get_button_template(self, platform, index):
-        return default_setting['PLATFORMS'][platform]['TABLE_SCANNER'][
-                   'TEMPLATES_FOLDER'] + '\\' + 'BUTTON{}_TEMPLATE'.format(index + 1) + '.jpg'
+    def get_button_template_file(selfself, platform, table, index):
+        return default_setting['PLATFORMS'][platform]['TABLE_SCANNER']['TEMPLATES_FOLDER'] + \
+               '\\' + 'BUTTON{}_TEMPLATE'.format(index + 1) + '.jpg'
+
+    def get_button_template(self, platform, tabletype, index):
+        return default_setting['PLATFORMS'][platform]['TABLE_SCANNER'][tabletype][
+            'BUTTON{}'.format(index + 1)]
 
     def get_card_template(self, platform, current_card, current_suit):
         return default_setting['PLATFORMS'][platform]['TABLE_SCANNER'][
@@ -51,10 +55,10 @@ class Settings:
         return default_setting['PLATFORMS'][platform]['TABLE_SCANNER'][tabletype]['FLOPCARD_SIZE']
 
     def get_flop_card_key(self, platform, tabletype, flop_card_key):
-        return default_setting['PLATFORMS'][platform]['TABLE_SCANNER'][tabletype][flop_card_key],
+        return default_setting['PLATFORMS'][platform]['TABLE_SCANNER'][tabletype][flop_card_key]
 
     def get_command_current_pos_key(self, platform, tabletype, current_pos_key):
-        return default_setting['PLATFORMS'][platform]['TABLE_SCANNER'][tabletype][current_pos_key],
+        return default_setting['PLATFORMS'][platform]['TABLE_SCANNER'][tabletype][current_pos_key]
 
     def get_command_test_tolerance(self, platform, tabletype):
         return default_setting['PLATFORMS'][platform]['TABLE_SCANNER'][tabletype]['COMMAND_TEST_TOLERANCE']
@@ -110,11 +114,10 @@ class Settings:
         return default_setting['PLATFORMS'][platform]['TABLE_SCANNER'][tabletype]['PLAYERHASCARD_SIZE']
 
     def get_command_pos(self, platform, tabletype, pos):
-        return default_setting['PLATFORMS'][platform]['TABLE_SCANNER'][tabletype]['COMMAND_POS{}'.format(pos + 1)],
+        return default_setting['PLATFORMS'][platform]['TABLE_SCANNER'][tabletype]['COMMAND_POS{}'.format(pos)]
 
     def get_pot(self, platform, tabletype):
         return default_setting['PLATFORMS'][platform]['TABLE_SCANNER'][tabletype]['POT']
 
     def get_pot_size(self, platform, tabletype):
         return default_setting['PLATFORMS'][platform]['TABLE_SCANNER'][tabletype]['POT_SIZE']
-

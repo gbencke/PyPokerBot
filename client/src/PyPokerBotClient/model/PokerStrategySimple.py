@@ -1,7 +1,5 @@
-import logging
-from settings import settings
-from model.PokerStrategy import PokerStrategy
-from model.PokerTableScanner import has_command_to_execute
+from PyPokerBotClient.model.PokerStrategy import PokerStrategy
+from PyPokerBotClient.model.PokerTableScanner import has_command_to_execute
 
 
 class PokerStrategySimple(PokerStrategy):

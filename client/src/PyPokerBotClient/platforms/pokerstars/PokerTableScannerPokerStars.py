@@ -48,7 +48,7 @@ class PokerTableScannerPokerStars(PokerTableScanner):
     def get_player_hasbutton_histogram(self, index):
         if self.button_template_histogram[index] is None:
             self.button_template_histogram[index] = get_histogram_from_image(
-                grab_image_from_file(Settings.get_button_template(self.Platform, index)))
+                grab_image_from_file(Settings.get_button_template_file(self.Platform, self.TableType, index)))
         return self.button_template_histogram[index]
 
     def get_player_hascard_histogram(self):
@@ -91,7 +91,7 @@ class PokerTableScannerPokerStars(PokerTableScanner):
             current_seat_cv2_hist = get_histogram_from_image(
                 grab_image_pos_from_image(
                     Image,
-                    Settings.get_button_template(self.Platform, self.TableType),
+                    Settings.get_button_template(self.Platform, self.TableType, index),
                     Settings.get_button_size(self.Platform, self.TableType)))
             res = cv2.compareHist(self.get_player_hasbutton_histogram(index), current_seat_cv2_hist, 0)
             button_threshold = Settings.get_button_threshold(self.Platform, self.TableType)
@@ -128,7 +128,7 @@ class PokerTableScannerPokerStars(PokerTableScanner):
         flop_card_key = 'FLOPCARD{}'.format(index + 1)
         image_from_flop_card = grab_image_pos_from_image(
             Image,
-            Settings.get_flop_card_key(self.Platform, self.TableType),
+            Settings.get_flop_card_key(self.Platform, self.TableType, flop_card_key ),
             Settings.get_flopcard_size(self.Platform, self.TableType))
         return image_from_flop_card, numpy.array(image_from_flop_card)[:, :, ::-1].copy()
 

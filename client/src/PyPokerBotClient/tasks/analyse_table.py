@@ -20,17 +20,25 @@ def execute(args):
 
     im = grab_image_from_file(image_name)
     result = table_scanner.analyze_from_image(im)
+    final_analisys = ''
+    final_analisys += '------------------------------------------------------------\n'
+    final_analisys += 'Number of Villains:{}\n'.format(len([x for x in result['cards'] if x]))
+    final_analisys += '------------------------------------------------------------\n'
+    final_analisys += 'Flop              :{}\n'.format("".join(result['flop']))
+    if 'hero' in result:
+        final_analisys += 'Pocket Cards      :{}\n'.format(result['hero']['hero_cards'])
+        final_analisys += 'Position          :{}\n'.format(result['hero']['position'])
+    else:
+        final_analisys += 'HERO is NOT PLAYING...\n'
+    if 'hand_analisys' in result:
+        final_analisys += 'Equity            :{}\n'.format(result['hand_analisys']['result'])
+    else:
+        final_analisys += 'NO HAND to Analyse...\n'
     if has_command_to_execute(result):
         result = table_strategy.run_strategy(result)
-        final_analisys = ''
-        final_analisys += '====================================\n'
+        final_analisys += '=================================================================\n'
         final_analisys += 'Command           :{}\n'.format(result['commands'][result['command']['to_execute'] - 1])
         final_analisys += 'Decision          :{}({})\n'.format(result['decision']['decision'],
                                                                result['decision']['raise_strategy'])
-        final_analisys += '------------------------------------\n'
-        final_analisys += 'Number of Villains:{}\n'.format(len([x for x in result['cards'] if x]))
-        final_analisys += 'Flop              :{}\n'.format("".join(result['flop']))
-        final_analisys += 'Pocket Cards      :{}\n'.format(result['hero']['hero_cards'])
-        final_analisys += 'Position          :{}\n'.format(result['hero']['position'])
-        final_analisys += 'Equity            :{}'.format(result['hand_analisys']['result'])
-        PokerTableScanner.generate_analisys_summary_info(final_analisys)
+        final_analisys += '=================================================================\n'
+    PokerTableScanner.generate_analisys_summary_info(final_analisys)

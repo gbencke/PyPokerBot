@@ -12,10 +12,10 @@ settings = {
             "POKER_TABLE_SCANNER_CLASS": "PyPokerBotClient.platforms.pokerstars.PokerTableScannerPokerStars",
             "POKER_STRATEGY_CLASS": "PyPokerBotClient.model.PokerStrategySimple",
             "TABLE_SCANNER": {
-                "TEMPLATES_FOLDER": "..\..\data\\template",
+                "TEMPLATES_FOLDER": "..\data\\template",
                 "TABLE_SIZE": (614, 456),
                 "PLAYERCARD_HAS_NOCARD_TEMPLATE": "",
-                "PLAYERCARD_HAS_UNKNOWN_CARD_TEMPLATE": "..\..\data\\template\PLAYER_HASCARD.jpg",
+                "PLAYERCARD_HAS_UNKNOWN_CARD_TEMPLATE": "..\data\\template\PLAYER_HASCARD.jpg",
                 "6-SEATS": {
                     "NUMBER_OF_SEATS": 6,
                     "PLAYERHASCARD_SIZE": (162, 42),
@@ -41,7 +41,7 @@ settings = {
                     "PLAYERCARD62_POS": (653, 79),
 
                     "FLOPCARD_SIZE": (60, 50),
-                    "FLOPCARD_HAS_NOCARD_TEMPLATE": "..\..\data\\template\NOFLOP.jpg",
+                    "FLOPCARD_HAS_NOCARD_TEMPLATE": "..\\data\\template\NOFLOP.jpg",
                     "FLOPCARD1": (455, 356),
                     "FLOPCARD2": (536, 356),
                     "FLOPCARD3": (617, 356),
@@ -65,19 +65,19 @@ settings = {
                     "COMMAND_POS2": (863, 847),
                     "COMMAND_POS3": (1081, 847),
 
-                    "COMMAND_TEST_TEMPLATE1": "..\..\data\\template\COMMAND_TEST_TEMPLATE1.jpg",
-                    "COMMAND_TEST_TEMPLATE2": "..\..\data\\template\COMMAND_TEST_TEMPLATE2.jpg",
-                    "COMMAND_TEST_TEMPLATE3": "..\..\data\\template\COMMAND_TEST_TEMPLATE3.jpg",
+                    "COMMAND_TEST_TEMPLATE1": "..\\data\\template\COMMAND_TEST_TEMPLATE1.jpg",
+                    "COMMAND_TEST_TEMPLATE2": "..\data\\template\COMMAND_TEST_TEMPLATE2.jpg",
+                    "COMMAND_TEST_TEMPLATE3": "..\data\\template\COMMAND_TEST_TEMPLATE3.jpg",
 
-                    "CHECK_TEMPLATE" : "..\..\data\\template\CHECK_TEMPLATE.jpg",
-                    "FOLD_TEMPLATE" : "..\..\data\\template\FOLD_TEMPLATE.jpg",
+                    "CHECK_TEMPLATE": "..\data\\template\CHECK_TEMPLATE.jpg",
+                    "FOLD_TEMPLATE": "..\data\\template\FOLD_TEMPLATE.jpg",
 
                     "SET_RAISE_TO_POT": (1100, 750),
 
                     "POT": (590, 300),
                     "POT_SIZE": (120, 35),
 
-                    "NOBET_TEMPLATE": "..\..\data\\template\NOBET_TEMPLATE.jpg",
+                    "NOBET_TEMPLATE": "..\\data\\template\NOBET_TEMPLATE.jpg",
                     "BET_SIZE": (135, 25),
                     "BET1": (835, 295),
                     "BET2": (850, 495),
@@ -93,7 +93,7 @@ settings = {
 
     "STRATEGIES": {
         "SIMPLE": {
-            "CALCULATE_URL": "http://192.168.198.134:5000/calculator",
+            "CALCULATE_URL": "http://192.168.198.198:5000/calculator",
             "PREFLOP": {
                 "CONFIDENCE_LEVEL": 0.44,
                 "CONFIDENCE_LEVEL_POSITION": 0.40,
