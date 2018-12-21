@@ -8,3 +8,14 @@ def get_histogram_from_image(image):
     dst = image_cv2_hist.copy()
     return cv2.normalize(image_cv2_hist, dst).flatten()
 
+
+def create_list_none_with_number_seats(NumberOfSeats):
+    return [None for _ in range(NumberOfSeats)]
+
+
+def create_list_boolean_with_number_seats(NumberOfSeats):
+    return [False] * NumberOfSeats
+
+
+def create_list_string_with_number_seats(NumberOfSeats):
+    return [''] * NumberOfSeats

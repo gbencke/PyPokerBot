@@ -13,36 +13,30 @@ from datetime import datetime
 from PyPokerBotClient.settings import GlobalSettings as Settings
 from PyPokerBotClient.model.PokerTableScanner import PokerTableScanner, has_command_to_execute
 from PyPokerBotClient.platforms.utils import get_histogram_from_image
+from PyPokerBotClient.platforms.utils import create_list_none_with_number_seats
+from PyPokerBotClient.platforms.utils import create_list_boolean_with_number_seats
+from PyPokerBotClient.platforms.utils import create_list_string_with_number_seats
 from PyPokerBotClient.osinterface.win32.screenshot import grab_image_from_file, grab_image_pos_from_image
 from PyPokerBotClient.custom_exceptions.NeedToSpecifySeatsException import NeedToSpecifySeatsException
 from PyPokerBotClient.custom_exceptions.NeedToSpecifyTableTypeException import NeedToSpecifyTableTypeException
-from PyPokerBotClient.platforms.pokerstars.image_scanner.PokerAnalysePlayersWithCards import PokerAnalysePlayersWithCards
+from PyPokerBotClient.platforms.pokerstars.image_scanner.PokerAnalysePlayersWithCards import \
+    PokerAnalysePlayersWithCards
 from PyPokerBotClient.platforms.pokerstars.image_scanner.PokerAnalyseCommands import PokerAnalyseCommands
 
 
 class PokerTableScannerPokerStars(PokerTableScanner):
-    def create_list_none_with_number_seats(self):
-        return [None for _ in range(self.NumberOfSeats)]
-
-    def create_list_boolean_with_number_seats(self):
-        return [False] * self.NumberOfSeats
-
-    def create_list_string_with_number_seats(self):
-        return [''] * self.NumberOfSeats
 
     def __init__(self, TableType, NumberOfSeats, BB, SB):
         PokerTableScanner.__init__(self, TableType, NumberOfSeats, BB, SB)
         self.Platform = 'POKERSTARS'
         self.FlopSize = 5
-        self.player_has_card_histogram = None
-        self.player_has_card_threshold = None
-        self.button_template_histogram = self.create_list_none_with_number_seats()
+        self.button_template_histogram = create_list_none_with_number_seats(self.NumberOfSeats)
         self.player_button_threshold = None
-        self.flop_has_card_histogram = self.create_list_none_with_number_seats()
+        self.flop_has_card_histogram = create_list_none_with_number_seats(self.NumberOfSeats)
         self.flop_has_card_threshold = None
         self.non_decimal = re.compile(r'[^\d.]+')
         self.AnalyseCommands = PokerAnalyseCommands(self.Platform, self.TableType)
-        self.AnalysePlayersWithCards = PokerAnalysePlayersWithCards()
+        self.AnalysePlayersWithCards = PokerAnalysePlayersWithCards(self.Platform, self.TableType, self.NumberOfSeats)
 
     def set_table_type(self, table_type):
         self.TableType = table_type
@@ -56,42 +50,13 @@ class PokerTableScannerPokerStars(PokerTableScanner):
                 grab_image_from_file(Settings.get_button_template_file(self.Platform, self.TableType, index)))
         return self.button_template_histogram[index]
 
-    def get_player_hascard_histogram(self):
-        if self.player_has_card_histogram is None:
-            self.player_has_card_histogram = get_histogram_from_image(
-                grab_image_from_file(
-                    Settings.get_player_has_unknown_card_template(self.Platform)))
-        return self.player_has_card_histogram
-
-    def get_player_has_card_threshold(self):
-        if self.player_has_card_threshold is None:
-            self.player_has_card_threshold = Settings.get_play_hascard_threshold(self.Platform, self.TableType)
-        return self.player_has_card_threshold
-
     def get_player_button_threshold(self):
         if self.player_button_threshold is None:
             self.player_button_threshold = Settings.get_button_threshold(self.Platform, self.TableType)
         return self.player_button_threshold
 
-    def get_player_has_card_in_position_histogram(self, index, Image):
-        return \
-            get_histogram_from_image(
-                grab_image_pos_from_image(
-                    Image,
-                    Settings.get_player_hascard(self.Platform, self.TableType, index),
-                    Settings.get_playerhascard_size(self.Platform, self.TableType)))
-
-    def analyse_players_with_cards(self, Image):
-        ret = self.create_list_boolean_with_number_seats()
-        for current_seat_index in range(self.NumberOfSeats):
-            res = cv2.compareHist(
-                self.get_player_hascard_histogram(),
-                self.get_player_has_card_in_position_histogram(current_seat_index, Image), 0)
-            ret[current_seat_index] = True if res > self.get_player_has_card_threshold() else False
-        return ret
-
     def analyse_button(self, Image):
-        ret = self.create_list_boolean_with_number_seats()
+        ret = create_list_boolean_with_number_seats(self.NumberOfSeats)
         for index in range(self.NumberOfSeats):
             current_seat_cv2_hist = get_histogram_from_image(
                 grab_image_pos_from_image(
@@ -133,7 +98,7 @@ class PokerTableScannerPokerStars(PokerTableScanner):
         flop_card_key = 'FLOPCARD{}'.format(index + 1)
         image_from_flop_card = grab_image_pos_from_image(
             Image,
-            Settings.get_flop_card_key(self.Platform, self.TableType, flop_card_key ),
+            Settings.get_flop_card_key(self.Platform, self.TableType, flop_card_key),
             Settings.get_flopcard_size(self.Platform, self.TableType))
         return image_from_flop_card, numpy.array(image_from_flop_card)[:, :, ::-1].copy()
 
@@ -143,7 +108,7 @@ class PokerTableScannerPokerStars(PokerTableScanner):
         return Image_template, numpy.array(Image_template)[:, :, ::-1].copy()
 
     def analyse_flop_template(self, Image):
-        ret = self.create_list_string_with_number_seats()
+        ret = create_list_string_with_number_seats(self.NumberOfSeats)
         for index in range(self.FlopSize):
             if self.check_if_flop_pos_is_empty(Image, index):
                 return ret
@@ -247,7 +212,7 @@ class PokerTableScannerPokerStars(PokerTableScanner):
         return self.player_has_card_histogram
 
     def analyse_players_without_cards(self, Image):
-        ret = self.create_list_boolean_with_number_seats()
+        ret = create_list_boolean_with_number_seats(self.NumberOfSeats)
         for index in range(self.NumberOfSeats):
             empty_card_key = Settings.get_player_hasnocard_template(self.Platform, index)
             empty_card_hst = get_histogram_from_image(grab_image_from_file(empty_card_key))
@@ -260,7 +225,6 @@ class PokerTableScannerPokerStars(PokerTableScanner):
             res = cv2.compareHist(empty_card_hst, current_pos_hst, 0)
             ret[index] = True if res > Settings.get_play_hascard_threshold(self.Platform, self.TableType) else False
         return ret
-
 
     def check_for_button_template(self, im, template, pos):
         template_has_command_cv2_hist = \
@@ -283,7 +247,6 @@ class PokerTableScannerPokerStars(PokerTableScanner):
 
     def check_for_fold_button(self, im):
         return self.check_for_button_template(im, 'FOLD', 0)
-
 
     def analyse_hand_phase(self, analisys):
         number_cards_on_flop = len(self.get_flop_cards(analisys)) / 2
@@ -359,7 +322,7 @@ class PokerTableScannerPokerStars(PokerTableScanner):
             return True
 
     def analyse_bets(self, im):
-        returned_list = self.create_list_none_with_number_seats()
+        returned_list = create_list_none_with_number_seats()
         for x in range(self.NumberOfSeats):
             if not self.check_if_bet_is_present(x, im):
                 continue
@@ -414,7 +377,7 @@ class PokerTableScannerPokerStars(PokerTableScanner):
         result = {}
         result['seats'] = self.NumberOfSeats
         result['commands'] = self.AnalyseCommands.analyse_commands(im)
-        result['cards'] = self.analyse_players_with_cards(im)
+        result['cards'] = self.AnalysePlayersWithCards.analyse_players_with_cards(im)
         result['nocards'] = self.analyse_players_without_cards(im)
         result['button'] = self.analyse_button(im)
         result['flop'] = self.analyse_flop_template(im)
