@@ -21,6 +21,8 @@ from PyPokerBotClient.custom_exceptions.NeedToSpecifySeatsException import NeedT
 from PyPokerBotClient.custom_exceptions.NeedToSpecifyTableTypeException import NeedToSpecifyTableTypeException
 from PyPokerBotClient.platforms.pokerstars.image_scanner.PokerAnalysePlayersWithCards import \
     PokerAnalysePlayersWithCards
+from PyPokerBotClient.platforms.pokerstars.image_scanner.PokerAnalysePlayersWithoutCards import \
+    PokerAnalysePlayersWithoutCards
 from PyPokerBotClient.platforms.pokerstars.image_scanner.PokerAnalyseCommands import PokerAnalyseCommands
 
 
@@ -37,6 +39,7 @@ class PokerTableScannerPokerStars(PokerTableScanner):
         self.non_decimal = re.compile(r'[^\d.]+')
         self.AnalyseCommands = PokerAnalyseCommands(self.Platform, self.TableType)
         self.AnalysePlayersWithCards = PokerAnalysePlayersWithCards(self.Platform, self.TableType, self.NumberOfSeats)
+        self.AnalysePlayersWithoutCards = PokerAnalysePlayersWithoutCards(self.Platform, self.TableType, self.NumberOfSeats)
 
     def set_table_type(self, table_type):
         self.TableType = table_type
@@ -211,20 +214,6 @@ class PokerTableScannerPokerStars(PokerTableScanner):
                     Settings.get_player_has_unknown_card_template(self.Platform)))
         return self.player_has_card_histogram
 
-    def analyse_players_without_cards(self, Image):
-        ret = create_list_boolean_with_number_seats(self.NumberOfSeats)
-        for index in range(self.NumberOfSeats):
-            empty_card_key = Settings.get_player_hasnocard_template(self.Platform, index)
-            empty_card_hst = get_histogram_from_image(grab_image_from_file(empty_card_key))
-
-            current_pos_key = 'PLAYER{}_HASCARD'.format(index + 1)
-            current_pos_hst = get_histogram_from_image(grab_image_pos_from_image(
-                Image,
-                Settings.get_command_current_pos_key(self.Platform, self.TableType, current_pos_key),
-                Settings.get_playerhascard_size(self.Platform, self.TableType)))
-            res = cv2.compareHist(empty_card_hst, current_pos_hst, 0)
-            ret[index] = True if res > Settings.get_play_hascard_threshold(self.Platform, self.TableType) else False
-        return ret
 
     def check_for_button_template(self, im, template, pos):
         template_has_command_cv2_hist = \
@@ -378,7 +367,7 @@ class PokerTableScannerPokerStars(PokerTableScanner):
         result['seats'] = self.NumberOfSeats
         result['commands'] = self.AnalyseCommands.analyse_commands(im)
         result['cards'] = self.AnalysePlayersWithCards.analyse_players_with_cards(im)
-        result['nocards'] = self.analyse_players_without_cards(im)
+        result['nocards'] = self.AnalysePlayersWithoutCards.analyse_players_without_cards(im)
         result['button'] = self.analyse_button(im)
         result['flop'] = self.analyse_flop_template(im)
         if has_command_to_execute(result):
