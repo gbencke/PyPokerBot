@@ -7,6 +7,7 @@ import datetime
 import subprocess
 import requests
 import re
+
 from time import sleep
 from datetime import datetime
 from PyPokerBotClient.settings import GlobalSettings as Settings
@@ -15,6 +16,8 @@ from PyPokerBotClient.platforms.utils import get_histogram_from_image
 from PyPokerBotClient.osinterface.win32.screenshot import grab_image_from_file, grab_image_pos_from_image
 from PyPokerBotClient.custom_exceptions.NeedToSpecifySeatsException import NeedToSpecifySeatsException
 from PyPokerBotClient.custom_exceptions.NeedToSpecifyTableTypeException import NeedToSpecifyTableTypeException
+from PyPokerBotClient.platforms.pokerstars.image_scanner.PokerAnalysePlayersWithCards import PokerAnalysePlayersWithCards
+from PyPokerBotClient.platforms.pokerstars.image_scanner.PokerAnalyseCommands import PokerAnalyseCommands
 
 
 class PokerTableScannerPokerStars(PokerTableScanner):
@@ -38,6 +41,8 @@ class PokerTableScannerPokerStars(PokerTableScanner):
         self.flop_has_card_histogram = self.create_list_none_with_number_seats()
         self.flop_has_card_threshold = None
         self.non_decimal = re.compile(r'[^\d.]+')
+        self.AnalyseCommands = PokerAnalyseCommands(self.Platform, self.TableType)
+        self.AnalysePlayersWithCards = PokerAnalysePlayersWithCards()
 
     def set_table_type(self, table_type):
         self.TableType = table_type
@@ -256,21 +261,6 @@ class PokerTableScannerPokerStars(PokerTableScanner):
             ret[index] = True if res > Settings.get_play_hascard_threshold(self.Platform, self.TableType) else False
         return ret
 
-    def generate_command_tuple(self, str):
-        command = ''
-        value = ''
-        if 'FOLD' in str.upper():
-            command = 'FOLD'
-        if 'RAISE' in str.upper():
-            command = 'RAISE'
-        if 'CHECK' in str.upper():
-            command = 'CHECK'
-        if 'CALL' in str.upper():
-            command = 'CALL'
-        if '$' in str:
-            value = str.split('$')[1].strip()
-            value = float(value) / self.BB
-        return (command, value, str)
 
     def check_for_button_template(self, im, template, pos):
         template_has_command_cv2_hist = \
@@ -294,44 +284,6 @@ class PokerTableScannerPokerStars(PokerTableScanner):
     def check_for_fold_button(self, im):
         return self.check_for_button_template(im, 'FOLD', 0)
 
-    def analyse_commands(self, im):
-        ret = ['', '', '']
-
-        for x in range(3):
-            current_command = x + 1
-
-            template_has_command_cv2_hist = \
-                get_histogram_from_image(
-                    grab_image_from_file(
-                        Settings.get_command_test_template(self.Platform, self.TableType, current_command)))
-
-            has_command_cv2_hist = \
-                get_histogram_from_image(grab_image_pos_from_image(
-                    im,
-                    Settings.get_comand_pos(self.Platform, self.TableType, current_command),
-                    Settings.get_command_test_size(self.Platform, self.TableType)))
-
-            res = cv2.compareHist(template_has_command_cv2_hist, has_command_cv2_hist, 0)
-            if res > Settings.get_command_test_tolerance(self.Platform, self.TableType):
-                im_command = grab_image_pos_from_image(
-                    im,
-                    Settings.get_command_pos(self.Platform, self.TableType, current_command),
-                    Settings.get_command_size(self.Platform, self.TableType))
-                command_image_name = 'command{}.jpg'.format(current_command)
-                im_command.save(command_image_name)
-                return_from_tesseract = subprocess.check_output(['tesseract', command_image_name, 'stdout'],
-                                                                shell=True)
-                if len(return_from_tesseract.strip()) == 0:
-                    error_filename = command_image_name + '.error.' + datetime.now().strftime(
-                        "%Y%m%d%H%M%S.%f") + '.jpg'
-                    logging.debug("ERROR ON TESSERACT!!! " + error_filename)
-                    im_command.save(error_filename)
-                ret[x] = self.generate_command_tuple(return_from_tesseract.replace('\r\n', ' ').replace('  ', ' '))
-                os.remove(command_image_name)
-                sleep(0.2)
-            else:
-                ret[x] = ('', 0, '')
-        return ret
 
     def analyse_hand_phase(self, analisys):
         number_cards_on_flop = len(self.get_flop_cards(analisys)) / 2
@@ -460,8 +412,8 @@ class PokerTableScannerPokerStars(PokerTableScanner):
         if self.TableType is None:
             raise NeedToSpecifyTableTypeException('You need to specify the table type prior to start analisys')
         result = {}
-        result['commands'] = self.analyse_commands(im)
         result['seats'] = self.NumberOfSeats
+        result['commands'] = self.AnalyseCommands.analyse_commands(im)
         result['cards'] = self.analyse_players_with_cards(im)
         result['nocards'] = self.analyse_players_without_cards(im)
         result['button'] = self.analyse_button(im)
