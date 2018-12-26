@@ -1,5 +1,6 @@
 # coding=utf-8
 import cv2
+
 from PyPokerBotClient.platforms.utils import create_list_boolean_with_number_seats
 from PyPokerBotClient.settings import GlobalSettings as Settings
 from PyPokerBotClient.platforms.utils import get_histogram_from_image

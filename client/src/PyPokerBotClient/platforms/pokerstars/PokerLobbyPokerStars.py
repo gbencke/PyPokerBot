@@ -1,5 +1,5 @@
-from model.PokerLobby import PokerLobby
-from model.PokerTable import PokerTable
+from PyPokerBotClient.model.PokerLobby import PokerLobby
+from PyPokerBotClient.model.PokerTable import PokerTable
 
 
 class PokerLobbyPokerStars(PokerLobby):

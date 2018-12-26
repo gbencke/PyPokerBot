@@ -1,5 +1,6 @@
 import numpy
 import cv2
+
 from PyPokerBotClient.osinterface.win32.screenshot import grab_image_from_file, grab_image_pos_from_image
 from PyPokerBotClient.settings import GlobalSettings as Settings
 

@@ -49,69 +49,6 @@ class PokerTableScannerPokerStars(PokerTableScanner):
         self.AnalyseHero = PokerAnalyseHero(self.Platform, self.TableType, self.NumberOfSeats)
         self.AnalyseHand = PokerAnalyseHand(self.Platform, self.TableType, self.NumberOfSeats, self.FlopSize)
 
-    def set_table_type(self, table_type):
-        self.TableType = table_type
-
-    def set_number_of_seats(self, number_of_seats):
-        self.NumberOfSeats = number_of_seats
-
-    def get_player_button_threshold(self):
-        if self.player_button_threshold is None:
-            self.player_button_threshold = Settings.get_button_threshold(self.Platform, self.TableType)
-        return self.player_button_threshold
-
-    def get_player_hasnocard_histogram(self):
-        if self.player_has_card_histogram is None:
-            self.player_has_card_histogram = get_histogram_from_image(
-                grab_image_from_file(
-                    Settings.get_player_has_unknown_card_template(self.Platform)))
-        return self.player_has_card_histogram
-
-    def check_for_button_template(self, im, template, pos):
-        template_has_command_cv2_hist = \
-            get_histogram_from_image(
-                grab_image_from_file(
-                    Settings.get_template(self.Platform, self.TableType, template)))
-
-        has_command_cv2_hist = \
-            get_histogram_from_image(grab_image_pos_from_image(
-                im,
-                Settings.get_command_pos(self.Platform, self.TableType, pos),
-                Settings.get_command_test_size(self.Platform, self.TableType)))
-
-        res = cv2.compareHist(template_has_command_cv2_hist, has_command_cv2_hist, 0)
-        if res > Settings.get_command_test_tolerance(self.Platform, self.TableType):
-            return True, (template, 0, template)
-
-    def check_for_check_button(self, im):
-        return self.check_for_button_template(im, 'CHECK', 1)
-
-    def check_for_fold_button(self, im):
-        return self.check_for_button_template(im, 'FOLD', 0)
-
-
-    def analyse_pot(self, im):
-        im_command = grab_image_pos_from_image(
-            im,
-            Settings.get_pot(self.Platform, self.TableType),
-            Settings.get_pot_size(self.Platform, self.TableType))
-        command_image_name = 'command_pot.jpg'
-        im_command.save(command_image_name)
-        return_from_tesseract = subprocess.check_output(['tesseract', command_image_name, 'stdout'],
-                                                        shell=False)
-        if len(return_from_tesseract.strip()) == 0:
-            error_filename = command_image_name + '.error.' + datetime.now().strftime(
-                "%Y%m%d%H%M%S.%f") + '.jpg'
-            logging.debug("ERROR ON TESSERACT!!! " + error_filename)
-            im_command.save(error_filename)
-        os.remove(command_image_name)
-        sleep(0.2)
-        ret = return_from_tesseract.replace('\r', '').replace('\n', '').replace(' ', '')
-        returned_string = ret
-        ret = ret.split("$")[1]
-        ret = float(ret) / self.BB
-        return ret, returned_string
-
     def check_if_bet_is_present(self, index, im):
         player_has_bet_histogram = get_histogram_from_image(
             grab_image_pos_from_image(im, Settings.get_bet(self.Platform, self.TableType, index),
@@ -124,51 +61,6 @@ class PokerTableScannerPokerStars(PokerTableScanner):
             return False
         else:
             return True
-
-    def analyse_bets(self, im):
-        returned_list = create_list_none_with_number_seats()
-        for x in range(self.NumberOfSeats):
-            if not self.check_if_bet_is_present(x, im):
-                continue
-            im_command = grab_image_pos_from_image(
-                im,
-                Settings.get_bet(self.Platform, self.TableType, x),
-                Settings.get_bet_size(self.Platform, self.TableType)
-            )
-            command_image_name = 'command_bet.jpg'
-            im_command.save(command_image_name)
-            start, stop, step = self.get_offset_for_numbers(im_command, x in [0, 1, 2])
-            for test in range(start, stop, step):
-                coords = Settings.get_bet(self.Platform, self.TableType, x)
-                if x in [0, 1, 2]:
-                    coords = (coords[0] - (test * 1), coords[1])
-                else:
-                    coords = (coords[0] + (test * 1), coords[1])
-                im_command = grab_image_pos_from_image(
-                    im,
-                    coords,
-                    Settings.get_bet_size(self.Platform, self.TableType, x)
-                )
-                command_image_name = 'command_bet.jpg'
-                im_command.save(command_image_name)
-                return_from_tesseract = subprocess.check_output(['tesseract', command_image_name, 'stdout'],
-                                                                shell=False)
-                return_from_tesseract = return_from_tesseract.replace('$11', '$0.')
-                if len(return_from_tesseract) == 0:
-                    break
-                if not (('$' in return_from_tesseract) and ('.' in return_from_tesseract)):
-                    continue
-                os.remove(command_image_name)
-                ret = return_from_tesseract.replace('\r', '').replace('\n', '').replace(' ', '').replace('\'', '')
-                ret = ret.split("$")[1]
-                ret = self.non_decimal.sub('', ret)
-                returned_string = ret
-                ret = float(ret) / self.BB
-                if ret > 200 or ret == 0:
-                    continue
-                returned_list[x] = (ret, returned_string, return_from_tesseract)
-                break
-        return returned_list
 
     def has_command_to_execute(self, analisys):
         return has_command_to_execute(analisys)

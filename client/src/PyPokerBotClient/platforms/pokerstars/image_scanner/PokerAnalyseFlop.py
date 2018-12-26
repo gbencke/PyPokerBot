@@ -1,6 +1,7 @@
 # coding=utf-8
 import numpy
 import cv2
+
 from PyPokerBotClient.settings import GlobalSettings as Settings
 from PyPokerBotClient.model.PokerTableScanner import PokerTableScanner, has_command_to_execute
 from PyPokerBotClient.platforms.utils import get_histogram_from_image

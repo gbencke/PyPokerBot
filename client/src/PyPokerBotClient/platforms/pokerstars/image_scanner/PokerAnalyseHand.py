@@ -1,33 +1,9 @@
 # coding=utf-8
-import logging
-import os
-import numpy
-import cv2
 import ast
-import datetime
-import subprocess
 import requests
-import re
 
-from time import sleep
-from datetime import datetime
 from PyPokerBotClient.settings import GlobalSettings as Settings
-from PyPokerBotClient.model.PokerTableScanner import PokerTableScanner, has_command_to_execute
-from PyPokerBotClient.platforms.utils import get_histogram_from_image
 from PyPokerBotClient.platforms.utils import create_list_none_with_number_seats
-from PyPokerBotClient.platforms.utils import create_list_boolean_with_number_seats
-from PyPokerBotClient.platforms.utils import create_list_string_with_number_seats
-from PyPokerBotClient.osinterface.win32.screenshot import grab_image_from_file, grab_image_pos_from_image
-from PyPokerBotClient.custom_exceptions.NeedToSpecifySeatsException import NeedToSpecifySeatsException
-from PyPokerBotClient.custom_exceptions.NeedToSpecifyTableTypeException import NeedToSpecifyTableTypeException
-from PyPokerBotClient.platforms.pokerstars.image_scanner.PokerAnalysePlayersWithCards import \
-    PokerAnalysePlayersWithCards
-from PyPokerBotClient.platforms.pokerstars.image_scanner.PokerAnalysePlayersWithoutCards import \
-    PokerAnalysePlayersWithoutCards
-from PyPokerBotClient.platforms.pokerstars.image_scanner.PokerAnalyseCommands import PokerAnalyseCommands
-from PyPokerBotClient.platforms.pokerstars.image_scanner.PokerAnalyseButton import PokerAnalyseButton
-from PyPokerBotClient.platforms.pokerstars.image_scanner.PokerAnalyseFlop import PokerAnalyseFlop
-
 
 class PokerAnalyseHand:
 
