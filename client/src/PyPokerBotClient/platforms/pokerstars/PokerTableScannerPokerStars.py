@@ -27,6 +27,7 @@ from PyPokerBotClient.platforms.pokerstars.image_scanner.PokerAnalysePlayersWith
 from PyPokerBotClient.platforms.pokerstars.image_scanner.PokerAnalyseCommands import PokerAnalyseCommands
 from PyPokerBotClient.platforms.pokerstars.image_scanner.PokerAnalyseButton import PokerAnalyseButton
 from PyPokerBotClient.platforms.pokerstars.image_scanner.PokerAnalyseFlop import PokerAnalyseFlop
+from PyPokerBotClient.platforms.pokerstars.image_scanner.PokerAnalyseHero import PokerAnalyseHero
 
 
 class PokerTableScannerPokerStars(PokerTableScanner):
@@ -44,6 +45,7 @@ class PokerTableScannerPokerStars(PokerTableScanner):
                                                                           self.NumberOfSeats)
         self.AnalyseButton = PokerAnalyseButton(self.Platform, self.TableType, self.NumberOfSeats)
         self.AnalyseFlop = PokerAnalyseFlop(self.Platform, self.TableType, self.NumberOfSeats, self.FlopSize)
+        self.AnalyseHero = PokerAnalyseHero(self.Platform, self.TableType, self.NumberOfSeats)
 
     def set_table_type(self, table_type):
         self.TableType = table_type
@@ -56,82 +58,7 @@ class PokerTableScannerPokerStars(PokerTableScanner):
             self.player_button_threshold = Settings.get_button_threshold(self.Platform, self.TableType)
         return self.player_button_threshold
 
-    def get_absoulute_hero_pos(self, hero_pos, button):
-        if len([x for x in button if x == True]) == 0:
-            return 'MP'
-        distance = 0
-        current_pos_analysed = hero_pos
-        while True:
-            distance += 1
-            if current_pos_analysed == self.NumberOfSeats:
-                current_pos_analysed = 0
-            if button[current_pos_analysed]:
-                break
-            current_pos_analysed += 1
-        if distance == 0:
-            return 'BUTTON'
-        if distance == 1:
-            return 'LP'
-        if distance == 2:
-            return 'MP'
-        if distance == 3:
-            return 'MP'
-        if distance == 4:
-            return 'BB'
-        if distance == 5:
-            return 'SB'
 
-    def get_hero_position(self, hero_pos, cards, button):
-        loop_total = 0
-        if button[hero_pos - 1]:
-            return 'BUTTON'
-        current_pos_analysed = hero_pos
-        while True:
-            loop_total += 1
-            if current_pos_analysed == self.NumberOfSeats:
-                current_pos_analysed = 0
-            if cards[current_pos_analysed] or loop_total > 3:
-                return self.get_absoulute_hero_pos(hero_pos, button)
-            if button[current_pos_analysed]:
-                return 'BUTTON'
-            current_pos_analysed += 1
-
-    def get_hero_card_image(self, Image, seat, current_hero_card):
-        flop_card_key = 'PLAYERCARD{}{}_POS'.format(seat + 1, current_hero_card + 1)
-        image_from_player = grab_image_pos_from_image(
-            Image,
-            Settings.get_flop_card_key(self.Platform, self.TableType, flop_card_key),
-            Settings.get_flopcard_size(self.Platform, self.TableType))
-        current_flop_image = numpy.array(image_from_player)[:, :, ::-1].copy()
-        return image_from_player, current_flop_image
-
-    def analyse_hero(self, im, cards, nocards, button):
-        ret = {'hero_cards': '', 'position': ''}
-        for seat in range(self.NumberOfSeats):
-            if cards[seat] == False and nocards[seat] == False:
-                ret['hero_pos'] = seat + 1
-                for current_hero_card in range(2):
-                    selected_card = ''
-                    selected_card_res = 1000000000
-                    image_from_player, current_flop_image = self.get_hero_card_image(im, seat, current_hero_card)
-                    for current_suit in PokerTableScanner.suits:
-                        for current_card in PokerTableScanner.cards:
-                            template_image, current_card_image = get_card_template(self.Platform, current_card,
-                                                                                   current_suit)
-                            res = cv2.matchTemplate(current_flop_image, current_card_image, 0)
-                            if res < selected_card_res:
-                                selected_card = current_card + current_suit
-                                selected_card_res = res
-                    correct_suit = get_suite_from_image(image_from_player)
-                    if correct_suit != selected_card[1]:
-                        selected_card = selected_card[0] + correct_suit
-                    ret['hero_cards'] += selected_card
-                break
-        hero_position = ''
-        if 'hero_pos' in ret:
-            hero_position = self.get_hero_position(ret['hero_pos'], cards, button)
-        ret['position'] = hero_position
-        return ret
 
     def get_player_hasnocard_histogram(self):
         if self.player_has_card_histogram is None:
@@ -296,6 +223,6 @@ class PokerTableScannerPokerStars(PokerTableScanner):
         result['button'] = self.AnalyseButton.analyse_button(im)
         result['flop'] = self.AnalyseFlop.analyse_flop_template(im)
         if has_command_to_execute(result):
-            result['hero'] = self.analyse_hero(im, result['cards'], result['nocards'], result['button'])
+            result['hero'] = self.AnalyseHero.analyse_hero(im, result['cards'], result['nocards'], result['button'])
             result['hand_analisys'] = self.analyse_hand(result)
         return result
