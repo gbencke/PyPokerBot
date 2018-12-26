@@ -15,9 +15,10 @@ from PyPokerBotClient.settings import GlobalSettings as Settings
 
 class PokerAnalyseCommands:
 
-    def __init__(self, Platform, TableType):
+    def __init__(self, Platform, TableType, BB):
         self.Platform = Platform
         self.TableType = TableType
+        self.BB = BB
         pass
 
     def generate_command_tuple(self, str):
@@ -34,7 +35,7 @@ class PokerAnalyseCommands:
         if '$' in str:
             value = str.split('$')[1].strip()
             value = float(value) / self.BB
-        return (command, value, str)
+        return command, value, str
 
     def analyse_commands(self, im):
         ret = ['', '', '']

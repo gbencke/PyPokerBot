@@ -40,7 +40,7 @@ class PokerTableScannerPokerStars(PokerTableScanner):
         self.button_template_histogram = create_list_none_with_number_seats(self.NumberOfSeats)
         self.player_button_threshold = None
         self.non_decimal = re.compile(r'[^\d.]+')
-        self.AnalyseCommands = PokerAnalyseCommands(self.Platform, self.TableType)
+        self.AnalyseCommands = PokerAnalyseCommands(self.Platform, self.TableType, self.BB)
         self.AnalysePlayersWithCards = PokerAnalysePlayersWithCards(self.Platform, self.TableType, self.NumberOfSeats)
         self.AnalysePlayersWithoutCards = PokerAnalysePlayersWithoutCards(self.Platform, self.TableType,
                                                                           self.NumberOfSeats)
