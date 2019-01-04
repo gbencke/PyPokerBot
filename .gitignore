@@ -19,3 +19,4 @@ logs/
 *.Table.txt
 tags
 env/
+sphinx/
