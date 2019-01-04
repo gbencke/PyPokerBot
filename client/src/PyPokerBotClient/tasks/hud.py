@@ -2,15 +2,15 @@ import os
 import logging
 import traceback
 from time import sleep
-from settings import settings
-from osinterface.win32.screenshot import capture_screenshot
-from osinterface.win32.hwnd_check import is_minimized, is_window_with_focus
-from model.PokerBot import PokerBot
-from model.PokerTableScanner import PokerTableScanner, has_command_to_execute
+from PyPokerBotClient.settings import GlobalSettings as Settings
+from PyPokerBotClient.osinterface.win32.screenshot import capture_screenshot
+from PyPokerBotClient.osinterface.win32.hwnd_check import is_minimized, is_window_with_focus
+from PyPokerBotClient.model.PokerBot import PokerBot
+from PyPokerBotClient.model.PokerTableScanner import PokerTableScanner, has_command_to_execute
 
 
 def get_time_to_sleep():
-    return settings['SLEEP_TIME_BETWEEN_CAPTURE_MS'] / 1000
+    return Settings.get_time_between_sleeps() / 1000
 
 
 def execute(args):
@@ -33,7 +33,7 @@ def execute(args):
                     if not is_window_with_focus(current_table.hwnd):
                         continue
                     im = capture_screenshot(current_table.hwnd,
-                                            os.path.join(settings['SAMPLES_FOLDER'],
+                                            os.path.join(Settings.get_sample_folder(),
                                                          current_table.get_screenshot_name()), should_save=False)
                     result = current_table.refresh_from_image(im)
                     result = current_table.generate_decision(result)
@@ -54,7 +54,7 @@ def execute(args):
                             continue
                         analisys = final_analisys
                         PokerTableScanner.generate_analisys_summary_info(final_analisys.strip())
-                        im.save(os.path.join(settings['SAMPLES_FOLDER'], current_table.get_screenshot_name()))
+                        im.save(os.path.join(Settings.get_sample_folder(), current_table.get_screenshot_name()))
             if len(lobbies) == 0:
                 logging.error('No Lobbies, exiting...')
                 exit(0)

@@ -121,3 +121,12 @@ class Settings:
 
     def get_pot_size(self, platform, tabletype):
         return default_setting['PLATFORMS'][platform]['TABLE_SCANNER'][tabletype]['POT_SIZE']
+
+    def get_sample_folder(self):
+        return default_setting['SAMPLES_FOLDER']
+
+    def get_time_between_sleeps(self):
+        return int(default_setting['SLEEP_TIME_BETWEEN_CAPTURE_MS'])
+
+    def get_platforms(self):
+        return [default_setting['PLATFORMS'][x] for x in default_setting['PLATFORMS']]

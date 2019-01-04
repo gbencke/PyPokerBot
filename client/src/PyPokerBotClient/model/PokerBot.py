@@ -1,7 +1,7 @@
 import importlib
-from custom_exceptions.MoreThanOneLobbyPerPlatformException import MoreThanOneLobbyPerPlatformException
-from settings import settings
-from osinterface.win32.scan_hwnd import scan_windows
+from PyPokerBotClient.custom_exceptions.MoreThanOneLobbyPerPlatformException import MoreThanOneLobbyPerPlatformException
+from PyPokerBotClient.settings import GlobalSettings as Settings
+from PyPokerBotClient.osinterface.win32.scan_hwnd import scan_windows
 
 
 class PokerBot:
@@ -10,7 +10,7 @@ class PokerBot:
 
     @staticmethod
     def get_supported_platforms():
-        return [settings['PLATFORMS'][x] for x in settings['PLATFORMS']]
+        return Settings.get_platforms()
 
     @staticmethod
     def get_instance(classname):
