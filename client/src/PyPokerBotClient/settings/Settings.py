@@ -113,6 +113,9 @@ class Settings:
     def get_playerhascard_size(self, platform, tabletype):
         return default_setting['PLATFORMS'][platform]['TABLE_SCANNER'][tabletype]['PLAYERHASCARD_SIZE']
 
+    def get_pot_pos(self, platform, tabletype):
+        return default_setting['PLATFORMS'][platform]['TABLE_SCANNER'][tabletype]['SET_RAISE_TO_POT']
+
     def get_command_pos(self, platform, tabletype, pos):
         return default_setting['PLATFORMS'][platform]['TABLE_SCANNER'][tabletype]['COMMAND_POS{}'.format(pos)]
 

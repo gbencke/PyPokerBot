@@ -1,5 +1,3 @@
-from time import sleep
-import logging
 import win32gui
 from PIL import Image
 from ctypes import windll, c_char_p, c_buffer

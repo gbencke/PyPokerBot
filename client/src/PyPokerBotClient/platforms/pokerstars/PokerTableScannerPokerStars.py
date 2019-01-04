@@ -1,21 +1,10 @@
 # coding=utf-8
-import logging
-import os
-import numpy
 import cv2
-import ast
-import datetime
-import subprocess
-import requests
 import re
 
-from time import sleep
-from datetime import datetime
 from PyPokerBotClient.settings import GlobalSettings as Settings
 from PyPokerBotClient.model.PokerTableScanner import PokerTableScanner, has_command_to_execute
 from PyPokerBotClient.platforms.utils import get_histogram_from_image
-from PyPokerBotClient.platforms.utils import get_card_template
-from PyPokerBotClient.platforms.utils import get_suite_from_image
 from PyPokerBotClient.platforms.utils import create_list_none_with_number_seats
 from PyPokerBotClient.osinterface.win32.screenshot import grab_image_from_file, grab_image_pos_from_image
 from PyPokerBotClient.custom_exceptions.NeedToSpecifySeatsException import NeedToSpecifySeatsException

@@ -1,29 +1,35 @@
-import logging
 import os
-import time
 import logging
-from settings import settings
-from os.win32.scan_hwnd import scan_windows, set_raise_to_pot
-from os.win32.screenshot import capture_screenshot
-from platforms.pokerstars.detection import is_pokerstars_lobby, is_pokerstars_table
-from platforms.pokerstars.helpers import get_table_name, get_table_stakes, get_table_format
-from model.PokerLobby import PokerLobby
-from model.PokerTable import PokerTable
+from PyPokerBotClient.settings import GlobalSettings as Settings
+from PyPokerBotClient.osinterface.win32.send_clicks import set_raise_to_pot
+from PyPokerBotClient.osinterface.win32.screenshot import capture_screenshot
+from PyPokerBotClient.model.PokerBot import PokerBot
 
 
 def execute(args):
-    windows_found = scan_windows()
-    pokerstars_lobby_hwnd = [x for x in windows_found if is_pokerstars_lobby(x['class'], x['title'])]
-    pokerstars_tables_hwnd = [x for x in windows_found if is_pokerstars_table(x['class'], x['title'])]
-    logging.debug(pokerstars_lobby_hwnd)
-    logging.debug(pokerstars_tables_hwnd)
+    res_last = {}
+    while True:
+        lobbies = PokerBot.scan_for_lobbies()
+        for current_lobby in lobbies:
+            for current_table in current_lobby.get_tables():
+                im = capture_screenshot(current_table.hwnd,
+                                        os.path.join(Settings.get_sample_folder(),
+                                                     current_table.get_screenshot_name()))
+                res = current_table.refresh_from_image(im)
+                res = current_table.generate_decision(res)
 
-    pokerstars_lobby = [PokerLobby(hwnd=x['hwnd'], lobby_name=x['title']) for x in pokerstars_lobby_hwnd]
-    pokerstars_tables = [PokerTable(hwnd=x['hwnd'],
-                                    name=get_table_name(x['title']),
-                                    stakes=get_table_stakes(x['title']),
-                                    format=get_table_format(x['title'])) for x in pokerstars_tables_hwnd]
-    for current_table in pokerstars_tables:
-        im = capture_screenshot(current_table.hwnd,
-                                os.path.join(settings['SAMPLES_FOLDER'], current_table.get_screenshot_name()), False)
-        set_raise_to_pot(current_table.hwnd)
+                if str(res) != str(res_last):
+                    logging.debug('--------------')
+                    logging.debug('Seats       : {}'.format(str(res['seats'])))
+                    logging.debug('Cards       : {}'.format(str(res['cards'])))
+                    logging.debug('Flop        : {}'.format(str(res['flop'])))
+                    logging.debug('Button      : {}'.format(str(res['button'])))
+                    if 'hero' in res:
+                        logging.debug('Hero        : {}'.format(str(res['hero'])))
+                    logging.debug('--------------')
+                    if current_table.has_command_to_execute(res):
+                        logging.debug('Commands    : {}'.format(str(res['commands'])))
+                        logging.debug('--------------')
+                        logging.debug('Decision    : {}'.format(str(res['decision'])))
+                        logging.debug('Command     : {}'.format(str(res['command'])))
+                        set_raise_to_pot(current_table.hwnd, current_lobby.platform, '6-SEATS')

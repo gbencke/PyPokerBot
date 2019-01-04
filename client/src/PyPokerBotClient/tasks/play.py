@@ -1,14 +1,14 @@
 import os
 import logging
 from time import sleep
-from settings import settings
-from osinterface.win32.screenshot import capture_screenshot
-from model.PokerBot import PokerBot
-from osinterface.win32.send_clicks import run_command
+from PyPokerBotClient.settings import GlobalSettings as Settings
+from PyPokerBotClient.osinterface.win32.screenshot import capture_screenshot
+from PyPokerBotClient.model.PokerBot import PokerBot
+from PyPokerBotClient.osinterface.win32.send_clicks import run_command
 
 
 def get_time_to_sleep():
-    return settings['SLEEP_TIME_BETWEEN_CAPTURE_MS'] / 1000
+    return Settings.get_time_between_sleeps() / 1000
 
 
 def execute(args):
@@ -19,7 +19,7 @@ def execute(args):
         for current_lobby in lobbies:
             for current_table in current_lobby.get_tables():
                 im = capture_screenshot(current_table.hwnd,
-                                        os.path.join(settings['SAMPLES_FOLDER'],
+                                        os.path.join(Settings.get_sample_folder(),
                                                      current_table.get_screenshot_name()))
                 res = current_table.refresh_from_image(im)
                 res = current_table.generate_decision(res)
@@ -38,7 +38,8 @@ def execute(args):
                         logging.debug('--------------')
                         logging.debug('Decision    : {}'.format(str(res['decision'])))
                         logging.debug('Command     : {}'.format(str(res['command'])))
-                        im.save(os.path.join(settings['SAMPLES_FOLDER'], current_table.get_screenshot_name()))
-                        run_command(current_table.hwnd, res['command']['to_execute'], res)
+                        im.save(os.path.join(Settings.get_sample_folder(), current_table.get_screenshot_name()))
+                        run_command(current_table.hwnd, res['command']['to_execute'], res, current_lobby.platform,
+                                    '6-SEATS')
                 res_last = res
             sleep(get_time_to_sleep())

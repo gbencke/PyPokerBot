@@ -1,8 +1,8 @@
 import os
 from time import sleep
-from settings import settings
-from osinterface.win32.screenshot import capture_screenshot
-from model.PokerBot import PokerBot
+from PyPokerBotClient.settings import GlobalSettings as Settings
+from PyPokerBotClient.osinterface.win32.screenshot import capture_screenshot
+from PyPokerBotClient.model.PokerBot import PokerBot
 
 
 def execute(args):
@@ -11,6 +11,6 @@ def execute(args):
         for current_lobby in lobbies:
             for current_table in current_lobby.get_tables():
                 capture_screenshot(current_table.hwnd,
-                                   os.path.join(settings['SAMPLES_FOLDER'],
+                                   os.path.join(Settings.get_sample_folder(),
                                                 current_table.get_screenshot_name()))
-        sleep(settings['SLEEP_TIME_BETWEEN_CAPTURE_MS'])
+        sleep(Settings.get_time_between_sleeps())

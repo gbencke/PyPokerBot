@@ -1,5 +1,5 @@
-from settings import settings
-from osinterface.win32.screenshot import grab_image_pos_from_file
+from PyPokerBotClient.settings import GlobalSettings as Settings
+from PyPokerBotClient.osinterface.win32.screenshot import grab_image_pos_from_file
 
 
 def execute(args):
@@ -14,6 +14,6 @@ def execute(args):
     image_filename_to_save = args[5]
     im = grab_image_pos_from_file(
         image_source,
-        settings['PLATFORMS'][image_platform]['TABLE_SCANNER'][image_tabletype][image_pos],
-        settings['PLATFORMS'][image_platform]['TABLE_SCANNER'][image_tabletype][image_size])
+        Settings.get_raw_image_pos(image_platform,image_tabletype,image_pos),
+        Settings.get_raw_image_size(image_platform,image_tabletype,image_pos))
     im.save(image_filename_to_save)
