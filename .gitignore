@@ -19,4 +19,4 @@ logs/
 *.Table.txt
 tags
 env/
-sphinx/
+_build/
