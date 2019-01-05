@@ -4,6 +4,17 @@ from PyPokerBotClient.osinterface.win32.screenshot import grab_image_from_file
 from PyPokerBotClient.model.PokerTableScanner import PokerTableScanner, has_command_to_execute
 
 
+def usage():
+    return \
+        """
+        This task analyses a screenshot of a pokertable and then returns a dictionary with 
+        the information captured from such image.
+                  
+        Parameters:
+           1:
+        """
+
+
 def execute(args):
     if len(args) < 1:
         print("For this task you need at least 1 arguments: <Image Source> <Platform> <TableType> ")

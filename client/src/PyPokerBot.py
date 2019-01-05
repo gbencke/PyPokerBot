@@ -21,13 +21,27 @@ def general_configuration():
 
 
 def show_usage():
+    """This function shows the command line parameters that every task requires.
+
+
+    :return:
+    """
     print("Welcome to PyPokerBot")
     print("=====================")
     print("Please execute: python PyPokerBot.py <task to run> [arguments]* ")
     print("Currently available tasks:")
     tasks_available = [modname for importer, modname, ispkg in pkgutil.iter_modules(tasks.__path__)]
     for current_task in tasks_available:
-        print("-{}".format(current_task))
+        try:
+            module_to_import = "PyPokerBotClient.tasks." + current_task
+            mod = import_module(module_to_import)
+            method_to_call = "usage"
+            method_pointer = getattr(mod, method_to_call)
+            descricao = method_pointer()
+            print("-{}:{}\n".format(current_task, descricao))
+        except ImportError, e:
+            logging.debug( "command ({0}) tried to import: {1} {2}".format(args[0], module_to_import, e))
+            continue
 
 
 def process_command(args):

@@ -9,6 +9,10 @@ from PyPokerBotClient.model.PokerBot import PokerBot
 from PyPokerBotClient.model.PokerTableScanner import PokerTableScanner, has_command_to_execute
 
 
+def usage():
+    return "Test"
+
+
 def get_time_to_sleep():
     return Settings.get_time_between_sleeps() / 1000
 

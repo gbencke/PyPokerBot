@@ -5,6 +5,10 @@ from PyPokerBotClient.osinterface.win32.screenshot import capture_screenshot
 from PyPokerBotClient.model.PokerBot import PokerBot
 
 
+def usage():
+    return "Test"
+
+
 def execute(args):
     while True:
         lobbies = PokerBot.scan_for_lobbies()

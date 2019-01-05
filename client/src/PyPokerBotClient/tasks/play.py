@@ -7,6 +7,10 @@ from PyPokerBotClient.model.PokerBot import PokerBot
 from PyPokerBotClient.osinterface.win32.send_clicks import run_command
 
 
+def usage():
+    return "Test"
+
+
 def get_time_to_sleep():
     return Settings.get_time_between_sleeps() / 1000
 
