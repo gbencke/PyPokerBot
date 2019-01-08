@@ -39,12 +39,12 @@ Return:
 
         **Decision**: The decision made by the current bot strategy
 
-Obs:
+    Obs:
 
-   * **Hero** is the term used for the current player
+       * **Hero** is the term used for the current player
+       * The python classes to be used for scanning the table and generating the strategy
+         are defined in the settings.py file
 
-   * The python classes to be used for scanning the table and generating the strategy
-    are defined in the settings.py file
 """
 
 from PyPokerBotClient.utils import get_instance
@@ -56,7 +56,7 @@ from PyPokerBotClient.model.PokerTableScanner import PokerTableScanner, has_comm
 def usage():
     """Display the current task (analyse table) usage
 
-    :return:  None
+    :return:  None (Prints the usage information to stdout)
     """
     return \
         """
@@ -97,6 +97,15 @@ def usage():
 
 
 def execute(args):
+    """Execute is the main entry point for this task module, it receives as parameters the args
+    specified on the module description above and run the scanning of the screenshot provided.
+    Prints to stdout the contents of the returned python dictionary.
+
+    :param args: The Command Line parameters specified on the module description above which are:
+         <Image Source> <Platform> <TableType>
+
+    :return: None (Prints the Analisys to stdout)
+    """
     if len(args) < 1:
         print("For this task you need at least 1 arguments: <Image Source> <Platform> <TableType> ")
         return
