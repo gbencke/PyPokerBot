@@ -1,12 +1,95 @@
+"""
+This task is used to debug the computer vision process that identifies the objects on the
+screenshot taken from the poker table. It crops the image in a specific position and size
+
+Usage:
+::
+
+    python PyPokerBot.py grab_image <Image Source> <Platform> <TableType> <Pos> <size> <FileName to save>")
+
+
+Parameters:
+
+    **Image Source**: The Screenshot of the poker client to be used as source
+
+    **Platform**: The poker platform from which the screenshot was taken
+
+    **TableType**: The type of table that the screenshot was taken (6-SEAT,9-SEAT,etc...)
+
+    **Pos**: The position to be cropped
+
+    **Size**: The size of the image to be cropped
+
+    **Filename to Save**: The filename for the cropped image
+
+Return:
+
+    **None** (But saves the image as specifiec in the parameter above)
+
+Obs:
+
+    It is important to notice that the position and size specified are
+    defined on the settings.py file.
+
+"""
 from PyPokerBotClient.settings import GlobalSettings as Settings
 from PyPokerBotClient.osinterface.win32.screenshot import grab_image_pos_from_file
 
 
 def usage():
-    return "Test"
+    """Display the current task (analyse table) usage
+
+    :return:  None (Prints the usage information to stdout)
+    """
+    return \
+        """
+        This task is used to debug the computer vision process that identifies the objects on the
+        screenshot taken from the poker table. It crops the image in a specific position and size
+
+        Usage:
+        ::
+
+            python PyPokerBot.py grab_image <Image Source> <Platform> <TableType> <Pos> <size> <FileName to save>")
+
+
+        Parameters:
+
+            **Image Source**: The Screenshot of the poker client to be used as source
+
+            **Platform**: The poker platform from which the screenshot was taken
+
+            **TableType**: The type of table that the screenshot was taken (6-SEAT,9-SEAT,etc...)
+
+            **Pos**: The position to be cropped
+
+            **Size**: The size of the image to be cropped
+
+            **Filename to Save**: The filename for the cropped image
+
+        Return:
+
+            **None** (But saves the image as specifiec in the parameter above)
+
+        Obs:
+
+            It is important to notice that the position and size specified are
+            defined on the settings.py file.
+
+        """
 
 
 def execute(args):
+    """
+    This task is used to debug the computer vision process that identifies the objects on the
+    screenshot taken from the poker table. It crops the image in a specific position and size
+
+    :param args: The Command Line parameters specified on the module description above which are:
+         <Image Source> <Platform> <TableType> <Pos> <size> <FileName to save>
+
+    :return: None (But saves the image as specifiec in the parameter above)
+
+
+    """
     if len(args) < 4:
         print(
             "For this task you need at least 3 arguments: <Image Source> <Platform> <TableType> <Pos> <size> <FileName to save>")
@@ -20,5 +103,5 @@ def execute(args):
     im = grab_image_pos_from_file(
         image_source,
         Settings.get_raw_image_pos(image_platform, image_tabletype, image_pos),
-        Settings.get_raw_image_size(image_platform, image_tabletype, image_pos))
+        Settings.get_raw_image_size(image_platform, image_tabletype, image_size))
     im.save(image_filename_to_save)

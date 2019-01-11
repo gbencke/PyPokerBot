@@ -1,3 +1,24 @@
+"""
+This task starts the PokerBot as a HUD (HeadUp Display), so it will open the poker cliente,
+start capturing the images, and parsing the image for the current table information and
+also will generate decisions, but it *wont* execute the decisions made (send clicks)
+
+Usage:
+::
+
+    python PyPokerBot.py hud [SleepTimeSec]
+
+Parameters:
+
+    **SleepTimeSec**: The time to sleep before starting to capture screen images. The
+    time between screen captures is defined in the settings.py file.
+
+
+Return:
+
+    **None** (But writes to stdout the parse of the screen image capture)
+
+"""
 import os
 import logging
 import traceback
@@ -10,14 +31,52 @@ from PyPokerBotClient.model.PokerTableScanner import PokerTableScanner, has_comm
 
 
 def usage():
-    return "Test"
+    return \
+        """
+        This task starts the PokerBot as a HUD (HeadUp Display), so it will open the poker cliente,
+        start capturing the images, and parsing the image for the current table information and
+        also will generate decisions, but it *wont* execute the decisions made (send clicks)
+
+        Usage:
+        ::
+
+            python PyPokerBot.py hud [SleepTimeSec]
+
+        Parameters:
+
+            **SleepTimeSec**: The time to sleep before starting to capture screen images. The
+            time between screen captures is defined in the settings.py file.
+
+
+        Return:
+
+            **None** (But writes to stdout the parse of the screen image capture)
+
+        """
 
 
 def get_time_to_sleep():
+    """ Returns the time to sleep between screen captures as defined on settings.py
+
+    :return: Time to sleep between screen captures as defined on settings.py
+    """
     return Settings.get_time_between_sleeps() / 1000
 
 
 def execute(args):
+    """
+    This task starts the PokerBot as a HUD (HeadUp Display), so it will open the poker cliente,
+    start capturing the images, and parsing the image for the current table information and
+    also will generate decisions, but it *wont* execute the decisions made (send clicks)
+
+    :param args: The Command Line parameters specified on the module description above which are:
+        <SleepTimeSec>
+
+    :return: None (But writes to stdout the parse of the screen image capture)
+        This task is used to debug the computer vision process that identifies the objects on the
+        screenshot taken from the poker table. It crops the image in a specific position and size
+
+    """
     logging.info("Starting HUD....")
     if len(args) > 0:
         total_secs = int(args[0])

@@ -1,3 +1,21 @@
+"""
+This tasks stars the PokerBot in Playing mode, so it will capture the screens of the
+poker client, parse the image, run the strategy and send the clicks to the poker cliente
+
+Usage:
+::
+
+    python PyPokerBot.py play
+
+Parameters:
+
+    **None**
+
+Return:
+
+    **None** (But writes to stdout the parse of the screen image capture)
+
+"""
 import os
 import logging
 from time import sleep
@@ -8,14 +26,45 @@ from PyPokerBotClient.osinterface.win32.send_clicks import run_command
 
 
 def usage():
-    return "Test"
+    return \
+        """
+        This tasks stars the PokerBot in Playing mode, so it will capture the screens of the
+        poker client, parse the image, run the strategy and send the clicks to the poker cliente
+
+        Usage:
+        ::
+
+            python PyPokerBot.py play
+
+        Parameters:
+
+            **None**
+
+        Return:
+
+            **None** (But writes to stdout the parse of the screen image capture)
+
+        """
 
 
 def get_time_to_sleep():
+    """ Returns the time to sleep between screen captures as defined on settings.py
+
+    :return: Time to sleep between screen captures as defined on settings.py
+    """
     return Settings.get_time_between_sleeps() / 1000
 
 
 def execute(args):
+    """
+    This tasks stars the PokerBot in Playing mode, so it will capture the screens of the
+    poker client, parse the image, run the strategy and send the clicks to the poker cliente
+
+    :param: None
+
+    :return: None (But writes to stdout the parse of the screen image capture)
+
+    """
     logging.debug("Starting the Play Task...")
     res_last = {}
     while True:
