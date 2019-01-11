@@ -1,3 +1,8 @@
+"""
+This module contains the default settings.py dictionary that contains all the PokerBot configuration
+parameters, it is a simple python dictionary that will be accessed by the *Settings* class
+
+"""
 settings = {
     "LOG_LEVEL": "DEBUG",
     "LOG_FORMAT": "%(asctime)-15s %(message)s",

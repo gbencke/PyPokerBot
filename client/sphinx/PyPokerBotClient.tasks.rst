@@ -44,23 +44,6 @@ PyPokerBotClient.tasks.play module
     :undoc-members:
     :show-inheritance:
 
-PyPokerBotClient.tasks.test\_mouse module
------------------------------------------
-
-.. automodule:: PyPokerBotClient.tasks.test_mouse
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-PyPokerBotClient.tasks.test\_raise\_pot module
-----------------------------------------------
-
-.. automodule:: PyPokerBotClient.tasks.test_raise_pot
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-
 Module contents
 ---------------
 

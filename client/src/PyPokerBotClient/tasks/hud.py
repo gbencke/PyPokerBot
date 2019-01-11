@@ -31,6 +31,10 @@ from PyPokerBotClient.model.PokerTableScanner import PokerTableScanner, has_comm
 
 
 def usage():
+    """Display the current task (hud) usage
+
+    :return:  None (Prints the usage information to stdout)
+    """
     return \
         """
         This task starts the PokerBot as a HUD (HeadUp Display), so it will open the poker cliente,

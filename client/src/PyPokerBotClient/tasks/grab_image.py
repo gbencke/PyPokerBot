@@ -37,7 +37,7 @@ from PyPokerBotClient.osinterface.win32.screenshot import grab_image_pos_from_fi
 
 
 def usage():
-    """Display the current task (analyse table) usage
+    """Display the current task (grab image) usage
 
     :return:  None (Prints the usage information to stdout)
     """

@@ -1,3 +1,7 @@
+"""This module is the main CLI interface to the PokerBot. It runs through a
+lot of 'tasks' that can be shown by calling this module without arguments.
+This is the main interface to the bot.
+"""
 import sys
 import os
 import logging
@@ -11,6 +15,10 @@ import PyPokerBotClient.tasks as tasks
 
 
 def general_configuration():
+    """ Performs the general configuration of the bot like setting
+    the correct working directory and also loading the logging
+    configurations...
+    """
     current_path = os.getcwd()
     sys.path.append(current_path)
     logging.basicConfig(format=Settings.get_log_format(),
@@ -21,10 +29,8 @@ def general_configuration():
 
 
 def show_usage():
-    """This function shows the command line parameters that every task requires.
-
-
-    :return:
+    """Scans through the tasks module and show the tasks that are available and
+    their required command-line parameters.
     """
     print("Welcome to PyPokerBot")
     print("=====================")
@@ -40,11 +46,15 @@ def show_usage():
             descricao = method_pointer()
             print("-{}:{}\n".format(current_task, descricao))
         except ImportError, e:
-            logging.debug( "command ({0}) tried to import: {1} {2}".format(args[0], module_to_import, e))
+            logging.debug( "command ({0}) tried to import: {1} {2}".format(current_task, module_to_import, e))
             continue
 
 
 def process_command(args):
+    """Parses the command line parameters and then load the correct task module to run it.
+    It is important to notice that the first command line parameter is the name of the
+    module to be used.
+    """
     module_to_import = "PyPokerBotClient.tasks." + args[0]
     try:
         mod = import_module(module_to_import)

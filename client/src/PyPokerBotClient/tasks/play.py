@@ -26,6 +26,10 @@ from PyPokerBotClient.osinterface.win32.send_clicks import run_command
 
 
 def usage():
+    """Display the current task (play) usage
+
+    :return:  None (Prints the usage information to stdout)
+    """
     return \
         """
         This tasks stars the PokerBot in Playing mode, so it will capture the screens of the
