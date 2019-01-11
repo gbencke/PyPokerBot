@@ -133,3 +133,9 @@ class Settings:
 
     def get_platforms(self):
         return [default_setting['PLATFORMS'][x] for x in default_setting['PLATFORMS']]
+
+    def get_raw_image_pos(self,image_platform,image_tabletype,image_pos):
+        return default_setting['PLATFORMS'][image_platform]['TABLE_SCANNER'][image_tabletype][image_pos]
+
+    def get_raw_image_size(self,image_platform,image_tabletype,image_size):
+        return default_setting['PLATFORMS'][image_platform]['TABLE_SCANNER'][image_tabletype][image_size]
