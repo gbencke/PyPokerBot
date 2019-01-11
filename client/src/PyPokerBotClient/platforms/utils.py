@@ -1,11 +1,23 @@
+"""
+This module contains several utility functions that are shared among all possible
+poker cliente platforms. They mainly deal with data and image manipulation
+"""
 import numpy
 import cv2
 
-from PyPokerBotClient.osinterface.win32.screenshot import grab_image_from_file, grab_image_pos_from_image
+from PyPokerBotClient.osinterface.win32.screenshot import grab_image_from_file
 from PyPokerBotClient.settings import GlobalSettings as Settings
 
 
 def get_histogram_from_image(image):
+    """
+    From a Numpy array loaded using a Image manipulation toolkit like
+    skimage or PIL, creates a histogram, a flattened vector of all the
+    color values of the image in order to compare it.
+
+    :param image: Numpy Array containing the image
+    :return: A Flattened histogram of the image
+    """
     image_cv2 = numpy.array(image)[:, :, ::-1].copy()
     image_cv2_hist = cv2.calcHist([image_cv2], [0, 1, 2], None, [8, 8, 8], [0, 256, 0, 256, 0, 256])
     dst = image_cv2_hist.copy()
@@ -13,18 +25,42 @@ def get_histogram_from_image(image):
 
 
 def create_list_none_with_number_seats(NumberOfSeats):
+    """
+    Utility function to create a array of empty seats as None
+    :param NumberOfSeats: Number of Seats (itens on the list)
+    :return: List of None entities in a range of NumberOfSeats
+    """
     return [None for _ in range(NumberOfSeats)]
 
 
 def create_list_boolean_with_number_seats(NumberOfSeats):
+    """
+    Utility function to create a array of empty seats as boolean
+    :param NumberOfSeats: Number of Seats (itens on the list)
+    :return: List of False Value entities in a range of NumberOfSeats
+    """
     return [False] * NumberOfSeats
 
 
 def create_list_string_with_number_seats(NumberOfSeats):
+    """
+    Utility function to create a array of empty seats as empty strings
+    :param NumberOfSeats: Number of Seats (itens on the list)
+    :return: List of empty strings in a range of NumberOfSeats
+    """
     return [''] * NumberOfSeats
 
 
 def get_suite_from_image(selected_image):
+    """
+    From a certain image, try to determine its suite ( clubs, spades,
+    diamonds or hearts). It uses a algorithm to check the predominant
+    colocar on the image and then check the corresponding suit.
+
+    :param selected_image: Numpy Array containing a image
+    :return: 'c' for clubs, 's' for spades,
+             'h' for hearts, 'd' for diamonds
+    """
     red = 0
     blue = 0
     green = 0
@@ -57,6 +93,15 @@ def get_suite_from_image(selected_image):
 
 
 def get_card_template(Platform, current_card, current_suit):
+    """
+    This utility function returns the Numpy array containing the
+    image of a certain card and suit.
+
+    :param Platform: The current Poker Platform (888, PokerStarts)
+    :param current_card: A string containing the card value (2-9,T,J,Q,K,A)
+    :param current_suit: The index of the seat to be returned (h,c,s,d)
+    :return: A numpy array containing the image to be returned
+    """
     filename = Settings.get_card_template(Platform, current_card, current_suit)
-    Image_template = grab_image_from_file(filename)
-    return Image_template, numpy.array(Image_template)[:, :, ::-1].copy()
+    image_template = grab_image_from_file(filename)
+    return numpy.array(image_template)[:, :, ::-1].copy()

@@ -77,7 +77,7 @@ class PokerAnalyseHero:
                     image_from_player, current_flop_image = self.get_hero_card_image(im, seat, current_hero_card)
                     for current_suit in PokerTableScanner.suits:
                         for current_card in PokerTableScanner.cards:
-                            template_image, current_card_image = get_card_template(self.Platform, current_card,
+                            current_card_image = get_card_template(self.Platform, current_card,
                                                                                    current_suit)
                             res = cv2.matchTemplate(current_flop_image, current_card_image, 0)
                             if res < selected_card_res:

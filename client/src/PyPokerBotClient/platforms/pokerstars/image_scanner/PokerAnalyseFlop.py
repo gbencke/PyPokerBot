@@ -67,7 +67,7 @@ class PokerAnalyseFlop:
             image_from_flop_card, current_flop_image = self.get_card_in_flop_pos_is_empty(Image, index)
             for current_suit in PokerTableScanner.suits:
                 for current_card in PokerTableScanner.cards:
-                    template_image, current_card_image = get_card_template(self.Platform, current_card, current_suit)
+                    current_card_image = get_card_template(self.Platform, current_card, current_suit)
                     res = cv2.matchTemplate(current_flop_image, current_card_image, 0)
                     if res < selected_card_res:
                         selected_card = current_card + current_suit
