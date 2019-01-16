@@ -9,7 +9,8 @@ from PyPokerBotClient.platforms.utils import get_card_template
 from PyPokerBotClient.platforms.utils import create_list_none_with_number_seats
 from PyPokerBotClient.osinterface.win32.screenshot import grab_image_from_file, grab_image_pos_from_image
 
-class PokerAnalyseHero:
+
+class PokerAnalyseHero(object):
 
     def __init__(self, Platform, TableType, NumberOfSeats):
         self.Platform = Platform
@@ -78,7 +79,7 @@ class PokerAnalyseHero:
                     for current_suit in PokerTableScanner.suits:
                         for current_card in PokerTableScanner.cards:
                             current_card_image = get_card_template(self.Platform, current_card,
-                                                                                   current_suit)
+                                                                   current_suit)
                             res = cv2.matchTemplate(current_flop_image, current_card_image, 0)
                             if res < selected_card_res:
                                 selected_card = current_card + current_suit
