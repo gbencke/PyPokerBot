@@ -66,6 +66,70 @@ def get_time_to_sleep():
     """
     return Settings.get_time_between_sleeps() / 1000
 
+def execute_hud():
+    """
+    Function that executes one loop of the hud...
+
+    :return: None
+    """
+    try:
+        analisys = ''
+        sleep(get_time_to_sleep())
+        lobbies = PokerBot.scan_for_lobbies()
+        for current_lobby in lobbies:
+            for current_table in current_lobby.get_tables():
+                if is_minimized(current_table.hwnd):
+                    return
+                if not is_window_with_focus(current_table.hwnd):
+                    return
+                grabbed_image = capture_screenshot(current_table.hwnd,
+                                                   os.path.join(Settings.get_sample_folder(),
+                                                                current_table.
+                                                                get_screenshot_name()),
+                                                   should_save=False)
+                result = current_table.refresh_from_image(grabbed_image)
+                result = current_table.generate_decision(result)
+                if has_command_to_execute(result):
+                    final_analisys = '\n'
+                    final_analisys += \
+                        '==========================================================\n'
+                    final_analisys += \
+                        '==========================================================\n'
+                    final_analisys += 'Decision          :{}({})\n'.format(
+                        result['decision']['decision'],
+                        result['decision']['raise_strategy'])
+                    final_analisys += 'Equity            :{}%\n'.format(
+                        result['hand_analisys']['result'])
+                    final_analisys += \
+                        '----------------------------------------------------------\n'
+                    final_analisys += 'Number of Villains:{}\n'.format(
+                        len([x for x in result['cards'] if x]))
+                    final_analisys += 'Flop              :{}\n'.format(
+                        "".join(result['flop']))
+                    final_analisys += 'Pocket Cards      :{}\n'.format(
+                        result['hero']['hero_cards'])
+                    final_analisys += 'Position          :{}\n'.format(
+                        result['hero']['position'])
+                    if final_analisys == analisys:
+                        return
+                    analisys = final_analisys
+                    PokerTableScanner.generate_analisys_summary_info(final_analisys.strip())
+                    grabbed_image.save(os.path.join(Settings.get_sample_folder(),
+                                                    current_table.get_screenshot_name()))
+        if len(lobbies) == 0:
+            logging.error('No Lobbies, exiting...')
+            exit(0)
+        else:
+            if len(lobbies[0].get_tables()) == 0:
+                logging.error('No Tables, sleeping 1 sec')
+                sleep(1)
+                return
+    except Exception as exception_raised:
+        traceback_from_exception = traceback.format_exc()
+        logging.error('error:{},{}'.format(
+            exception_raised,
+            str(traceback_from_exception)))
+
 
 def execute(args):
     """
@@ -85,51 +149,8 @@ def execute(args):
     if len(args) > 0:
         total_secs = int(args[0])
         logging.info("Will sleep for {}....".format(args[0]))
-        for x in range(total_secs):
-            logging.info("Sleeping({})".format(total_secs - x))
+        for current_secs in range(total_secs):
+            logging.info("Sleeping({})".format(total_secs - current_secs))
             sleep(1)
-    analisys = ''
     while True:
-        try:
-            sleep(get_time_to_sleep())
-            lobbies = PokerBot.scan_for_lobbies()
-            for current_lobby in lobbies:
-                for current_table in current_lobby.get_tables():
-                    if is_minimized(current_table.hwnd):
-                        continue
-                    if not is_window_with_focus(current_table.hwnd):
-                        continue
-                    im = capture_screenshot(current_table.hwnd,
-                                            os.path.join(Settings.get_sample_folder(),
-                                                         current_table.get_screenshot_name()), should_save=False)
-                    result = current_table.refresh_from_image(im)
-                    result = current_table.generate_decision(result)
-                    if has_command_to_execute(result):
-                        final_analisys = '\n'
-                        final_analisys += '==========================================================\n'
-                        final_analisys += '==========================================================\n'
-                        final_analisys += 'Decision          :{}({})\n'.format(
-                            result['decision']['decision'],
-                            result['decision']['raise_strategy'])
-                        final_analisys += 'Equity            :{}%\n'.format(result['hand_analisys']['result'])
-                        final_analisys += '----------------------------------------------------------\n'
-                        final_analisys += 'Number of Villains:{}\n'.format(len([x for x in result['cards'] if x]))
-                        final_analisys += 'Flop              :{}\n'.format("".join(result['flop']))
-                        final_analisys += 'Pocket Cards      :{}\n'.format(result['hero']['hero_cards'])
-                        final_analisys += 'Position          :{}\n'.format(result['hero']['position'])
-                        if final_analisys == analisys:
-                            continue
-                        analisys = final_analisys
-                        PokerTableScanner.generate_analisys_summary_info(final_analisys.strip())
-                        im.save(os.path.join(Settings.get_sample_folder(), current_table.get_screenshot_name()))
-            if len(lobbies) == 0:
-                logging.error('No Lobbies, exiting...')
-                exit(0)
-            else:
-                if len(lobbies[0].get_tables()) == 0:
-                    logging.error('No Tables, sleeping 1 sec')
-                    sleep(1)
-                    continue
-        except Exception as e:
-            tb = traceback.format_exc()
-            logging.error('error:' + str(tb))
+        execute_hud()

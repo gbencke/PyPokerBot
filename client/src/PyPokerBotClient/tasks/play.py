@@ -59,7 +59,7 @@ def get_time_to_sleep():
     return Settings.get_time_between_sleeps() / 1000
 
 
-def execute(args):
+def execute():
     """
     This tasks stars the PokerBot in Playing mode, so it will capture the screens of the
     poker client, parse the image, run the strategy and send the clicks to the poker cliente
@@ -75,10 +75,11 @@ def execute(args):
         lobbies = PokerBot.scan_for_lobbies()
         for current_lobby in lobbies:
             for current_table in current_lobby.get_tables():
-                im = capture_screenshot(current_table.hwnd,
-                                        os.path.join(Settings.get_sample_folder(),
-                                                     current_table.get_screenshot_name()))
-                res = current_table.refresh_from_image(im)
+                grabbed_image = capture_screenshot(
+                    current_table.hwnd,
+                    os.path.join(Settings.get_sample_folder(),
+                                 current_table.get_screenshot_name()))
+                res = current_table.refresh_from_image(grabbed_image)
                 res = current_table.generate_decision(res)
 
                 if str(res) != str(res_last):
@@ -95,8 +96,16 @@ def execute(args):
                         logging.debug('--------------')
                         logging.debug('Decision    : {}'.format(str(res['decision'])))
                         logging.debug('Command     : {}'.format(str(res['command'])))
-                        im.save(os.path.join(Settings.get_sample_folder(), current_table.get_screenshot_name()))
-                        run_command(current_table.hwnd, res['command']['to_execute'], res, current_lobby.platform,
-                                    '6-SEATS')
+
+                        grabbed_image.save(
+                            os.path.join(Settings.get_sample_folder(),
+                                         current_table.get_screenshot_name()))
+
+                        run_command(
+                            current_table.hwnd,
+                            res['command']['to_execute'],
+                            res,
+                            current_lobby.platform,
+                            '6-SEATS')
                 res_last = res
             sleep(get_time_to_sleep())

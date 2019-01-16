@@ -37,7 +37,7 @@ def usage():
     :return:  None (Prints the usage information to stdout)
     """
     return \
-        """
+"""
         This Task generates a series of screenshots from the Poker desktop client that is
         running on the computer. It saves them as JPEG images for later analisys. Those
         samples are saved on the samples_folder key of the settings.py configuration file
@@ -60,10 +60,10 @@ def usage():
 
             The samples are saved on the folder specified on the samples_folder key of the
             dictionary returned by settings.py
-        """
+"""
 
 
-def execute(args):
+def execute():
     """Execute is the main entry point for this task module. It starts the loop that generate the
     samples from capturing the poker client desktop image.
 
