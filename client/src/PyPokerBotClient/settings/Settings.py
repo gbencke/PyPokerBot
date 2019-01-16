@@ -7,7 +7,7 @@ as there is a need for all components of the bot to share the same parameters.
 from PyPokerBotClient.settings.default_settings import settings as default_setting
 
 
-class Settings:
+class Settings(object):
     """
     Settings class is a interface to the settings.py dictionary that contains the general
     configuration and parameters for the PokerBot, it is meant to be used as a singleton

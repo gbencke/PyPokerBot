@@ -1,3 +1,7 @@
+"""
+This module contains a class that analyses the commands available to the Poker Player on the current
+Table being played.
+"""
 # coding=utf-8
 import subprocess
 import cv2
@@ -13,15 +17,36 @@ from PyPokerBotClient.osinterface.win32.screenshot import grab_image_from_file, 
 from PyPokerBotClient.settings import GlobalSettings as Settings
 
 
-class PokerAnalyseCommands:
+class PokerAnalyseCommands(object):
+    """
+    This class verifies which commands (Buttons are available to the poker) are in the current image to
+    be used by the player. It crops the image, and then uses a OCR program called Tesseract to try to
+    convert the image into a string.
+    """
 
     def __init__(self, Platform, TableType, BB):
+        """
+        The constructor for the class, takes as parameter the Poker Platform to use, the Table Type
+        to analyse and the value of the BigBlind
+
+        :param Platform: The Poker Platform as specified on the settings.py file
+        :param TableType: The Table Type as specified on the settings.py file
+        :param BB: The current Table Big Blind
+        """
         self.Platform = Platform
         self.TableType = TableType
         self.BB = BB
-        pass
 
     def generate_command_tuple(self, str):
+        """
+        This method takes as parameter the string returned from Tesseract and then tries
+        to parse the string in order to get the correct command and if there is a value
+        on the command like: "Raise $0.25", tries to get this value.
+
+        :param str: The string to parse
+        :return: A Tuple containing the command string: FOLD, RAISE, CHECK or CALL, a value
+             and the original string
+        """
         command = ''
         value = ''
         if 'FOLD' in str.upper():
@@ -38,6 +63,15 @@ class PokerAnalyseCommands:
         return command, value, str
 
     def analyse_commands(self, im):
+        """
+        This is the default method for this class, as it receives the screenshot of the table
+        and then analyse the image to check for the current buttons being shown, it uses Tesseract
+        to OCR the cropped positions to transform the image into a string.
+
+        :param im: The Table ScreenShot to be parsed
+        :return: A List of Tuples, each tuple containing the command found, its value (if
+            available) and the original string from Tesseract
+        """
         ret = ['', '', '']
 
         for x in range(3):
