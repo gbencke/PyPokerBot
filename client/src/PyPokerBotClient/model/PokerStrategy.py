@@ -1,11 +1,18 @@
-class PokerStrategy:
+"""
+This module contains a abstract class that will be specialized on different
+poker strategies, which are classes that returns the correct action for a certain
+situation
+"""
+
+
+class PokerStrategy(object):
+    """
+    Abstract class that encapsulates a PokerStrategy.
+    """
+
     def __init__(self):
+        """
+        Default Constructor
+        """
         pass
 
-
-
-    def verify_check_command(self, analisys):
-        for x in range(3):
-            if 'CHECK' in analisys['commands'][x].upper():
-                return True
-        return False
