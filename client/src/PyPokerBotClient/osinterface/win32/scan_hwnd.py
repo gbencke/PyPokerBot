@@ -1,7 +1,16 @@
+"""
+This module contains functions to scan the Windows Operating System for Windows Handles (HWND).
+"""
 import win32gui
 
 
 def scan_windows(hwnd_parent=0):
+    """
+    Returns a list of dictionaries containing the windows found on the windows desktop GUI.
+
+    :param hwnd_parent: The parent HWND, starts with 0 (root window)
+    :return: A list of dictionaries containing: hwnd, title, class and its parent
+    """
     ret = []
     current_hwnd = 0
     while True:

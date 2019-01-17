@@ -1,3 +1,7 @@
+"""
+This module contains several functions to handle screenshots that are taken from the
+Poker Client GUIs.
+"""
 import win32gui
 from PIL import Image
 from ctypes import windll, c_char_p, c_buffer
@@ -27,15 +31,7 @@ ERROR_INVALID_PARAMETER = 87
 
 def grab_screen(bbox=None):
     """
-    Grabs a screenshot. This is a replacement for PIL's ImageGrag.grab() method
-    that supports multiple monitors. (SEE: https://github.com/python-pillow/Pillow/issues/1547)
-
-    Returns a PIL Image, so PIL library must be installed.
-
-    Usage:
-        im = grab_screen() # grabs a screenshot of the primary monitor
-        im = grab_screen([-1600, 0, -1, 1199]) # grabs a 1600 x 1200 screenshot to the left of the primary monitor
-        im.save('screencap.jpg')
+    This function returns a image of the entire computer desktop screen
     """
 
     def cleanup():
@@ -87,6 +83,16 @@ def grab_screen(bbox=None):
 
 
 def capture_screenshot(hwnd, file_to_save, should_save=True):
+    """
+    This is the main function for this module, as it receives as parameter the HWND
+    (Windows Handle) identifying the correct screen to capture, and if specified, the
+    file_name where we need to save that screen shot.
+
+    :param hwnd: The HWND (Windows Handle) for that Window.
+    :param file_to_save: The name of the file to save the image
+    :param should_save: Should we save the image?
+    :return: Return a numpy array containing a image
+    """
     if not hwnd == win32gui.GetForegroundWindow():
         win32gui.SetForegroundWindow(hwnd)
     win32gui.MoveWindow(hwnd, 0, 0, 1042, 745, True)
@@ -100,13 +106,35 @@ def capture_screenshot(hwnd, file_to_save, should_save=True):
 
 
 def grab_image_from_file(image):
+    """
+    Loads a certain image from a filename and returns a numpy array representing it.
+
+    :param image: The filename to load.
+    :return: The numpy array representing the image
+    """
     return Image.open(image)
 
 
 def grab_image_pos_from_image(image, pos, size):
+    """
+    Returns a region of the image based on a certain position and size.
+
+    :param image: The numpy array representing the image
+    :param pos: The Top-Left position
+    :param size: The size of the image
+    :return: A numpy array of the region, representing the image.
+    """
     return image.crop((pos[0], pos[1], pos[0] + size[0], pos[1] + size[1]))
 
 
 def grab_image_pos_from_file(file_name, pos, size):
+    """
+    Returns a region of the image in the file name specified, based on a certain position and size
+
+    :param file_name: The file name of the image
+    :param pos: The Top-Left position
+    :param size: The size of the image
+    :return: A numpy array of the region, representing the image.
+    """
     im = Image.open(file_name)
     return grab_image_pos_from_image(im, pos, size)
