@@ -8,8 +8,7 @@ import re
 
 from PyPokerBotClient.model.PokerTableScanner import PokerTableScanner, has_command_to_execute
 from PyPokerBotClient.platforms.utils import create_list_none_with_number_seats
-from PyPokerBotClient.custom_exceptions.NeedToSpecifySeatsException import NeedToSpecifySeatsException
-from PyPokerBotClient.custom_exceptions.NeedToSpecifyTableTypeException import NeedToSpecifyTableTypeException
+from PyPokerBotClient.custom_exceptions import NeedToSpecifySeatsException, NeedToSpecifyTableTypeException
 from PyPokerBotClient.platforms.pokerstars.image_scanner.PokerAnalysePlayersWithCards import \
     PokerAnalysePlayersWithCards
 from PyPokerBotClient.platforms.pokerstars.image_scanner.PokerAnalysePlayersWithoutCards import \
