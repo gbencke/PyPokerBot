@@ -32,7 +32,7 @@ Obs:
     defined on the settings.py file.
 
 """
-from PyPokerBotClient.settings import GlobalSettings as Settings
+from PyPokerBotClient.settings import GLOBAL_SETTINGS as Settings
 from PyPokerBotClient.osinterface.win32.screenshot import grab_image_pos_from_file
 
 

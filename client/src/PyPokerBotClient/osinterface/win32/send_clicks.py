@@ -6,7 +6,7 @@ import pyautogui
 import logging
 from time import sleep
 
-from PyPokerBotClient.settings import GlobalSettings as Settings
+from PyPokerBotClient.settings import GLOBAL_SETTINGS as Settings
 
 
 def set_raise_to_pot(hwnd, platform, tabletype):

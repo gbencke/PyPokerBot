@@ -4,7 +4,7 @@ Settings class is a interface to the settings.py dictionary that contains the ge
 configuration and parameters for the PokerBot, it is meant to be used as a singleton
 as there is a need for all components of the bot to share the same parameters.
 """
-from PyPokerBotClient.settings.default_settings import settings as default_setting
+from PyPokerBotClient.settings.default_settings import DEFAULT_SETTINGS as default_setting
 
 
 class Settings(object):
@@ -75,7 +75,8 @@ class Settings(object):
         :param image_tabletype: A string containing the poker table type to use.
         :return: A integer with the number of seats.
         """
-        return default_setting['PLATFORMS'][image_platform]['TABLE_SCANNER'][image_tabletype]['NUMBER_OF_SEATS']
+        return default_setting['PLATFORMS'][image_platform]['TABLE_SCANNER'] \
+            [image_tabletype]['NUMBER_OF_SEATS']
 
     def get_calculate_url(self):
         """
@@ -98,10 +99,10 @@ class Settings(object):
         :param index: The index of the seat to be returned
         :return: A string containing the path to the sample image
         """
-        return default_setting['PLATFORMS'][platform]['TABLE_SCANNER'][
-                   'TEMPLATES_FOLDER'] + '\\' + 'PLAYER{}_HASNOCARD'.format(index + 1) + '.jpg'
+        return default_setting['PLATFORMS'][platform]['TABLE_SCANNER'] \
+                   ['TEMPLATES_FOLDER'] + '\\' + 'PLAYER{}_HASNOCARD'.format(index + 1) + '.jpg'
 
-    def get_button_template_file(selfself, platform, table, index):
+    def get_button_template_file(self, platform, index):
         """
         The PokerBot uses a series of templates for each platform to determine if a
         certain button is in a certain position, or if there are no buttons. This
@@ -143,8 +144,8 @@ class Settings(object):
         :param current_suit: The index of the seat to be returned (h,c,s,d)
         :return: A string containing the path to the sample image.
         """
-        return default_setting['PLATFORMS'][platform]['TABLE_SCANNER'][
-                   'TEMPLATES_FOLDER'] + '\\' + current_card + current_suit + '.jpg'
+        return default_setting['PLATFORMS'][platform]['TABLE_SCANNER'] \
+                   ['TEMPLATES_FOLDER'] + '\\' + current_card + current_suit + '.jpg'
 
     def get_nobet_template(self, platform, tabletype):
         """
@@ -221,7 +222,8 @@ class Settings(object):
         :param tabletype: A string containing the poker table type to use.
         :return: A integer returning the tolerance level
         """
-        return default_setting['PLATFORMS'][platform]['TABLE_SCANNER'][tabletype]['COMMAND_TEST_TOLERANCE']
+        return default_setting['PLATFORMS'][platform] \
+            ['TABLE_SCANNER'][tabletype]['COMMAND_TEST_TOLERANCE']
 
     def get_command_test_template(self, platform, tabletype, current_command):
         """
@@ -247,7 +249,8 @@ class Settings(object):
         :param tabletype: A string containing the poker table type to use.
         :return: A tuple containing the size of the command button
         """
-        return default_setting['PLATFORMS'][platform]['TABLE_SCANNER'][tabletype]['COMMAND_TEST_SIZE']
+        return default_setting['PLATFORMS'][platform] \
+            ['TABLE_SCANNER'][tabletype]['COMMAND_TEST_SIZE']
 
     def get_command_size(self, platform, tabletype):
         """
@@ -272,8 +275,8 @@ class Settings(object):
         :param index: The index of the position in the table
         :return: A tuple containing the size of the command button template
         """
-        return default_setting['PLATFORMS'][platform]['TABLE_SCANNER'][tabletype][
-                   'BUTTON{}'.format(index + 1)],
+        return default_setting['PLATFORMS'][platform]['TABLE_SCANNER'] \
+                   [tabletype]['BUTTON{}'.format(index + 1)],
 
     def get_button_threshold(self, platform, tabletype):
         """
@@ -288,7 +291,8 @@ class Settings(object):
         :param index: The index of the position in the table
         :return: A integer containing the threshold
         """
-        return default_setting['PLATFORMS'][platform]['TABLE_SCANNER'][tabletype]['BUTTON_THRESHOLD']
+        return default_setting['PLATFORMS'][platform]['TABLE_SCANNER'] \
+            [tabletype]['BUTTON_THRESHOLD']
 
     def get_button_size(self, platform, tabletype):
         """
@@ -302,9 +306,10 @@ class Settings(object):
         :param index: The index of the position in the table
         :return: A tuple containing the size of the button template
         """
-        return default_setting['PLATFORMS'][platform]['TABLE_SCANNER'][tabletype]['BUTTON_SIZE']
+        return default_setting['PLATFORMS'][platform]['TABLE_SCANNER'] \
+            [tabletype]['BUTTON_SIZE']
 
-    def get_player_has_unknown_card_template(self, platform):
+    def get_has_unknown_card_template(self, platform):
         """
         The Pokerbot uses a series of templates in order to analyse the image on
         poker client, this template is the one used to determine if a certain position on
@@ -313,7 +318,8 @@ class Settings(object):
         :param platform: A string containing the poker platform to use.
         :return: A path containing the template path
         """
-        return default_setting['PLATFORMS'][platform]['TABLE_SCANNER']['PLAYERCARD_HAS_UNKNOWN_CARD_TEMPLATE']
+        return default_setting['PLATFORMS'][platform]['TABLE_SCANNER'] \
+            ['PLAYERCARD_HAS_UNKNOWN_CARD_TEMPLATE']
 
     def get_comand_pos(self, platform, tabletype, current_command):
         """
@@ -326,8 +332,8 @@ class Settings(object):
         :param current_command: The index of the position of the button in the table
         :return: A path containing the template path
         """
-        return default_setting['PLATFORMS'][platform]['TABLE_SCANNER'][tabletype][
-            'COMMAND_POS{}'.format(current_command)]
+        return default_setting['PLATFORMS'][platform]['TABLE_SCANNER'][tabletype] \
+            ['COMMAND_POS{}'.format(current_command)]
 
     def get_flop_has_nocard_template(self, platform, tabletype):
         """
@@ -339,8 +345,8 @@ class Settings(object):
         :param tabletype: A string containing the poker table type to use.
         :return: A path containing the template path
         """
-        return default_setting['PLATFORMS'][platform]['TABLE_SCANNER'][tabletype][
-            'FLOPCARD_HAS_NOCARD_TEMPLATE']
+        return default_setting['PLATFORMS'][platform]['TABLE_SCANNER'][tabletype] \
+            ['FLOPCARD_HAS_NOCARD_TEMPLATE']
 
     def get_play_hascard_threshold(self, platform, tabletype):
         """
@@ -352,7 +358,8 @@ class Settings(object):
         :param tabletype: A string containing the poker table type to use.
         :return: A path containing the template path
         """
-        return default_setting['PLATFORMS'][platform]['TABLE_SCANNER'][tabletype]['PLAY_HASCARD_THRESHOLD']
+        return default_setting['PLATFORMS'][platform]['TABLE_SCANNER'] \
+            [tabletype]['PLAY_HASCARD_THRESHOLD']
 
     def get_player_hascard(self, platform, tabletype, index):
         """
@@ -365,10 +372,8 @@ class Settings(object):
         :param index: The index of the position in the table
         :return: A path containing the template path
         """
-        return default_setting['PLATFORMS'][platform]['TABLE_SCANNER'][tabletype]['PLAYER{}_HASCARD'.format(index + 1)]
-
-    def get_bet_size(self, platform, tabletype):
-        return default_setting['PLATFORMS'][platform]['TABLE_SCANNER'][tabletype]['BET_SIZE']
+        return default_setting['PLATFORMS'][platform]['TABLE_SCANNER'] \
+            [tabletype]['PLAYER{}_HASCARD'.format(index + 1)]
 
     def get_bet(self, platform, tabletype, index):
         """
@@ -381,7 +386,8 @@ class Settings(object):
         :param index: The index of the position in the table
         :return: A path containing the template path
         """
-        return default_setting['PLATFORMS'][platform]['TABLE_SCANNER'][tabletype]['BET{}'.format(index + 1)]
+        return default_setting['PLATFORMS'][platform]['TABLE_SCANNER'] \
+            [tabletype]['BET{}'.format(index + 1)]
 
     def get_playerhascard_size(self, platform, tabletype):
         """
@@ -393,7 +399,8 @@ class Settings(object):
         :param tabletype: A string containing the poker table type to use.
         :return: A tuple containing the size of the template
         """
-        return default_setting['PLATFORMS'][platform]['TABLE_SCANNER'][tabletype]['PLAYERHASCARD_SIZE']
+        return default_setting['PLATFORMS'][platform]['TABLE_SCANNER'] \
+            [tabletype]['PLAYERHASCARD_SIZE']
 
     def get_pot_pos(self, platform, tabletype):
         """
@@ -404,7 +411,8 @@ class Settings(object):
         :param tabletype: A string containing the poker table type to use.
         :return: A tuple containing the size of the template
         """
-        return default_setting['PLATFORMS'][platform]['TABLE_SCANNER'][tabletype]['SET_RAISE_TO_POT']
+        return default_setting['PLATFORMS'][platform]['TABLE_SCANNER'] \
+            [tabletype]['SET_RAISE_TO_POT']
 
     def get_command_pos(self, platform, tabletype, pos):
         """
@@ -417,7 +425,8 @@ class Settings(object):
         :param pos: The pos of the command on the table`s flop
         :return: A string containing the path to the sample image.
         """
-        return default_setting['PLATFORMS'][platform]['TABLE_SCANNER'][tabletype]['COMMAND_POS{}'.format(pos)]
+        return default_setting['PLATFORMS'][platform]['TABLE_SCANNER'] \
+            [tabletype]['COMMAND_POS{}'.format(pos)]
 
     def get_sample_folder(self):
         """
@@ -444,7 +453,7 @@ class Settings(object):
         """
         return [default_setting['PLATFORMS'][x] for x in default_setting['PLATFORMS']]
 
-    def get_raw_image_pos(self,image_platform,image_tabletype,image_pos):
+    def get_raw_image_pos(self, image_platform, image_tabletype, image_pos):
         """
         This function returns the positicn for a certain image component of a screenshot
         made by the grab_image task
@@ -455,9 +464,10 @@ class Settings(object):
         :return: A tuple containing the position of the image component
 
         """
-        return default_setting['PLATFORMS'][image_platform]['TABLE_SCANNER'][image_tabletype][image_pos]
+        return default_setting['PLATFORMS'][image_platform]['TABLE_SCANNER'] \
+            [image_tabletype][image_pos]
 
-    def get_raw_image_size(self,image_platform,image_tabletype,image_size):
+    def get_raw_image_size(self, image_platform, image_tabletype, image_size):
         """
         This function returns the size for a certain image component of a screenshot
         made by the grab_image task
@@ -468,4 +478,5 @@ class Settings(object):
         :return: A tuple containing the size of the image component
 
         """
-        return default_setting['PLATFORMS'][image_platform]['TABLE_SCANNER'][image_tabletype][image_size]
+        return default_setting['PLATFORMS'][image_platform]['TABLE_SCANNER'] \
+            [image_tabletype][image_size]

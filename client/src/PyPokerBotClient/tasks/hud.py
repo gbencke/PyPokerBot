@@ -23,7 +23,7 @@ import os
 import logging
 import traceback
 from time import sleep
-from PyPokerBotClient.settings import GlobalSettings as Settings
+from PyPokerBotClient.settings import GLOBAL_SETTINGS as Settings
 from PyPokerBotClient.osinterface.win32.screenshot import capture_screenshot
 from PyPokerBotClient.osinterface.win32.hwnd_check import is_minimized, is_window_with_focus
 from PyPokerBotClient.model.PokerBot import PokerBot

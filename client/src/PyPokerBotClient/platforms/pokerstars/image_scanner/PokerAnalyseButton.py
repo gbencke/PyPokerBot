@@ -4,7 +4,7 @@ This module contains the class that analyses the button position on the screensh
 """
 import cv2
 
-from PyPokerBotClient.settings import GlobalSettings as Settings
+from PyPokerBotClient.settings import GLOBAL_SETTINGS as Settings
 from PyPokerBotClient.platforms.utils import get_histogram_from_image
 from PyPokerBotClient.platforms.utils import create_list_none_with_number_seats
 from PyPokerBotClient.platforms.utils import create_list_boolean_with_number_seats
@@ -44,7 +44,7 @@ class PokerAnalyseButton(object):
         """
         if self.button_template_histogram[index] is None:
             self.button_template_histogram[index] = get_histogram_from_image(
-                grab_image_from_file(Settings.get_button_template_file(self.Platform, self.TableType, index)))
+                grab_image_from_file(Settings.get_button_template_file(self.Platform, index)))
         return self.button_template_histogram[index]
 
     def analyse_button(self, Image):

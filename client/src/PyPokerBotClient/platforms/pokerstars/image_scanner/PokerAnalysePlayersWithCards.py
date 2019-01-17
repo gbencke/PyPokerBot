@@ -6,7 +6,7 @@ playing cards or not (it is participating on the hand).
 import cv2
 
 from PyPokerBotClient.platforms.utils import create_list_boolean_with_number_seats
-from PyPokerBotClient.settings import GlobalSettings as Settings
+from PyPokerBotClient.settings import GLOBAL_SETTINGS as Settings
 from PyPokerBotClient.platforms.utils import get_histogram_from_image
 from PyPokerBotClient.osinterface.win32.screenshot import grab_image_from_file, grab_image_pos_from_image
 
@@ -56,7 +56,7 @@ class PokerAnalysePlayersWithCards(object):
         if self.player_has_card_histogram is None:
             self.player_has_card_histogram = get_histogram_from_image(
                 grab_image_from_file(
-                    Settings.get_player_has_unknown_card_template(self.Platform)))
+                    Settings.get_has_unknown_card_template(self.Platform)))
         return self.player_has_card_histogram
 
     def get_player_has_card_in_position_histogram(self, index, Image):

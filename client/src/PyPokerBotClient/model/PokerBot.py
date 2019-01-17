@@ -3,7 +3,7 @@ This method contains the main poker bot class that wraps all the business logic 
 """
 import importlib
 from PyPokerBotClient.custom_exceptions import MoreThanOneLobbyPerPlatformException
-from PyPokerBotClient.settings import GlobalSettings as Settings
+from PyPokerBotClient.settings import GLOBAL_SETTINGS as Settings
 from PyPokerBotClient.osinterface.win32.scan_hwnd import scan_windows
 
 

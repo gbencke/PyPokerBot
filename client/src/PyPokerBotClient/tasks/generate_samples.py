@@ -26,7 +26,7 @@ Obs:
 
 import os
 from time import sleep
-from PyPokerBotClient.settings import GlobalSettings as Settings
+from PyPokerBotClient.settings import GLOBAL_SETTINGS as Settings
 from PyPokerBotClient.osinterface.win32.screenshot import capture_screenshot
 from PyPokerBotClient.model.PokerBot import PokerBot
 

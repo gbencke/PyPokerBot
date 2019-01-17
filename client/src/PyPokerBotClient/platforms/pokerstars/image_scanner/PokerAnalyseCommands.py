@@ -14,7 +14,7 @@ from datetime import datetime
 
 from PyPokerBotClient.platforms.utils import get_histogram_from_image
 from PyPokerBotClient.osinterface.win32.screenshot import grab_image_from_file, grab_image_pos_from_image
-from PyPokerBotClient.settings import GlobalSettings as Settings
+from PyPokerBotClient.settings import GLOBAL_SETTINGS as Settings
 
 
 class PokerAnalyseCommands(object):

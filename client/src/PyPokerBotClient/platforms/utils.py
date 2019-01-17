@@ -6,7 +6,7 @@ import numpy
 import cv2
 
 from PyPokerBotClient.osinterface.win32.screenshot import grab_image_from_file
-from PyPokerBotClient.settings import GlobalSettings as Settings
+from PyPokerBotClient.settings import GLOBAL_SETTINGS as Settings
 
 
 def get_histogram_from_image(image):

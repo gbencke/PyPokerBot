@@ -6,7 +6,7 @@ player hand and its strength.
 import ast
 import requests
 
-from PyPokerBotClient.settings import GlobalSettings as Settings
+from PyPokerBotClient.settings import GLOBAL_SETTINGS as Settings
 from PyPokerBotClient.platforms.utils import create_list_none_with_number_seats
 
 

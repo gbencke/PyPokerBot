@@ -10,7 +10,7 @@ import pkgutil
 from datetime import datetime
 from importlib import import_module
 
-from PyPokerBotClient.settings import GlobalSettings as Settings
+from PyPokerBotClient.settings import GLOBAL_SETTINGS as Settings
 import PyPokerBotClient.tasks as tasks
 
 
@@ -24,7 +24,8 @@ def general_configuration():
     logging.basicConfig(format=Settings.get_log_format(),
                         level=Settings.get_log_level(),
                         filename=os.path.join(Settings.get_log_location(),
-                                              'log.' + datetime.now().strftime("%Y%m%d%H%M%S.%f") + '.log'))
+                                              'log.' + datetime.now().strftime("%Y%m%d%H%M%S.%f")
+                                              + '.log'))
     logging.getLogger().addHandler(logging.StreamHandler())
 
 
@@ -36,7 +37,7 @@ def show_usage():
     print("=====================")
     print("Please execute: python PyPokerBot.py <task to run> [arguments]* ")
     print("Currently available tasks:")
-    tasks_available = [modname for importer, modname, ispkg in pkgutil.iter_modules(tasks.__path__)]
+    tasks_available = [modname for _, modname, _ in pkgutil.iter_modules(tasks.__path__)]
     for current_task in tasks_available:
         try:
             module_to_import = "PyPokerBotClient.tasks." + current_task
@@ -45,8 +46,9 @@ def show_usage():
             method_pointer = getattr(mod, method_to_call)
             descricao = method_pointer()
             print("-{}:{}\n".format(current_task, descricao))
-        except ImportError, e:
-            logging.debug( "command ({0}) tried to import: {1} {2}".format(current_task, module_to_import, e))
+        except ImportError, exception_raised:
+            logging.debug("command ({0}) tried to import: {1} {2}".format(
+                current_task, module_to_import, exception_raised))
             continue
 
 
@@ -58,9 +60,10 @@ def process_command(args):
     module_to_import = "PyPokerBotClient.tasks." + args[0]
     try:
         mod = import_module(module_to_import)
-    except ImportError, e:
+    except ImportError, exception_raised:
         logging.debug(
-            "Error, this command ({0}) was not found, tried to import: {1} {2}".format(args[0], module_to_import, e))
+            "Error, this command ({0}) was not found, tried to import: {1} {2}".format(
+                args[0], module_to_import, exception_raised))
         return
     arguments_for_method_to_call = args[1:]
     method_to_call = "execute"

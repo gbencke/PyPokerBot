@@ -6,7 +6,7 @@ are without cards or not. The opposite of the PokerAnalysePlayersWithCards class
 import cv2
 
 from PyPokerBotClient.platforms.utils import create_list_boolean_with_number_seats
-from PyPokerBotClient.settings import GlobalSettings as Settings
+from PyPokerBotClient.settings import GLOBAL_SETTINGS as Settings
 from PyPokerBotClient.platforms.utils import get_histogram_from_image
 from PyPokerBotClient.osinterface.win32.screenshot import grab_image_from_file, grab_image_pos_from_image
 

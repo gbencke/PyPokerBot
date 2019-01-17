@@ -6,7 +6,7 @@ players can combine with their pocket cards in order to make the best possible h
 import numpy
 import cv2
 
-from PyPokerBotClient.settings import GlobalSettings as Settings
+from PyPokerBotClient.settings import GLOBAL_SETTINGS as Settings
 from PyPokerBotClient.model.PokerTableScanner import PokerTableScanner
 from PyPokerBotClient.platforms.utils import get_histogram_from_image
 from PyPokerBotClient.platforms.utils import create_list_none_with_number_seats

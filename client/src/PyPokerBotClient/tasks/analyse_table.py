@@ -48,7 +48,7 @@ Return:
 """
 
 from PyPokerBotClient.utils import get_instance
-from PyPokerBotClient.settings import GlobalSettings as Settings
+from PyPokerBotClient.settings import GLOBAL_SETTINGS as Settings
 from PyPokerBotClient.osinterface.win32.screenshot import grab_image_from_file
 from PyPokerBotClient.model.PokerTableScanner import PokerTableScanner, has_command_to_execute
 

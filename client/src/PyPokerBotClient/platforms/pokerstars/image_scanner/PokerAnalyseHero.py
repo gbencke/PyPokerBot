@@ -7,7 +7,7 @@ analysing a certain poker table image.
 import numpy
 import cv2
 
-from PyPokerBotClient.settings import GlobalSettings as Settings
+from PyPokerBotClient.settings import GLOBAL_SETTINGS as Settings
 from PyPokerBotClient.model.PokerTableScanner import PokerTableScanner
 from PyPokerBotClient.platforms.utils import get_suite_from_image
 from PyPokerBotClient.platforms.utils import get_card_template
