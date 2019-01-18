@@ -22,7 +22,8 @@ class PokerBot(object):
     @staticmethod
     def get_supported_platforms():
         """
-        Returns a list of supported Poker Platforms like 888Poker, PokerStars, Party Poker and others
+        Returns a list of supported Poker Platforms like 888Poker, PokerStars,
+        Party Poker and others
         :return: A List of strings
         """
         return Settings.get_platforms()
@@ -57,9 +58,11 @@ class PokerBot(object):
             if len(lobbies_from_platform_found) == 0:
                 continue
             if len(lobbies_from_platform_found) > 1:
-                raise MoreThanOneLobbyPerPlatformException("Only one lobby allowed for platform".format(platform_name))
-            tables_found = lobbies_from_platform_found[0].scan_for_tables(windows_found, table_scanner, table_strategy,
-                                                                          lobbies_from_platform_found[0])
+                raise MoreThanOneLobbyPerPlatformException\
+                    ("Only one lobby allowed for platform:{}".format(platform_name))
+            tables_found = lobbies_from_platform_found[0].\
+                scan_for_tables(windows_found, table_scanner, table_strategy,
+                                lobbies_from_platform_found[0])
             lobbies_from_platform_found[0].add_tables(tables_found)
             lobbies_found += lobbies_from_platform_found
         return lobbies_found

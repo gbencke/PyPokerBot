@@ -8,7 +8,7 @@ class PokerTable(object):
     """
     Abstract class representing a poker table from a certain platform.
     """
-    def __init__(self, hwnd, name, stakes, format, scanner, strategy, lobby):
+    def __init__(self, hwnd, name, stakes, scanner, strategy, lobby):
         """
         Default constructor
 
@@ -23,7 +23,6 @@ class PokerTable(object):
         self.hwnd = hwnd
         self.name = name
         self.stakes = stakes
-        self.format = format
         self.scanner = scanner
         self.strategy = strategy
         self.lobby = lobby
@@ -35,7 +34,8 @@ class PokerTable(object):
 
         :return: string containing a suggested filename for the current table screenshot
         """
-        return 'Screenshot.' + datetime.now().strftime("%Y%m%d%H%M%S.%f") + "." + self.name + ".Table.jpg"
+        return 'Screenshot.' + datetime.now().strftime("%Y%m%d%H%M%S.%f") + \
+               "." + self.name + ".Table.jpg"
 
     def refresh_from_image(self, image):
         """

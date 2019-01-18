@@ -15,4 +15,3 @@ class PokerStrategy(object):
         Default Constructor
         """
         pass
-

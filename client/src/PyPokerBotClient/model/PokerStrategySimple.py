@@ -16,13 +16,92 @@ class PokerStrategySimple(PokerStrategy):
     strategies available and being researched as a field of Computer AI, but this is the
     simplest imaginable.
     """
+
     def __init__(self):
         """
         Default Constructor, which calls the super class constructor as well...
         """
         PokerStrategy.__init__(self)
 
-    def generate_command(self, analisys):
+    @staticmethod
+    def generate_command_fold_or_check(ret, number_of_commands, analisys):
+        """
+        This method generates a command (which is a index of a button on the poker
+        client software), where we need to send a click. It analisys the text of the
+        decision and the text of the commands and then return a dictionary with a single
+        key: to_execute populated with the index to execute.
+
+        This method is called when the decision is to fold or check.
+
+        :param analisys: The analisys dictionary returned by a PokerTableScanner instance
+        :return: a dictionary containing the "to_execute" key filled with the index of the
+            command to send
+        """
+        for current_command in range(number_of_commands):
+            if analisys['commands'][current_command][0] == 'CHECK':
+                ret['to_execute'] = current_command + 1
+                return ret
+        for current_command in range(number_of_commands):
+            if analisys['commands'][current_command][0] == 'FOLD':
+                ret['to_execute'] = current_command + 1
+                return ret
+        return ret
+
+    @staticmethod
+    def generate_command_raise(ret, number_of_commands, analisys):
+        """
+        This method generates a command (which is a index of a button on the poker
+        client software), where we need to send a click. It analisys the text of the
+        decision and the text of the commands and then return a dictionary with a single
+        key: to_execute populated with the index to execute.
+
+        This method is called when the decision is to raise.
+
+        :param analisys: The analisys dictionary returned by a PokerTableScanner instance
+        :return: a dictionary containing the "to_execute" key filled with the index of the
+            command to send
+        """
+        for current_command in range(number_of_commands):
+            if analisys['commands'][current_command][0] == 'RAISE' or \
+                    analisys['commands'][current_command][0] == 'BET':
+                ret['to_execute'] = current_command + 1
+                return ret
+        for current_command in range(number_of_commands):
+            if analisys['commands'][current_command][0] == 'CALL':
+                ret['to_execute'] = current_command + 1
+                return ret
+        for current_command in range(number_of_commands):
+            if analisys['commands'][current_command][0] == 'CHECK':
+                ret['to_execute'] = current_command + 1
+                return ret
+        return ret
+
+    @staticmethod
+    def generate_command_call(ret, number_of_commands, analisys):
+        """
+        This method generates a command (which is a index of a button on the poker
+        client software), where we need to send a click. It analisys the text of the
+        decision and the text of the commands and then return a dictionary with a single
+        key: to_execute populated with the index to execute.
+
+        This method is called when the decision is to call.
+
+        :param analisys: The analisys dictionary returned by a PokerTableScanner instance
+        :return: a dictionary containing the "to_execute" key filled with the index of the
+            command to send
+        """
+        for current_command in range(number_of_commands):
+            if analisys['commands'][current_command][0] == 'CALL':
+                ret['to_execute'] = current_command + 1
+                return ret
+        for current_command in range(number_of_commands):
+            if analisys['commands'][current_command][0] == 'CHECK':
+                ret['to_execute'] = current_command + 1
+                return ret
+        return ret
+
+    @staticmethod
+    def generate_command(analisys):
         """
         This method generates a command (which is a index of a button on the poker
         client software), where we need to send a click. It analisys the text of the
@@ -40,42 +119,21 @@ class PokerStrategySimple(PokerStrategy):
         number_of_commands = len(analisys['commands'])
 
         if analisys['decision']['decision'] == 'FOLD OR CHECK':
-            for x in range(number_of_commands):
-                if 'CHECK' == analisys['commands'][x][0]:
-                    ret['to_execute'] = x + 1
-                    return ret
-            for x in range(number_of_commands):
-                if 'FOLD' == analisys['commands'][x][0]:
-                    ret['to_execute'] = x + 1
-                    return ret
+            return PokerStrategySimple.generate_command_fold_or_check\
+                (ret, number_of_commands, analisys)
 
         if analisys['decision']['decision'] == 'RAISE':
-            for x in range(number_of_commands):
-                if 'RAISE' == analisys['commands'][x][0] or 'BET' == analisys['commands'][x][0]:
-                    ret['to_execute'] = x + 1
-                    return ret
-            for x in range(number_of_commands):
-                if 'CALL' == analisys['commands'][x][0]:
-                    ret['to_execute'] = x + 1
-                    return ret
-            for x in range(number_of_commands):
-                if 'CHECK' == analisys['commands'][x][0]:
-                    ret['to_execute'] = x + 1
-                    return ret
+            return PokerStrategySimple.generate_command_raise\
+                (ret, number_of_commands, analisys)
 
         if analisys['decision']['decision'] == 'CALL':
-            for x in range(number_of_commands):
-                if 'CALL' in analisys['commands'][x][0]:
-                    ret['to_execute'] = x + 1
-                    return ret
-            for x in range(number_of_commands):
-                if 'CHECK' in analisys['commands'][x][0]:
-                    ret['to_execute'] = x + 1
-                    return ret
+            return PokerStrategySimple.generate_command_call\
+                (ret, number_of_commands, analisys)
 
         return ret
 
-    def get_current_call_value(self, analisys):
+    @staticmethod
+    def get_current_call_value(analisys):
         """
         This method returns the current value (money amount) necessary to call anothers
         player bet, as described on the analisys dictionary passed as parameter
@@ -89,7 +147,8 @@ class PokerStrategySimple(PokerStrategy):
         else:
             return 0
 
-    def is_check_button_available(self, analisys):
+    @staticmethod
+    def is_check_button_available(analisys):
         """
         Return if the CHECK Button is available on the Poker Client UI.
 
@@ -98,7 +157,8 @@ class PokerStrategySimple(PokerStrategy):
         """
         return len([x for x in analisys['commands'] if x[0] == 'CHECK']) > 0
 
-    def position_button(self, analisys):
+    @staticmethod
+    def position_button(analisys):
         """
         Return if the player is on the button or not.
 
@@ -107,14 +167,16 @@ class PokerStrategySimple(PokerStrategy):
         """
         return analisys['hero']['position'] == 'BUTTON' or analisys['hero']['position'] == 'LP'
 
-    def position_out_position(self, analisys):
+    @staticmethod
+    def position_out_position(analisys):
         """
         Return if the player is out of position or not.
 
         :param analisys: The analisys dictionary returned by a PokerTableScanner instance
         :return: True or False
         """
-        return not ((analisys['hero']['position'] == 'BUTTON') or (analisys['hero']['position'] == 'LP'))
+        return not ((analisys['hero']['position'] == 'BUTTON') or
+                    (analisys['hero']['position'] == 'LP'))
 
     def position_bb_check(self, analisys):
         """
@@ -136,6 +198,133 @@ class PokerStrategySimple(PokerStrategy):
         """
         return self.position_button(analisys) and self.is_check_button_available(analisys)
 
+    def generate_pre_decision_preflop(self, hand_equity, analisys):
+        """
+        This method returns the correct strategy when we are playing the PreFlop
+
+        :param hand_equity: The Mathematical probabilty that our hand is the best
+        :param analisys: The Dictionary retuned by PyPokerScanner
+        :return: A Tuple containing the decision and the amount to raise
+        """
+
+        ret = ('FOLD OR CHECK', 0)
+        if self.position_button(analisys):
+            if hand_equity > 0.77:
+                ret = ('RAISE OR CALL', 20)
+            if hand_equity > 0.72:
+                ret = ('RAISE OR CALL', 10)
+            if hand_equity > 0.60:
+                ret = ('RAISE OR CALL', 5)
+        if self.position_out_position(analisys):
+            if hand_equity > 0.77:
+                ret = ('RAISE OR CALL', 20)
+            if hand_equity > 0.72:
+                ret = ('RAISE OR CALL', 5)
+        if self.position_bb_check(analisys):
+            if hand_equity > 0.77:
+                ret = ('RAISE OR CALL', 20)
+            if hand_equity > 0.72:
+                ret = ('RAISE OR CALL', 20)
+            if hand_equity > 0.60:
+                ret = ('RAISE OR CALL', 5)
+        return ret
+
+    def generate_pre_decision_flop3(self, hand_equity, analisys):
+        """
+        This method returns the correct strategy when we are playing the Flop
+
+        :param hand_equity: The Mathematical probabilty that our hand is the best
+        :param analisys: The Dictionary retuned by PyPokerScanner
+        :return: A Tuple containing the decision and the amount to raise
+        """
+        ret = ('FOLD OR CHECK', 0)
+        if self.position_button(analisys):
+            if hand_equity > 0.77:
+                ret = ('RAISE OR CALL', 20)
+            if hand_equity > 0.72:
+                ret = ('RAISE OR CALL', 10)
+            if hand_equity > 0.60:
+                ret = ('CALL OR FOLD', 5)
+        if self.position_button_check(analisys):
+            if hand_equity > 0.77:
+                ret = ('RAISE OR CALL', 20)
+            if hand_equity > 0.72:
+                ret = ('RAISE OR CALL', 10)
+            if hand_equity > 0.60:
+                ret = ('RAISE OR CALL', 5)
+        if self.position_out_position(analisys):
+            if hand_equity > 0.77:
+                ret = ('RAISE OR CALL', 20)
+            if hand_equity > 0.72:
+                ret = ('RAISE OR CALL', 10)
+            if hand_equity > 0.60:
+                ret = ('CALL OR FOLD', 5)
+        return ret
+
+    def generate_pre_decision_flop4(self, hand_equity, analisys):
+        """
+        This method returns the correct strategy when we are playing the River
+
+        :param hand_equity: The Mathematical probabilty that our hand is the best
+        :param analisys: The Dictionary retuned by PyPokerScanner
+        :return: A Tuple containing the decision and the amount to raise
+        """
+        ret = ('FOLD OR CHECK', 0)
+        if self.position_button(analisys):
+            if hand_equity > 0.77:
+                ret = ('RAISE OR CALL', 40)
+            if hand_equity > 0.72:
+                ret = ('RAISE OR CALL', 20)
+            if hand_equity > 0.60:
+                ret = ('CALL OR FOLD', 10)
+        if self.position_button_check(analisys):
+            if hand_equity > 0.77:
+                ret = ('RAISE OR CALL', 40)
+            if hand_equity > 0.72:
+                ret = ('RAISE OR CALL', 20)
+            if hand_equity > 0.60:
+                ret = ('RAISE OR CALL', 10)
+        if self.position_out_position(analisys):
+            if hand_equity > 0.77:
+                ret = ('RAISE OR CALL', 40)
+            if hand_equity > 0.72:
+                ret = ('RAISE OR CALL', 20)
+            if hand_equity > 0.60:
+                ret = ('CALL OR FOLD', 10)
+        return ret
+
+    def generate_pre_decision_flop5(self, hand_equity, analisys):
+        """
+        This method returns the correct strategy when we are playing the Turn
+
+        :param hand_equity: The Mathematical probabilty that our hand is the best
+        :param analisys: The Dictionary retuned by PyPokerScanner
+        :return: A Tuple containing the decision and the amount to raise
+        """
+        ret = ('FOLD OR CHECK', 0)
+        if self.position_button(analisys):
+            if hand_equity > 0.77:
+                ret = ('RAISE OR CALL', 40)
+            if hand_equity > 0.72:
+                ret = ('RAISE OR CALL', 20)
+            if hand_equity > 0.60:
+                ret = ('CALL OR FOLD', 10)
+        if self.position_button_check(analisys):
+            if hand_equity > 0.77:
+                ret = ('RAISE OR CALL', 40)
+            if hand_equity > 0.72:
+                ret = ('RAISE OR CALL', 20)
+            if hand_equity > 0.60:
+                ret = ('RAISE OR CALL', 10)
+        if self.position_out_position(analisys):
+            if hand_equity > 0.77:
+                ret = ('RAISE OR CALL', 40)
+            if hand_equity > 0.72:
+                ret = ('RAISE OR CALL', 20)
+            if hand_equity > 0.60:
+                ret = ('CALL OR FOLD', 10)
+        return ret
+
     def generate_pre_decision(self, analisys):
         """
         This method implements a very simple decision to be made based on a decision tree using
@@ -150,94 +339,13 @@ class PokerStrategySimple(PokerStrategy):
             hand_equity = analisys['hand_analisys']['result'][0][1]
 
             if phase == 'PREFLOP':
-                if self.position_button(analisys):
-                    if hand_equity > 0.77:
-                        return ('RAISE OR CALL', 20)
-                    if hand_equity > 0.72:
-                        return ('RAISE OR CALL', 10)
-                    if hand_equity > 0.60:
-                        return ('RAISE OR CALL', 5)
-                if self.position_out_position(analisys):
-                    if hand_equity > 0.77:
-                        return ('RAISE OR CALL', 20)
-                    if hand_equity > 0.72:
-                        return ('RAISE OR CALL', 5)
-                if self.position_bb_check(analisys):
-                    if hand_equity > 0.77:
-                        return ('RAISE OR CALL', 20)
-                    if hand_equity > 0.72:
-                        return ('RAISE OR CALL', 20)
-                    if hand_equity > 0.60:
-                        return ('RAISE OR CALL', 5)
+                return self.generate_pre_decision_preflop(hand_equity, analisys)
             if phase == 'FLOP3':
-                if self.position_button(analisys):
-                    if hand_equity > 0.77:
-                        return ('RAISE OR CALL', 20)
-                    if hand_equity > 0.72:
-                        return ('RAISE OR CALL', 10)
-                    if hand_equity > 0.60:
-                        return ('CALL OR FOLD', 5)
-                if self.position_button_check(analisys):
-                    if hand_equity > 0.77:
-                        return ('RAISE OR CALL', 20)
-                    if hand_equity > 0.72:
-                        return ('RAISE OR CALL', 10)
-                    if hand_equity > 0.60:
-                        return ('RAISE OR CALL', 5)
-                    return ('RAISE OR CALL', 5)
-                if self.position_out_position(analisys):
-                    if hand_equity > 0.77:
-                        return ('RAISE OR CALL', 20)
-                    if hand_equity > 0.72:
-                        return ('RAISE OR CALL', 10)
-                    if hand_equity > 0.60:
-                        return ('CALL OR FOLD', 5)
+                return self.generate_pre_decision_flop3(hand_equity, analisys)
             if phase == 'FLOP4':
-                if self.position_button(analisys):
-                    if hand_equity > 0.77:
-                        return ('RAISE OR CALL', 40)
-                    if hand_equity > 0.72:
-                        return ('RAISE OR CALL', 20)
-                    if hand_equity > 0.60:
-                        return ('CALL OR FOLD', 10)
-                if self.position_button_check(analisys):
-                    if hand_equity > 0.77:
-                        return ('RAISE OR CALL', 40)
-                    if hand_equity > 0.72:
-                        return ('RAISE OR CALL', 20)
-                    if hand_equity > 0.60:
-                        return ('RAISE OR CALL', 10)
-                    return ('RAISE OR CALL', 10)
-                if self.position_out_position(analisys):
-                    if hand_equity > 0.77:
-                        return ('RAISE OR CALL', 40)
-                    if hand_equity > 0.72:
-                        return ('RAISE OR CALL', 20)
-                    if hand_equity > 0.60:
-                        return ('CALL OR FOLD', 10)
+                return self.generate_pre_decision_flop4(hand_equity, analisys)
             if phase == 'FLOP5':
-                if self.position_button(analisys):
-                    if hand_equity > 0.77:
-                        return ('RAISE OR CALL', 40)
-                    if hand_equity > 0.72:
-                        return ('RAISE OR CALL', 20)
-                    if hand_equity > 0.60:
-                        return ('CALL OR FOLD', 10)
-                if self.position_button_check(analisys):
-                    if hand_equity > 0.77:
-                        return ('RAISE OR CALL', 40)
-                    if hand_equity > 0.72:
-                        return ('RAISE OR CALL', 20)
-                    if hand_equity > 0.60:
-                        return ('RAISE OR CALL', 10)
-                    return ('RAISE OR CALL', 10)
-                if self.position_out_position(analisys):
-                    if hand_equity > 0.77:
-                        return ('RAISE OR CALL', 40)
-                    if hand_equity > 0.72:
-                        return ('RAISE OR CALL', 20)
-                    if hand_equity > 0.60:
-                        return ('CALL OR FOLD', 10)
+                return self.generate_pre_decision_flop5(hand_equity, analisys)
         except:
             pass
         return ('FOLD OR CHECK', 0)
@@ -269,8 +377,8 @@ class PokerStrategySimple(PokerStrategy):
 
     def run_strategy(self, analisys):
         """
-        This is the main method of the PokerStrategy Class, as it defines what needs to be done, given a
-        certain situation (analisys parameter)
+        This is the main method of the PokerStrategy Class, as it defines what
+        needs to be done, given a certain situation (analisys parameter)
 
         This method implements a very simple decision to be made based on a decision tree using
         the analisys dictionary returned by the PokerTableScanner instance
@@ -283,4 +391,3 @@ class PokerStrategySimple(PokerStrategy):
             analisys['decision'] = self.generate_decision(analisys)
             analisys['command'] = self.generate_command(analisys)
         return analisys
-

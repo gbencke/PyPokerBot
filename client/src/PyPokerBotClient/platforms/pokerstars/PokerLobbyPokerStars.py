@@ -161,7 +161,6 @@ class PokerLobbyPokerStars(PokerLobby):
         """
         return [PokerTable(x['hwnd'], PokerLobbyPokerStars.get_table_name(x['title']),
                            PokerLobbyPokerStars.get_table_stakes(x['title']),
-                           PokerLobbyPokerStars.get_table_format(x['title']),
                            scanner('6-SEATS', 6, self.get_table_bb(x['title']), self.get_table_sb(x['title'])),
                            strategy(), lobby)
                 for x in hwnd_to_scan if
