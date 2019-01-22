@@ -3,7 +3,7 @@ This module contains several utility functions that are shared among all possibl
 poker cliente platforms. They mainly deal with data and image manipulation
 """
 import numpy
-import cv2
+from cv2 import calcHist, normalize
 
 from PyPokerBotClient.osinterface.win32.screenshot import grab_image_from_file
 from PyPokerBotClient.settings import GLOBAL_SETTINGS as Settings
@@ -19,36 +19,36 @@ def get_histogram_from_image(image):
     :return: A Flattened histogram of the image
     """
     image_cv2 = numpy.array(image)[:, :, ::-1].copy()
-    image_cv2_hist = cv2.calcHist([image_cv2], [0, 1, 2], None, [8, 8, 8], [0, 256, 0, 256, 0, 256])
+    image_cv2_hist = calcHist([image_cv2], [0, 1, 2], None, [8, 8, 8], [0, 256, 0, 256, 0, 256])
     dst = image_cv2_hist.copy()
-    return cv2.normalize(image_cv2_hist, dst).flatten()
+    return normalize(image_cv2_hist, dst).flatten()
 
 
-def create_list_none_with_number_seats(NumberOfSeats):
+def create_list_seats(number_of_seats):
     """
     Utility function to create a array of empty seats as None
     :param NumberOfSeats: Number of Seats (itens on the list)
     :return: List of None entities in a range of NumberOfSeats
     """
-    return [None for _ in range(NumberOfSeats)]
+    return [None for _ in range(number_of_seats)]
 
 
-def create_list_boolean_with_number_seats(NumberOfSeats):
+def create_list_boolean_seats(number_of_seats):
     """
     Utility function to create a array of empty seats as boolean
     :param NumberOfSeats: Number of Seats (itens on the list)
     :return: List of False Value entities in a range of NumberOfSeats
     """
-    return [False] * NumberOfSeats
+    return [False] * number_of_seats
 
 
-def create_list_string_with_number_seats(NumberOfSeats):
+def create_list_string_seats(number_of_seats):
     """
     Utility function to create a array of empty seats as empty strings
     :param NumberOfSeats: Number of Seats (itens on the list)
     :return: List of empty strings in a range of NumberOfSeats
     """
-    return [''] * NumberOfSeats
+    return [''] * number_of_seats
 
 
 def get_suite_from_image(selected_image):
@@ -65,9 +65,9 @@ def get_suite_from_image(selected_image):
     blue = 0
     green = 0
     black = 0
-    for w in range(selected_image.width):
-        for h in range(selected_image.height):
-            pixel = selected_image.getpixel((w, h))
+    for current_w in range(selected_image.width):
+        for current_h in range(selected_image.height):
+            pixel = selected_image.getpixel((current_w, current_h))
             if pixel[0] >= 230 and pixel[1] >= 230 and pixel[2] >= 230:
                 continue
             if pixel[0] < 20 and pixel[1] < 20 and pixel[2] < 20:
@@ -92,7 +92,7 @@ def get_suite_from_image(selected_image):
         return 'd'
 
 
-def get_card_template(Platform, current_card, current_suit):
+def get_card_template(platform, current_card, current_suit):
     """
     This utility function returns the Numpy array containing the
     image of a certain card and suit.
@@ -102,6 +102,6 @@ def get_card_template(Platform, current_card, current_suit):
     :param current_suit: The index of the seat to be returned (h,c,s,d)
     :return: A numpy array containing the image to be returned
     """
-    filename = Settings.get_card_template(Platform, current_card, current_suit)
+    filename = Settings.get_card_template(platform, current_card, current_suit)
     image_template = grab_image_from_file(filename)
     return numpy.array(image_template)[:, :, ::-1].copy()

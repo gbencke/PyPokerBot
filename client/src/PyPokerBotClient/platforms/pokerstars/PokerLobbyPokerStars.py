@@ -41,8 +41,10 @@ class PokerLobbyPokerStars(PokerLobby):
         """
         ret = []
         for current_hwnd in hwnd_to_scan:
-            if PokerLobbyPokerStars.is_pokerstars_lobby(current_hwnd['class'], current_hwnd['title']):
-                ret.append(PokerLobbyPokerStars(current_hwnd['hwnd'], current_hwnd['title']))
+            if PokerLobbyPokerStars.is_pokerstars_lobby(current_hwnd['class'],
+                                                        current_hwnd['title']):
+                ret.append(PokerLobbyPokerStars(current_hwnd['hwnd'],
+                                                current_hwnd['title']))
         return ret
 
     @staticmethod
@@ -118,7 +120,8 @@ class PokerLobbyPokerStars(PokerLobby):
         """
         return self.tables
 
-    def sanitize_string(self, str):
+    @staticmethod
+    def sanitize_string(str_to_clean):
         """
         Perform simple sanitization of the table title (remove any
         unnecessary strings) and return a cleaned string.
@@ -126,7 +129,7 @@ class PokerLobbyPokerStars(PokerLobby):
         :param str: The window title to sanitize
         :return: The cleaned string
         """
-        return str.replace(' USD', '').replace('$', '').replace('Play Money', '').strip()
+        return str_to_clean.replace(' USD', '').replace('$', '').replace('Play Money', '').strip()
 
     def get_table_bb(self, title):
         """
@@ -135,8 +138,8 @@ class PokerLobbyPokerStars(PokerLobby):
         :param title: The title of the window
         :return: The value of the big blind as float
         """
-        str = self.get_table_stakes(self.sanitize_string(title))
-        return float(str.split('/')[1])
+        str_to_parse = self.get_table_stakes(self.sanitize_string(title))
+        return float(str_to_parse.split('/')[1])
 
     def get_table_sb(self, title):
         """
@@ -145,8 +148,8 @@ class PokerLobbyPokerStars(PokerLobby):
         :param title: The title of the window
         :return: The value of the small blind as float
         """
-        str = self.get_table_stakes(self.sanitize_string(title))
-        return float(str.split('/')[0])
+        str_to_parse = self.get_table_stakes(self.sanitize_string(title))
+        return float(str_to_parse.split('/')[0])
 
     def scan_for_tables(self, hwnd_to_scan, scanner, strategy, lobby):
         """
@@ -159,9 +162,12 @@ class PokerLobbyPokerStars(PokerLobby):
         :param lobby: The Parent Lobby
         :return: List of PokerTable Instances
         """
-        return [PokerTable(x['hwnd'], PokerLobbyPokerStars.get_table_name(x['title']),
+        return [PokerTable(x['hwnd'],
+                           PokerLobbyPokerStars.get_table_name(x['title']),
                            PokerLobbyPokerStars.get_table_stakes(x['title']),
-                           scanner('6-SEATS', 6, self.get_table_bb(x['title']), self.get_table_sb(x['title'])),
-                           strategy(), lobby)
+                           scanner('6-SEATS', 6, self.get_table_bb(x['title']),
+                                   self.get_table_sb(x['title'])),
+                           strategy(),
+                           lobby)
                 for x in hwnd_to_scan if
                 PokerLobbyPokerStars.is_pokerstars_table(x['class'], x['title'])]
