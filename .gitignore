@@ -1,4 +1,6 @@
 #downloads/
+images/
+logs/
 Include/
 Lib/
 Scripts/
@@ -15,6 +17,6 @@ client/data/*.jpg
 client/data/samples/*.jpg
 logs/
 *.Table.txt
-
-
-
+tags
+env/
+_build/
