@@ -38,16 +38,16 @@ The current software architecture uses 2 layers, one on Linux that calculate pok
 	*  **grab_image**: Get a particular region of the image for analysis.
 	*  **analyse_image**: Analyze and use computer vision to return a python dictionary with all the data and status of a screen shot of a poker client
 	*  **hud**: The poker bot enters in a loop and takes screenshots of the poker table, and advises the player about the correct decision to be made (It doesn't send clicks to the poker table, so it does not play alone).
-	*  **play**: In this mode, the poker bot takes screen shots and performs analisys of the playing table, it generates decisions and send the proper clicks to the poker client.
+	*  **play**: In this mode, the poker bot takes screen shots and performs analysis of the playing table, it generates decisions and send the proper clicks to the poker client.
 
 
 ## Requirements and Installation
 
-The Poker Bot has 2 main components, a server web application that servers calculation requests for the poker bot client, and a client that takes screenshots of playing poker tables, analyses them and send clicks.
+The Poker Bot has 2 main components, a server web application that servers calculation requests for the poker bot client, and a client that takes screen shots of playing poker tables, analyses them and send clicks.
 
 ### Server
 
-The server is a standard python application that uses the flask framework to serve calculation requests, it can be run on any linux distribution that has support for python 2.7. the instalation procedure is:
+The server is a standard python application that uses the flask framework to serve calculation requests, it can be run on any linux distribution that has support for python 2.7. the installation procedure is:
 
     1) download the source code from git:
         git clone https://github.com/gbencke/PyPokerBot.git
@@ -72,7 +72,7 @@ After the steps above the server will be accepting  requests on the following UR
 
 ### Client
 
-The client is simply a python script that detects the poker tables on the Desktop computer, saves screenshots, and then analyse the image and sends clicks. For the Client, it is required:
+The client is simply a python script that detects the poker tables on the Desktop computer, saves screen shots, and then analyze the image and sends clicks. For the Client, it is required:
 
 * **Windows Operating System version 7 or above**
 * **Python 2.7**: Downloaded from python.org 
@@ -120,12 +120,12 @@ The server after installation is very simple to start, just execute:
 
 ### Client
 
-The client is a simple python script that keeps taking screenshots from playing tables and sends commands to such poker desktop clients. After the install procedures above are completed, we can use the poker script as follows:
+The client is a simple python script that keeps taking screen shots from playing tables and sends commands to such poker desktop clients. After the install procedures above are completed, we can use the poker script as follows:
 
 #### generate_samples
  
-This Task generates a series of screenshots from the Poker desktop client that is
-running on the computer. It saves them as JPEG images for later analisys. Those
+This Task generates a series of screen shots from the Poker desktop client that is
+running on the computer. It saves them as JPEG images for later analysis. Those
 samples are saved on the samples_folder key of the settings.py configuration file
 
 Usage:
@@ -157,16 +157,16 @@ Usage:
 
 Parameters:
 
-* **Image Source**: The Screenshot of the poker client to be used as source
-* **Platform**: The poker platform from which the screenshot was taken
-* **TableType**: The type of table that the screenshot was taken (6-SEAT,9-SEAT,etc...)
+* **Image Source**: The Screen shot of the poker client to be used as source
+* **Platform**: The poker platform from which the screen shot was taken
+* **TableType**: The type of table that the screen shot was taken (6-SEAT,9-SEAT,etc...)
 * **Pos**: The position to be cropped
 * **Size**: The size of the image to be cropped
-* **Filename to Save**: The filename for the cropped image
+* **Filename to Save**: The file name for the cropped image
 
 Return:
 
-* **None** (But saves the image as specifiec in the parameter above)
+* **None** (But saves the image as specific in the parameter above)
 
 Obs:
 
@@ -186,7 +186,7 @@ Usage:
 
 Parameters:
 
-* **Image Source**: The jpg image containing the poker table screenshot to be analyzed.
+* **Image Source**: The jpg image containing the poker table screen shot to be analyzed.
 * **Platform**: The Poker Platform (Client Software) that should be considered in the analysis
 * **TableType**: The Type of Table, for example, 6-SEAT, 9-SEAT or others.
 
@@ -217,7 +217,7 @@ Obs:
 
 #### hud
 
-This task starts the PokerBot as a HUD (HeadUp Display), so it will open the poker client,
+This task starts the PokerBot as a HUD (Head Up Display), so it will open the poker client,
 start capturing the images, and parsing the image for the current table information and
 also will generate decisions, but it *wont* execute the decisions made (send clicks)
 
@@ -239,7 +239,7 @@ Return:
 #### play
 
 This tasks stars the PokerBot in Playing mode, so it will capture the screens of the
-poker client, parse the image, run the strategy and send the clicks to the poker cliente
+poker client, parse the image, run the strategy and send the clicks to the poker client.
 
 Usage:
 
@@ -256,19 +256,67 @@ Return:
 
 ## Implementation Details
 
+Below, I just highlight some implementation details and remarks:
+
+*All source code has been recently linted and refactored*  
+
 ### Server
+
+The server is a very simple webserver using Flask framework, so it is no very scalable and does not uses any modern python technique like asynchronous request processing.
 
 #### Poker Odds Calculation
 
+The Odds calculator uses the MIT library and requires to be compiled from its C source: [pbots_calc](https://github.com/mitpokerbots/pbots_calc), the compilation is quite trivial but there are several other poker libraries required or the build. I have tested the build both on Ubuntu 16 and ArchLinux.
+
 #### REST API
+
+The Rest API is simply a single URL that receives a json on the format required by the Poker Odds Calculation C Library [pbots_calc](https://github.com/mitpokerbots/pbots_calc) and returns a JSON with a python tuple containing the response. 
 
 ### Client
 
+The Client is the actual script running on a windows desktop and has a "task" architecture where in the CLI you specify the correct task to be performed by the tool, as we can see on the usage section above.  
+
 #### Screenshot Grab
+
+The Poker Bot script detects the poker tables by its HWND and classname and instantiate a PokerTable class. Such class executes screen shots of the table, saving it for analysis. It is important that the table is placed on a certain location and with a certain size for the analysis to be performed as the regions of the image to be analyzed are in general hard coded.
 
 #### Image Analisys
 
+The image analysis code: *PokerTableScanner* class and its specializations uses OpenCV2 to do a histogram comparison between a certain region of the image and a template, for example if we are trying to detect with card the player has, we will compare the region of the image where the card should be with all the histograms from known cards, the best result will be the selected (detected) card. 
+
+In order to detect the text of the message, we use a command line tool called tesseract that tries to detect the text from the image and returns it as a string.
+
 #### Decision Making
 
+The decision making is a very simple decision tree taking into account the hand equity, our position on the table and the current hand phase, as we can see on the example code below:
+
+        if self.position_button(analisys):
+            if hand_equity > 0.77:
+                ret = ('RAISE OR CALL', 20)
+            if hand_equity > 0.72:
+                ret = ('RAISE OR CALL', 10)
+            if hand_equity > 0.60:
+                ret = ('RAISE OR CALL', 5)
+        if self.position_out_position(analisys):
+            if hand_equity > 0.77:
+                ret = ('RAISE OR CALL', 20)
+            if hand_equity > 0.72:
+                ret = ('RAISE OR CALL', 5)
+        if self.position_bb_check(analisys):
+            if hand_equity > 0.77:
+                ret = ('RAISE OR CALL', 20)
+            if hand_equity > 0.72:
+                ret = ('RAISE OR CALL', 20)
+            if hand_equity > 0.60:
+                ret = ('RAISE OR CALL', 5)
+        return ret
+
+
 ## Current Status and Improvements
+
+This is a first attempt to implement a completely functional poker playing bot, but at this moment, it has the following improvement points:
+
+* **AI**: Implement real AI techniques and not simple decision trees.
+* **Additional Platforms**: Currently the pot only support Pokerstars, but it can easily be added support for PartyPoker, 888Poker and other platforms.
+* **Stealth**: Currently poker platforms have several algorithms that detect if the player is human or a bot, currently there is no implementation to mimic regular human player behavior and it is very easy to detect that it is a automated bot playing due to several reasons like: Python script running, always clicking on the same screen coordenatess and many other playing characteristics.
 
