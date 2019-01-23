@@ -5,10 +5,11 @@ playing cards or not (it is participating on the hand).
 """
 import cv2
 
-from PyPokerBotClient.platforms.utils import create_list_boolean_with_number_seats
+from PyPokerBotClient.platforms.utils import create_list_boolean_seats
 from PyPokerBotClient.settings import GLOBAL_SETTINGS as Settings
 from PyPokerBotClient.platforms.utils import get_histogram_from_image
-from PyPokerBotClient.osinterface.win32.screenshot import grab_image_from_file, grab_image_pos_from_image
+from PyPokerBotClient.osinterface.win32.screenshot import \
+    grab_image_from_file, grab_image_pos_from_image
 
 
 class PokerAnalysePlayersWithCards(object):
@@ -18,18 +19,19 @@ class PokerAnalysePlayersWithCards(object):
     playing or not.
     """
 
-    def __init__(self, Platform, TableType, NumberOfSeats):
+    def __init__(self, platform, table_type, number_of_seats):
         """
-        This is the constructor for this class, it takes as parameter the Poker Platform to be used, the
-        TableType, the number of available seats and the maximum number of cards on the flop.
+        This is the constructor for this class, it takes as parameter the
+        Poker Platform to be used, the TableType, the number of available seats
+        and the maximum number of cards on the flop.
 
         :param Platform: The Poker Platform, in our case, it must be POKERSTARS
         :param TableType: The Table Type as in the settings.py file like: 6-SEATS
         :param NumberOfSeats: A integer representing the number of seats on the table
         """
-        self.Platform = Platform
-        self.TableType = TableType
-        self.NumberOfSeats = NumberOfSeats
+        self.platform = platform
+        self.table_type = table_type
+        self.number_of_seats = number_of_seats
         self.player_has_card_histogram = None
         self.player_has_card_threshold = None
 
@@ -42,7 +44,8 @@ class PokerAnalysePlayersWithCards(object):
         :return: Threshold value from settings.py
         """
         if self.player_has_card_threshold is None:
-            self.player_has_card_threshold = Settings.get_play_hascard_threshold(self.Platform, self.TableType)
+            self.player_has_card_threshold = \
+                Settings.get_play_hascard_threshold(self.platform, self.table_type)
         return self.player_has_card_threshold
 
     def get_player_hascard_histogram(self):
@@ -56,10 +59,10 @@ class PokerAnalysePlayersWithCards(object):
         if self.player_has_card_histogram is None:
             self.player_has_card_histogram = get_histogram_from_image(
                 grab_image_from_file(
-                    Settings.get_has_unknown_card_template(self.Platform)))
+                    Settings.get_has_unknown_card_template(self.platform)))
         return self.player_has_card_histogram
 
-    def get_player_has_card_in_position_histogram(self, index, Image):
+    def get_has_card_in_pos_histogram(self, index, image_to_analyse):
         """
         This method returns the histogram of the image of the cards on a certain position
         of the table. This image will be compared with the template specified on the
@@ -73,11 +76,11 @@ class PokerAnalysePlayersWithCards(object):
         return \
             get_histogram_from_image(
                 grab_image_pos_from_image(
-                    Image,
-                    Settings.get_player_hascard(self.Platform, self.TableType, index),
-                    Settings.get_playerhascard_size(self.Platform, self.TableType)))
+                    image_to_analyse,
+                    Settings.get_player_hascard(self.platform, self.table_type, index),
+                    Settings.get_playerhascard_size(self.platform, self.table_type)))
 
-    def analyse_players_with_cards(self, Image):
+    def analyse_players_with_cards(self, image_to_analyse):
         """
         This is the main method of the class, as it scans the seated positions on the
         poker table image and return a list of booleans indicating that this position
@@ -86,10 +89,13 @@ class PokerAnalysePlayersWithCards(object):
         :param Image: The source image to scan
         :return: A List of booleans indicating if the position has cards or not.
         """
-        ret = create_list_boolean_with_number_seats(self.NumberOfSeats)
-        for current_seat_index in range(self.NumberOfSeats):
+        ret = create_list_boolean_seats(self.number_of_seats)
+        for current_seat_index in range(self.number_of_seats):
             res = cv2.compareHist(
                 self.get_player_hascard_histogram(),
-                self.get_player_has_card_in_position_histogram(current_seat_index, Image), 0)
-            ret[current_seat_index] = True if res > self.get_player_has_card_threshold() else False
+                self.get_has_card_in_pos_histogram(
+                    current_seat_index,
+                    image_to_analyse), 0)
+            ret[current_seat_index] = \
+                True if res > self.get_player_has_card_threshold() else False
         return ret
