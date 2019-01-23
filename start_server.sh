@@ -1,1 +1,0 @@
-./server/PyPokerServer/src/server.sh
