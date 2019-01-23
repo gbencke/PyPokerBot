@@ -14,12 +14,13 @@ class PokerLobby(object):
         """
         pass
 
-    def usage(self):
+    @staticmethod
+    def usage():
         """
         Show a simple description of this instance
         :return: None
         """
-        print("Main PokerLobby Class, needs to be specialized according to platform")
+        print "Main PokerLobby Class, needs to be specialized according to platform"
 
     def __str__(self):
         """
