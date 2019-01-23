@@ -32,39 +32,226 @@ The current software architecture uses 2 layers, one on Linux that calculate pok
 * **Server**: The Server calculates hands equities, which are the probabilities that a certain set of cards will win the hand. 
 	* For that it uses a C library called [pbots_calc](https://github.com/mitpokerbots/pbots_calc) from the mitpokerbot competition. 
 	* It implements a REST API using [Flask MicroFramework](http://flask.pocoo.org/) that exposes the C library functions to be consumed by the client application.
-* **Client**: The Client is a command-line application that detects the poker client, captures a screenshot, analyses the image, make a decision and send the command to the poker client. As a command-line tool it has several commands that set its use, for each command it has a particular set of functionalities. 
+* **Client**: The Client is a command-line application that detects the poker client, captures a screen shot, analyses the image, make a decision and send the command to the poker client. As a command-line tool it has several commands that set its use, for each command it has a particular set of functionalities. 
 	* It is important to notice that each command extends the funcionality of other. For a more detailed description of each, please see the [Usage Section](#UsageSection) below.    
-	*  **generate_samples**: 
-	*  **grab_image**:
-	*  **analyse_image**:
-	*  **hud**:
-	*  **play**:
-
-
-
+	*  **generate_samples**: It is used to capture screen shots of the desktop poker client for use as samples for the PokerBot
+	*  **grab_image**: Get a particular region of the image for analysis.
+	*  **analyse_image**: Analyze and use computer vision to return a python dictionary with all the data and status of a screen shot of a poker client
+	*  **hud**: The poker bot enters in a loop and takes screenshots of the poker table, and advises the player about the correct decision to be made (It doesn't send clicks to the poker table, so it does not play alone).
+	*  **play**: In this mode, the poker bot takes screen shots and performs analisys of the playing table, it generates decisions and send the proper clicks to the poker client.
 
 
 ## Requirements and Installation
 
+The Poker Bot has 2 main components, a server web application that servers calculation requests for the poker bot client, and a client that takes screenshots of playing poker tables, analyses them and send clicks.
+
 ### Server
 
+The server is a standard python application that uses the flask framework to serve calculation requests, it can be run on any linux distribution that has support for python 2.7. the instalation procedure is:
+
+    1) download the source code from git:
+        git clone https://github.com/gbencke/PyPokerBot.git
+        cd PyPokerBot
+
+    2) Install virtualenv 
+        pip install virtualenv
+ 
+    3) Create a virtualenv environment 
+        virtualenv -p python2 env
+
+    4) Activate the virtualenv
+        source env/bin/activate
+
+    5) Install the required modules and start the server
+        pip install -r requirements.server.txt
+        sudo ./server.sh
+        
+After the steps above the server will be accepting  requests on the following URL 
+
+    http://<<server-ip>>:5000/calculator
+
 ### Client
+
+The client is simply a python script that detects the poker tables on the Desktop computer, saves screenshots, and then analyse the image and sends clicks. For the Client, it is required:
+
+* **Windows Operating System version 7 or above**
+* **Python 2.7**: Downloaded from python.org 
+* **Tesseract software**: The tesseract.exe file should be on the PATH.
+
+In order to execute the software it is necessary to:
+
+    1) download and install the required software above.
+
+    2) download the source code from git:
+        git clone https://github.com/gbencke/PyPokerBot.git
+        cd PyPokerBot
+
+    3) Install virtualenv 
+        pip install virtualenv
+ 
+    4) Create a virtualenv environment 
+        virtualenv -p python2 env
+
+    5) Activate the virtualenv
+        env\Scripts\activate.bat
+
+    6) Install the required modules and start the server
+        pip install -r requirements.client.txt
+        
+After the steps above, we can execute the python client as specified on the Usage parameters below:
 
 ## Usage
 
+The Poker Bot is very simple to use, and has several modes to execute.
+
 ### Server
+
+The server only provides a simple URL that receives a JSON containing a calculation request as shown below: 
+
+    { "command" : "AsTh:XX" }
+
+and returns the result of these calculation as a python tuple with the probability of such hand being the best hand:
+
+    [(u'AsTh:XX', 0.627141)]
+
+The server after installation is very simple to start, just execute:
+
+    sudo ./server.sh
 
 ### Client
 
+The client is a simple python script that keeps taking screenshots from playing tables and sends commands to such poker desktop clients. After the install procedures above are completed, we can use the poker script as follows:
+
 #### generate_samples
  
+This Task generates a series of screenshots from the Poker desktop client that is
+running on the computer. It saves them as JPEG images for later analisys. Those
+samples are saved on the samples_folder key of the settings.py configuration file
+
+Usage:
+
+    python PyPokerBot.py generate_samples
+
+Parameters:
+
+**None**
+
+Return:
+
+**None**
+
+Obs:
+
+The samples are saved on the folder specified on the samples_folder key of the
+dictionary returned by settings.py
+
 #### grab_image
+
+This task is used to debug the computer vision process that identifies the objects on the
+screenshot taken from the poker table. It crops the image in a specific position and size
+
+Usage:
+
+    python PyPokerBot.py grab_image <Image Source> <Platform> <TableType> <Pos> <size> <FileName>
+
+
+Parameters:
+
+* **Image Source**: The Screenshot of the poker client to be used as source
+* **Platform**: The poker platform from which the screenshot was taken
+* **TableType**: The type of table that the screenshot was taken (6-SEAT,9-SEAT,etc...)
+* **Pos**: The position to be cropped
+* **Size**: The size of the image to be cropped
+* **Filename to Save**: The filename for the cropped image
+
+Return:
+
+* **None** (But saves the image as specifiec in the parameter above)
+
+Obs:
+
+It is important to notice that the position and size specified are defined on the settings.py file.
+
 
 #### analyse_image
 
+This task analyses a screen shot of a poker table and then returns a dictionary with
+the information captured from such image. It analyses the cards on the table, the
+hero position and cards and also the commands available to the player.
+
+Usage:
+
+    python PyPokerBot.py analyze_table <Image Source> <Platform> <TableType>
+
+
+Parameters:
+
+* **Image Source**: The jpg image containing the poker table screenshot to be analyzed.
+* **Platform**: The Poker Platform (Client Software) that should be considered in the analysis
+* **TableType**: The Type of Table, for example, 6-SEAT, 9-SEAT or others.
+
+Return:
+After the analysis is completed, the script prints a friendly representation of the
+returned  dictionary with the following values:
+
+* **Number Of Villains**: Number of Players playing against the Hero
+* **Flop**: Current The Cards in the Flop (Table)
+
+if player is playing current hand:
+
+* **Pocket Cards**: The Cards that the Hero is holding
+* **Position**: Current Hero Position in the table
+* **Equity**: The Equity (% of success with current hand)
+
+If there is a decision to be made by the player:
+
+* **Command**: The button to be pressed
+* **Decision**: The decision made by the current bot strategy
+
+Obs:
+
+* **Hero** is the term used for the current player
+* The python classes to be used for scanning the table and generating the strategy
+ are defined in the settings.py file
+
+
 #### hud
 
+This task starts the PokerBot as a HUD (HeadUp Display), so it will open the poker client,
+start capturing the images, and parsing the image for the current table information and
+also will generate decisions, but it *wont* execute the decisions made (send clicks)
+
+Usage:
+
+    python PyPokerBot.py hud [SleepTimeSec]
+
+Parameters:
+
+* **SleepTimeSec**: The time to sleep before starting to capture screen images. The
+time between screen captures is defined in the settings.py file.
+
+
+Return:
+
+* **None** (But writes to stdout the parse of the screen image capture)
+
+
 #### play
+
+This tasks stars the PokerBot in Playing mode, so it will capture the screens of the
+poker client, parse the image, run the strategy and send the clicks to the poker cliente
+
+Usage:
+
+    python PyPokerBot.py play
+
+Parameters:
+
+* **None**
+
+Return:
+
+* **None** (But writes to stdout the parse of the screen image capture)
 
 
 ## Implementation Details
