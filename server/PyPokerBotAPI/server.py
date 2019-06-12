@@ -40,8 +40,8 @@ def calculator():
         start_cards = normalize_cards(tokens)
         for x in lookup_table.keys():
             print(str(lookup_table[x])[:80])
-            card_found = filter(lambda card: card['cards'] == start_cards,
-                                lookup_table[x])
+            card_found = list(filter(lambda card: card['cards'] == start_cards,
+                                     lookup_table[x]))
             print(card_found)
             if len(card_found) > 0:
                 print("Found {} in lookup_table".format(start_cards))
@@ -50,5 +50,9 @@ def calculator():
     print("{} {} {} will be calculated".format(start_cards, board, dead))
     r = calc(start_cards, board, dead, 1000000)
     if r:
-        print("{} calculated equity:{}".format(start_cards, str(r)))
-        return str(zip(r.hands, r.ev))
+        print("{} calculated equity:{}".format(start_cards, str(r.ev)))
+        return str((r.hands, r.ev))
+
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0')
