@@ -12,7 +12,7 @@ from datetime import datetime
 
 import cv2
 from PyPokerBotClient.platforms.utils import get_histogram_from_image
-from PyPokerBotClient.osinterface.win32.screenshot \
+from PyPokerBotClient.osinterface.image \
     import grab_image_from_file, grab_image_pos_from_image
 from PyPokerBotClient.settings import GLOBAL_SETTINGS as Settings
 

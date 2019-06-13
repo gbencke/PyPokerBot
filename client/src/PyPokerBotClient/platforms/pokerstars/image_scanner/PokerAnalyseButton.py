@@ -9,7 +9,7 @@ from PyPokerBotClient.settings import GLOBAL_SETTINGS as Settings
 from PyPokerBotClient.platforms.utils import get_histogram_from_image
 from PyPokerBotClient.platforms.utils import create_list_seats
 from PyPokerBotClient.platforms.utils import create_list_boolean_seats
-from PyPokerBotClient.osinterface.win32.screenshot \
+from PyPokerBotClient.osinterface.image \
     import grab_image_from_file, grab_image_pos_from_image
 
 

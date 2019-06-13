@@ -5,7 +5,7 @@ poker cliente platforms. They mainly deal with data and image manipulation
 import numpy
 from cv2 import calcHist, normalize
 
-from PyPokerBotClient.osinterface.win32.screenshot import grab_image_from_file
+from PyPokerBotClient.osinterface.image import grab_image_from_file
 from PyPokerBotClient.settings import GLOBAL_SETTINGS as Settings
 
 

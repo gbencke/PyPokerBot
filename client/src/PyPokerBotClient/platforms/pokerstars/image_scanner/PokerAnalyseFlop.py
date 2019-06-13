@@ -13,7 +13,7 @@ from PyPokerBotClient.platforms.utils import create_list_seats
 from PyPokerBotClient.platforms.utils import get_suite_from_image
 from PyPokerBotClient.platforms.utils import get_card_template
 from PyPokerBotClient.platforms.utils import create_list_string_seats
-from PyPokerBotClient.osinterface.win32.screenshot \
+from PyPokerBotClient.osinterface.image \
     import grab_image_from_file, grab_image_pos_from_image
 
 
