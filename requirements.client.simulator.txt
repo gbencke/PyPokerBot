@@ -1,0 +1,13 @@
+appdirs==1.4.3
+EasyProcess==0.2.3
+numpy==1.15.4
+opencv-python==3.4.3.18
+packaging==16.8
+Pillow==4.0.0
+PyMsgBox==1.0.6
+pyparsing==2.2.0
+PyScreeze==0.1.9
+pytesseract==0.1.6
+PyTweening==1.0.3
+requests==2.13.0
+six==1.10.0

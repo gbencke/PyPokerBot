@@ -22,4 +22,5 @@ env/
 _build/
 env.client/
 env.server/
+env.simulator/
 
