@@ -46,7 +46,7 @@ def show_usage():
             method_pointer = getattr(mod, method_to_call)
             descricao = method_pointer()
             print("-{}:{}\n".format(current_task, descricao))
-        except ImportError, exception_raised:
+        except ImportError as exception_raised:
             logging.debug("command ({0}) tried to import: {1} {2}".format(
                 current_task, module_to_import, exception_raised))
             continue
@@ -60,7 +60,7 @@ def process_command(args):
     module_to_import = "PyPokerBotClient.tasks." + args[0]
     try:
         mod = import_module(module_to_import)
-    except ImportError, exception_raised:
+    except ImportError as exception_raised:
         logging.debug(
             "Error, this command ({0}) was not found, tried to import: {1} {2}".format(
                 args[0], module_to_import, exception_raised))
