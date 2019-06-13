@@ -1,9 +1,17 @@
 appdirs==1.4.3
 EasyProcess==0.2.3
+entrypoints==0.3
+flake8==3.7.7
+mccabe==0.6.1
 numpy==1.15.4
+olefile==0.46
 opencv-python==3.4.3.18
 packaging==16.8
 Pillow==4.0.0
+pudb==2019.1
+pycodestyle==2.5.0
+pyflakes==2.1.1
+Pygments==2.4.2
 PyMsgBox==1.0.6
 pyparsing==2.2.0
 PyScreeze==0.1.9
@@ -11,3 +19,4 @@ pytesseract==0.1.6
 PyTweening==1.0.3
 requests==2.13.0
 six==1.10.0
+urwid==2.0.1
