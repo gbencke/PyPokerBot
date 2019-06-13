@@ -107,6 +107,6 @@ class PokerAnalyseHand(object):
             Settings.get_calculate_url(),
             json={"command": command_to_send})
         if request_made.status_code == 200:
-            return command_to_send, ast.literal_eval(request_made.content)
+            return command_to_send, ast.literal_eval(request_made.content.decode('UTF-8'))
         else:
             return command_to_send, ''

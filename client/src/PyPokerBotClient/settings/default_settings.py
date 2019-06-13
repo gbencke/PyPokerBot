@@ -25,7 +25,7 @@ DEFAULT_SETTINGS = {
                 "TEMPLATES_FOLDER": "..\\data\\template" if windows else "../data/template",
                 "TABLE_SIZE": (614, 456),
                 "PLAYERCARD_HAS_NOCARD_TEMPLATE": "",
-                "PLAYERCARD_HAS_UNKNOWN_CARD_TEMPLATE": "..\\data\\template\\PLAYER_HASCARD.jpg" if windows else "../data/template/PLAYER_HASCARD.jpg",
+                "PLAYERCARD_HAS_UNKNOWN_CARD_TEMPLATE": "..\\data\\template\\PLAYER_HASCARD.JPG" if windows else "../data/template/PLAYER_HASCARD.JPG",
                 "6-SEATS": {
                     "NUMBER_OF_SEATS": 6,
                     "PLAYERHASCARD_SIZE": (162, 42),
@@ -51,7 +51,7 @@ DEFAULT_SETTINGS = {
                     "PLAYERCARD62_POS": (653, 79),
 
                     "FLOPCARD_SIZE": (60, 50),
-                    "FLOPCARD_HAS_NOCARD_TEMPLATE": "..\\data\\template\\NOFLOP.jpg" if windows else "../data/template/NOFLOP.jpg",
+                    "FLOPCARD_HAS_NOCARD_TEMPLATE": "..\\data\\template\\NOFLOP.JPG" if windows else "../data/template/NOFLOP.JPG",
                     "FLOPCARD1": (455, 356),
                     "FLOPCARD2": (536, 356),
                     "FLOPCARD3": (617, 356),
@@ -60,7 +60,7 @@ DEFAULT_SETTINGS = {
 
                     "BUTTON_SIZE": (39, 34),
                     "BUTTON_THRESHOLD": 0.85,
-                    "BUTTON_TEMPLATE": "..\\..\\data\\template\\BUTTON.jpg" if windows else "../../data/template/BUTTON.jpg",
+                    "BUTTON_TEMPLATE": "..\\..\\data\\template\\BUTTON.JPG" if windows else "../../data/template/BUTTON.JPG",
                     "BUTTON1": (999, 321),
                     "BUTTON2": (944, 527),
                     "BUTTON3": (742, 585),
@@ -75,19 +75,19 @@ DEFAULT_SETTINGS = {
                     "COMMAND_POS2": (863, 847),
                     "COMMAND_POS3": (1081, 847),
 
-                    "COMMAND_TEST_TEMPLATE1": "..\\data\\template\\COMMAND_TEST_TEMPLATE1.jpg" if windows else "../data/template/COMAND_TEST_TEMPLATE1.jpg",
-                    "COMMAND_TEST_TEMPLATE2": "..\\data\\template\\COMMAND_TEST_TEMPLATE2.jpg" if windows else "../data/template/COMMAND_TEST_TEMPLATE2.jpg",
-                    "COMMAND_TEST_TEMPLATE3": "..\\data\\template\\COMMAND_TEST_TEMPLATE3.jpg" if windows else "../data/template/COMMAND_TEST_TEMPLATE3.jpg",
+                    "COMMAND_TEST_TEMPLATE1": "..\\data\\template\\COMMAND_TEST_TEMPLATE1.JPG" if windows else "../data/template/COMMAND_TEST_TEMPLATE1.JPG",
+                    "COMMAND_TEST_TEMPLATE2": "..\\data\\template\\COMMAND_TEST_TEMPLATE2.JPG" if windows else "../data/template/COMMAND_TEST_TEMPLATE2.JPG",
+                    "COMMAND_TEST_TEMPLATE3": "..\\data\\template\\COMMAND_TEST_TEMPLATE3.JPG" if windows else "../data/template/COMMAND_TEST_TEMPLATE3.JPG",
 
-                    "CHECK_TEMPLATE": "..\\data\\template\\CHECK_TEMPLATE.jpg" if windows else "../data/template/CHECK_TEMPLATE.jpg",
-                    "FOLD_TEMPLATE": "..\\data\\template\\FOLD_TEMPLATE.jpg" if windows else "../data/template/FOLD_TEMPLATE.jpg",
+                    "CHECK_TEMPLATE": "..\\data\\template\\CHECK_TEMPLATE.JPG" if windows else "../data/template/CHECK_TEMPLATE.JPG",
+                    "FOLD_TEMPLATE": "..\\data\\template\\FOLD_TEMPLATE.JPG" if windows else "../data/template/FOLD_TEMPLATE.JPG",
 
                     "SET_RAISE_TO_POT": (1100, 750),
 
                     "POT": (590, 300),
                     "POT_SIZE": (120, 35),
 
-                    "NOBET_TEMPLATE": "..\\data\\template\\NOBET_TEMPLATE.jpg" if windows else "../data/template/NOBET_TEMPLATE.jpg",
+                    "NOBET_TEMPLATE": "..\\data\\template\\NOBET_TEMPLATE.JPG" if windows else "../data/template/NOBET_TEMPLATE.JPG",
                     "BET_SIZE": (135, 25),
                     "BET1": (835, 295),
                     "BET2": (850, 495),

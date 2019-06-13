@@ -98,15 +98,15 @@ class PokerAnalyseCommands(object):
                     image_to_analyse,
                     Settings.get_command_pos(self.platform, self.table_type, current_command),
                     Settings.get_command_size(self.platform, self.table_type))
-                command_image_name = 'command{}.jpg'.format(current_command)
+                command_image_name = 'command{}.JPG'.format(current_command)
                 im_command.save(command_image_name)
                 return_from_tesseract = subprocess.check_output(['tesseract',
                                                                  command_image_name,
                                                                  'stdout'],
-                                                                shell=True)
+                                                                shell=False).decode('UTF-8')
                 if len(return_from_tesseract.strip()) == 0:
                     error_filename = command_image_name + '.error.' + datetime.now().strftime(
-                        "%Y%m%d%H%M%S.%f") + '.jpg'
+                        "%Y%m%d%H%M%S.%f") + '.JPG'
                     logging.debug("ERROR ON TESSERACT!!! " + error_filename)
                     im_command.save(error_filename)
                 ret[current_x] = self.generate_command_tuple(

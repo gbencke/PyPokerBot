@@ -6,6 +6,9 @@ as there is a need for all components of the bot to share the same parameters.
 """
 from PyPokerBotClient.settings.default_settings import DEFAULT_SETTINGS as default_setting
 
+import os
+import os.path
+
 
 class Settings(object):
     """
@@ -57,7 +60,8 @@ class Settings(object):
         :param image_platform: A string containing the poker platform to use.
         :return: A string containing the relevant python class
         """
-        return default_setting['PLATFORMS'][image_platform]['POKER_TABLE_SCANNER_CLASS']
+        return default_setting['PLATFORMS'][image_platform][
+            'POKER_TABLE_SCANNER_CLASS']
 
     @staticmethod
     def get_table_strategy_class(image_platform):
@@ -69,7 +73,8 @@ class Settings(object):
         :param image_platform: A string containing the poker platform to use.
         :return: A string containing the relevant python class
         """
-        return default_setting['PLATFORMS'][image_platform]['POKER_STRATEGY_CLASS']
+        return default_setting['PLATFORMS'][image_platform][
+            'POKER_STRATEGY_CLASS']
 
     @staticmethod
     def get_number_of_seats(image_platform, image_tabletype):
@@ -81,7 +86,7 @@ class Settings(object):
         :param image_tabletype: A string containing the poker table type to use.
         :return: A integer with the number of seats.
         """
-        return default_setting['PLATFORMS'][image_platform]['TABLE_SCANNER'] \
+        return default_setting['PLATFORMS'][image_platform]['TABLE_SCANNER']\
             [image_tabletype]['NUMBER_OF_SEATS']
 
     @staticmethod
@@ -107,8 +112,9 @@ class Settings(object):
         :param index: The index of the seat to be returned
         :return: A string containing the path to the sample image
         """
-        return default_setting['PLATFORMS'][platform]['TABLE_SCANNER'] \
-                   ['TEMPLATES_FOLDER'] + '\\' + 'PLAYER{}_HASNOCARD'.format(index + 1) + '.jpg'
+        return os.path.join(
+            default_setting['PLATFORMS'][platform]['TABLE_SCANNER']['TEMPLATES_FOLDER'],
+            'PLAYER{}_HASNOCARD'.format(index + 1) + '.JPG')
 
     @staticmethod
     def get_button_template_file(platform, index):
@@ -123,8 +129,10 @@ class Settings(object):
         :param index: The index of the seat to be returned
         :return: A string containing the path to the sample image.
         """
-        return default_setting['PLATFORMS'][platform]['TABLE_SCANNER']['TEMPLATES_FOLDER'] + \
-               '\\' + 'BUTTON{}_TEMPLATE'.format(index + 1) + '.jpg'
+        return os.path.join(
+            default_setting['PLATFORMS'][platform]['TABLE_SCANNER']
+            ['TEMPLATES_FOLDER'],
+            'BUTTON{}_TEMPLATE'.format(index + 1) + '.JPG')
 
     @staticmethod
     def get_button_template(platform, tabletype, index):
@@ -139,8 +147,8 @@ class Settings(object):
         :param index: The index of the seat to be returned
         :return: A string containing the path to the sample image.
         """
-        return default_setting['PLATFORMS'][platform]['TABLE_SCANNER'][tabletype][
-            'BUTTON{}'.format(index + 1)]
+        return default_setting['PLATFORMS'][platform]['TABLE_SCANNER'][
+            tabletype]['BUTTON{}'.format(index + 1)]
 
     @staticmethod
     def get_card_template(platform, current_card, current_suit):
@@ -155,8 +163,9 @@ class Settings(object):
         :param current_suit: The index of the seat to be returned (h,c,s,d)
         :return: A string containing the path to the sample image.
         """
-        return default_setting['PLATFORMS'][platform]['TABLE_SCANNER'] \
-                   ['TEMPLATES_FOLDER'] + '\\' + current_card + current_suit + '.jpg'
+        return os.path.join(
+            default_setting['PLATFORMS'][platform]['TABLE_SCANNER']
+            ['TEMPLATES_FOLDER'], current_card + current_suit + '.JPG')
 
     @staticmethod
     def get_nobet_template(platform, tabletype):
@@ -169,7 +178,8 @@ class Settings(object):
         :param tabletype: A string containing the poker table type to use.
         :return: A string containing the path to the sample image.
         """
-        return default_setting['PLATFORMS'][platform]['TABLE_SCANNER'][tabletype]['NOBET_TEMPLATE']
+        return default_setting['PLATFORMS'][platform]['TABLE_SCANNER'][
+            tabletype]['NOBET_TEMPLATE']
 
     @staticmethod
     def get_flopcard(platform, tabletype, index):
@@ -183,8 +193,8 @@ class Settings(object):
         :param index: The index of the card on the table`s flop
         :return: A string containing the path to the sample image.
         """
-        return default_setting['PLATFORMS'][platform]['TABLE_SCANNER'][tabletype][
-            'FLOPCARD{}'.format(index + 1)]
+        return default_setting['PLATFORMS'][platform]['TABLE_SCANNER'][
+            tabletype]['FLOPCARD{}'.format(index + 1)]
 
     @staticmethod
     def get_flopcard_size(platform, tabletype):
@@ -196,7 +206,8 @@ class Settings(object):
         :param tabletype: A string containing the poker table type to use.
         :return: A string containing the path to the sample image.
         """
-        return default_setting['PLATFORMS'][platform]['TABLE_SCANNER'][tabletype]['FLOPCARD_SIZE']
+        return default_setting['PLATFORMS'][platform]['TABLE_SCANNER'][
+            tabletype]['FLOPCARD_SIZE']
 
     @staticmethod
     def get_flop_card_key(platform, tabletype, flop_card_key):
@@ -210,7 +221,8 @@ class Settings(object):
         :param key: The key of the card on the table`s flop
         :return: A string containing the path to the sample image.
         """
-        return default_setting['PLATFORMS'][platform]['TABLE_SCANNER'][tabletype][flop_card_key]
+        return default_setting['PLATFORMS'][platform]['TABLE_SCANNER'][
+            tabletype][flop_card_key]
 
     @staticmethod
     def get_command_current_pos_key(platform, tabletype, current_pos_key):
@@ -224,7 +236,8 @@ class Settings(object):
         :param current_pos_key: The key of the command on the table`s flop
         :return: A string containing the path to the sample image.
         """
-        return default_setting['PLATFORMS'][platform]['TABLE_SCANNER'][tabletype][current_pos_key]
+        return default_setting['PLATFORMS'][platform]['TABLE_SCANNER'][
+            tabletype][current_pos_key]
 
     @staticmethod
     def get_command_test_tolerance(platform, tabletype):
@@ -254,8 +267,8 @@ class Settings(object):
         :param current_command: The index of the command to be tested.
         :return: A string containing the path to the sample image.
         """
-        return default_setting['PLATFORMS'][platform]['TABLE_SCANNER'][tabletype][
-            'COMMAND_TEST_TEMPLATE{}'.format(current_command)]
+        return default_setting['PLATFORMS'][platform]['TABLE_SCANNER'][
+            tabletype]['COMMAND_TEST_TEMPLATE{}'.format(current_command)]
 
     @staticmethod
     def get_command_test_size(platform, tabletype):
@@ -282,7 +295,8 @@ class Settings(object):
         :param tabletype: A string containing the poker table type to use.
         :return: A tuple containing the size of the command button
         """
-        return default_setting['PLATFORMS'][platform]['TABLE_SCANNER'][tabletype]['COMMAND_SIZE']
+        return default_setting['PLATFORMS'][platform]['TABLE_SCANNER'][
+            tabletype]['COMMAND_SIZE']
 
     @staticmethod
     def get_button(platform, tabletype, index):
@@ -486,7 +500,10 @@ class Settings(object):
 
         :return: List of strings containing the available platforms
         """
-        return [default_setting['PLATFORMS'][x] for x in default_setting['PLATFORMS']]
+        return [
+            default_setting['PLATFORMS'][x]
+            for x in default_setting['PLATFORMS']
+        ]
 
     @staticmethod
     def get_raw_image_pos(image_platform, image_tabletype, image_pos):
