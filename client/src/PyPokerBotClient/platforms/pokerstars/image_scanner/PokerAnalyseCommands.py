@@ -100,9 +100,11 @@ class PokerAnalyseCommands(object):
                     Settings.get_command_size(self.platform, self.table_type))
                 command_image_name = 'command{}.JPG'.format(current_command)
                 im_command.save(command_image_name)
+                devNULL = open(os.devnull,'w')
                 return_from_tesseract = subprocess.check_output(['tesseract',
                                                                  command_image_name,
                                                                  'stdout'],
+                                                                stderr=devNULL,
                                                                 shell=False).decode('UTF-8')
                 if len(return_from_tesseract.strip()) == 0:
                     error_filename = command_image_name + '.error.' + datetime.now().strftime(
