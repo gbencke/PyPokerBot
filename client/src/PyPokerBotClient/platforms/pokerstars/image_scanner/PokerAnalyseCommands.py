@@ -111,6 +111,8 @@ class PokerAnalyseCommands(object):
                         "%Y%m%d%H%M%S.%f") + '.JPG'
                     logging.debug("ERROR ON TESSERACT!!! " + error_filename)
                     im_command.save(error_filename)
+                return_from_tesseract = return_from_tesseract.replace('\n',' ')
+                return_from_tesseract = return_from_tesseract.replace('\x0c',' ')
                 ret[current_x] = self.generate_command_tuple(
                     return_from_tesseract.replace('\r\n', ' ').replace('  ', ' '))
                 os.remove(command_image_name)
