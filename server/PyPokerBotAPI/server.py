@@ -1,5 +1,6 @@
 import sys
 from flask import Flask, request
+from flask_socketio import SocketIO
 
 sys.path.insert(0, ".")
 
@@ -9,6 +10,10 @@ from helpers.LookupTable import LookupTable
 from lookup_table.lookup_table import lookup_table
 
 app = Flask(__name__)
+app.config['SERVER_NAME'] = 'poker_app.ddns.net:5000'
+app.config['SECRET_KEY'] = '12345'
+
+socketio = SocketIO(app)
 lookup_table_utils = LookupTable()
 
 table_status = {}
@@ -28,6 +33,7 @@ def table(tableid):
     str_tableid = str(tableid)
     table_status[str_tableid] = request.get_json()
     print("Status for table:{} was received".format(tableid))
+    socketio.emit('tablestatus', table_status[str_tableid])
     return "OK"
 
 
@@ -69,4 +75,4 @@ def calculator():
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0')
+    socketio.run(app)
