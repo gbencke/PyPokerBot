@@ -11,6 +11,8 @@ from lookup_table.lookup_table import lookup_table
 app = Flask(__name__)
 lookup_table_utils = LookupTable()
 
+table_status = {}
+
 
 def normalize_cards(tokens):
     start_cards = (RangeHelper()).parse(tokens[0])
@@ -19,6 +21,14 @@ def normalize_cards(tokens):
     start_cards_list[0] = start_cards.split(':')[0]
     start_cards = ':'.join(start_cards_list)
     return start_cards
+
+
+@app.route('/table/<tableid>', methods=['POST'])
+def table(tableid):
+    str_tableid = str(tableid)
+    table_status[str_tableid] = request.get_json()
+    print("Status for table:{} was received".format(tableid))
+    return "OK"
 
 
 @app.route('/calculator', methods=['POST'])
@@ -40,8 +50,9 @@ def calculator():
         start_cards = normalize_cards(tokens)
         for x in lookup_table.keys():
             print(str(lookup_table[x])[:80])
-            card_found = list(filter(lambda card: card['cards'] == start_cards,
-                                     lookup_table[x]))
+            card_found = list(
+                filter(lambda card: card['cards'] == start_cards,
+                       lookup_table[x]))
             print(card_found)
             if len(card_found) > 0:
                 print("Found {} in lookup_table".format(start_cards))
@@ -52,6 +63,9 @@ def calculator():
     if r:
         print("{} calculated equity:{}".format(start_cards, str(r.ev)))
         return str((r.hands, r.ev))
+    else:
+        print("Error for:{}".format(r))
+        return "Error"
 
 
 if __name__ == '__main__':
