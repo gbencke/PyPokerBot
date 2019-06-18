@@ -51,6 +51,7 @@ import os
 import os.path
 import argparse
 import json
+import requests
 
 from PyPokerBotClient.utils import get_instance
 from PyPokerBotClient.settings import GLOBAL_SETTINGS as Settings
@@ -63,8 +64,7 @@ def usage():
 
     :return:  None (Prints the usage information to stdout)
     """
-    return \
-
+    return
 
 
 """
@@ -128,7 +128,8 @@ def get_arguments(args):
             options.tableid is None and options.observer_url is not None):
         raise ValueError("tableid and observer_url must be BOTH informed")
 
-    should_observe = (options.tableid is not None and options.observer_url is not None)
+    should_observe = (options.tableid is not None
+                      and options.observer_url is not None)
 
     return options, should_observe
 
@@ -141,6 +142,13 @@ def clean_string(result):
     result = result.replace("[b\"", "[\"")
     result = result.replace(" b\"", " \"")
     return result
+
+
+def post_table_status(json_result):
+    url = Settings.get_table_url() + '/1'
+    request_made = requests.post(url, json=json_result)
+    if not request_made.status_code == 200:
+        print("Error posting status to server...")
 
 
 def execute(args):
@@ -214,5 +222,5 @@ def execute(args):
             PokerTableScanner.generate_analisys_summary_info(final_analisys)
         if should_observe:
             result = clean_string(result)
-            print(result)
-            print(json.dumps(json.loads(result), indent=3))
+            json_result = json.dumps(json.loads(result), indent=3)
+            post_table_status(json_result)

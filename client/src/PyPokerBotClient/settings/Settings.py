@@ -101,6 +101,17 @@ class Settings(object):
         return default_setting['STRATEGIES']['SIMPLE']['CALCULATE_URL']
 
     @staticmethod
+    def get_table_url():
+        """
+        The PokerBot uses a server to calculate hand equity (the probrabilty) that
+        a certain hand will be the winning hand. This server exposes a rest api with
+        a URL, and this parameter specifies the URL to be used.
+
+        :return: A string containing the URL
+        """
+        return default_setting['STRATEGIES']['SIMPLE']['TABLE_URL']
+
+    @staticmethod
     def get_player_hasnocard_template(platform, index):
         """
         The PokerBot uses a series of templates for each platform to determine if a
