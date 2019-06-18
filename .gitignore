@@ -24,3 +24,5 @@ env.client/
 env.server/
 env.simulator/
 client/test/
+node_modules/
+
