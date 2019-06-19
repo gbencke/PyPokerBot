@@ -4,6 +4,9 @@ EasyProcess==0.2.3
 entrypoints==0.3
 flake8==3.7.7
 Flask==1.0.2
+Flask-SocketIO==4.1.0
+gevent==1.4.0
+greenlet==0.4.15
 itsdangerous==1.1.0
 Jinja2==2.10
 MarkupSafe==1.1.0
@@ -21,6 +24,8 @@ pyparsing==2.2.0
 pyscreenshot==0.4.2
 PyScreeze==0.1.9
 pytesseract==0.1.6
+python-engineio==3.8.1
+python-socketio==4.1.0
 PyTweening==1.0.3
 requests==2.13.0
 six==1.10.0
