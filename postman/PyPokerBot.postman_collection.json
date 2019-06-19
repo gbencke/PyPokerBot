@@ -1,0 +1,37 @@
+{
+	"info": {
+		"_postman_id": "1fe18862-af1d-4aaa-af6b-c942a59616c5",
+		"name": "PyPokerBot",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Calculate Odds",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{ \"command\":\"4h5h:XX:XX:XX\" }"
+				},
+				"url": {
+					"raw": "{{serverURL}}/calculator",
+					"host": [
+						"{{serverURL}}"
+					],
+					"path": [
+						"calculator"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
