@@ -12,7 +12,6 @@ from lookup_table.lookup_table import lookup_table
 app = Flask(__name__)
 app.config['HOST'] = '0.0.0.0'
 app.config['PORT'] = 5000
-app.config['SERVER_NAME'] = 'poker_app.ddns.net:5000'
 app.config['SECRET_KEY'] = '12345'
 
 socketio = SocketIO(app)
