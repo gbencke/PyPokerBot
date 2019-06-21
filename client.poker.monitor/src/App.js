@@ -1,3 +1,4 @@
+import axios from 'axios';
 import React, { Component } from 'react';
 import SocketIOClient from 'socket.io-client';
 
@@ -9,23 +10,36 @@ import {
 
 class App extends Component {
   state = {
-    table:{}
+    table:{},
+    equity:""
   }
 
   componentDidMount() {
-    this.socket = SocketIOClient(`http://poker_app.ddns.net:5000`);
+    const URL = Platform.OS === 'web' ? 'http://poker_app.ddns.net:5000' : 'http://192.168.0.10:5000'
+
+    this.setState({...this.state, "URL": URL});
+    this.socket = SocketIOClient(URL);
     console.log('socket created...');
     this.socket.on('tablestatus', (message) => {
       console.log(`Message:${message} received`);
       this.setState({ table : message});
     })
+    axios.get('http://192.168.0.10:5000/ping')
+      .then( (r) => {
+        this.setState({...this.state, equity: JSON.stringify(r) });
+      })
+      .catch( (r) => {
+        this.setState({...this.state, equity: JSON.stringify(r) });
+      });
   }
 
   render() {
 
     return (
       <View>
-        <Text>{this.state.table}</Text>
+        <Text>{JSON.stringify(this.state.table)}</Text>
+        <Text>{this.state.URL}</Text>
+        <Text>{this.state.equity}</Text>
       </View>
     );
   }
