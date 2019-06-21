@@ -25,4 +25,5 @@ env.server/
 env.simulator/
 client/test/
 node_modules/
-
+.gradle/
+client.poker.monitor/android/app/build/
