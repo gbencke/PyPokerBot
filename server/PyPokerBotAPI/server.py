@@ -1,4 +1,5 @@
 import sys
+from flask_cors import CORS
 from flask import Flask, request
 from flask_socketio import SocketIO
 
@@ -10,6 +11,7 @@ from helpers.LookupTable import LookupTable
 from lookup_table.lookup_table import lookup_table
 
 app = Flask(__name__)
+CORS(app)
 app.config['HOST'] = '0.0.0.0'
 app.config['PORT'] = 5000
 app.config['SECRET_KEY'] = '12345'
