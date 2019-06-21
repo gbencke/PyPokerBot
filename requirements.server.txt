@@ -4,6 +4,7 @@ EasyProcess==0.2.3
 entrypoints==0.3
 flake8==3.7.7
 Flask==1.0.2
+Flask-Cors==3.0.8
 Flask-SocketIO==4.1.0
 gevent==1.4.0
 greenlet==0.4.15
