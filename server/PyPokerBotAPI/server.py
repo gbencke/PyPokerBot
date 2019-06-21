@@ -29,6 +29,11 @@ def normalize_cards(tokens):
     return start_cards
 
 
+@app.route('/ping', methods=['GET'])
+def ping():
+    return "PONG"
+
+
 @app.route('/table/<tableid>', methods=['POST'])
 def table(tableid):
     str_tableid = str(tableid)
