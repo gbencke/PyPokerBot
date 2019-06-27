@@ -29,7 +29,7 @@ export default class PokerAnalyser extends Component {
           connected={this.state.connected}
           pressConnect={this.connectionChanged}
         />
-          <PokerAnalyserCard/>
+          <PokerAnalyserCard table={getTableData()}/>
         </PokerAnalyserContainer>
     );
   }
