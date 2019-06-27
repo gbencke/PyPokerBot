@@ -6,7 +6,39 @@ import PokerContainer from './PokerContainer';
 
 export default class PokerAnalyserConnect extends Component {
 
-  ConnectInfoText = "Please Enter your Connection Info to the Poker Client";
+  constructor(props){
+    super(props)
+    this.ConnectInfoText = "Please Enter your Connection Info to the Poker Client";
+    this.pressConnect = this.pressConnect.bind(this);
+    this.renderButton = this.renderButton.bind(this);
+  }
+
+  pressConnect(){
+    console.log("pressConnect");
+    this.props.pressConnect(!this.props.connected);
+  }
+
+  renderButton(){
+    if(this.props.connected){
+      return (
+        <Button 
+          style = { styles.DisconnectButton } 
+          raised 
+          accent 
+          onPress={this.pressConnect}
+          text="Disconnect"/>
+      );
+    }else{
+      return (
+        <Button 
+          style = { styles.ConnectButton } 
+          raised 
+          primary 
+          onPress={this.pressConnect}
+          text="Connect"/>
+      );
+    }
+  }
 
   render(){
 
@@ -17,7 +49,7 @@ export default class PokerAnalyserConnect extends Component {
         </View>
         <View style={styles.ConnectView}>
           <TextInput style= { styles.ConnectTextField } />
-          <Button style = { styles.ConnectButton } raised primary text="Connect"/>
+            { this.renderButton() }
         </View>
       </View>
     );
@@ -52,6 +84,9 @@ const styles = {
     borderColor: '#ddd',
   },
   ConnectButton : {
+    flex: 1,
+  },
+  DisconnectButton : {
     flex: 1,
   }
 }
