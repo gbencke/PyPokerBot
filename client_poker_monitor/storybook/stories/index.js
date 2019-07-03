@@ -9,6 +9,7 @@ import Button from './Button';
 import CenterView from './CenterView';
 import Welcome from './Welcome';
 
+
 storiesOf('Welcome', module).add('to Storybook', () => <Welcome showApp={linkTo('Button')} />);
 
 storiesOf('Button', module)
@@ -22,4 +23,13 @@ storiesOf('Button', module)
     <Button onPress={action('clicked-emoji')}>
       <Text>😀 😎 👍 💯</Text>
     </Button>
+  ));
+
+import getTableData from '../../src/test/tableData';
+import PokerAnalyserCard from '../../src/PokerAnalyserCard';
+
+storiesOf('PokerApp', module)
+  .addDecorator(getStory => <CenterView>{getStory()}</CenterView>)
+  .add('with text', () => (
+    <PokerAnalyserCard table={getTableData()}/>
   ));
