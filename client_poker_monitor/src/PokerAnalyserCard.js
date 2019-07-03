@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import { Image, View, Text } from 'react-native';
 import { Card } from 'react-native-material-ui';
+import { getCardCode } from './helpers/getCardCode';
 
 
 export default class PokerAnalyserCard extends Component {
@@ -8,7 +9,6 @@ export default class PokerAnalyserCard extends Component {
     super(props)
     this.table = props.table;
     this.tableType = `${this.table.image_platform} (${this.table.image_tabletype})`;
-    this.imagesTemplates = getImagesTemplates();
   }
 
   render(){
@@ -17,7 +17,7 @@ export default class PokerAnalyserCard extends Component {
         <Card >
           <View style={styles.CardStyle}>
             <Text style={styles.CardText}>{ this.tableType }</Text>
-            <Text style={styles.CardTextFont}>ABCDE</Text>
+            <Text style={styles.CardTextFont}>{ getCardCode('AsAh') }</Text>
           </View>
         </Card>
       </View>
@@ -31,8 +31,6 @@ const styles = {
     paddingRight: 12,
     paddingLeft: 12,
     marginTop: 30,
-    //marginRight: 20,
-    //marginLeft: 20,
   },
   CardStyle : {
     marginLeft: 10,
