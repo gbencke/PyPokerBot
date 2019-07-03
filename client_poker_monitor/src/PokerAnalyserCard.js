@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import { Image, View, Text } from 'react-native';
 import { Card } from 'react-native-material-ui';
-import { getImagesTemplates } from './ImageTemplates';
 
 
 export default class PokerAnalyserCard extends Component {
@@ -15,18 +14,13 @@ export default class PokerAnalyserCard extends Component {
   render(){
     return (
       <View style={styles.ViewStyle}>
-        <Card style={styles.CardStyle}>
-          <Text>{ this.tableType }</Text>
-          <Image 
-            source={ this.imagesTemplates['Ah'] }
-            style={{width:60, height:50}}
-          />
-          <Image 
-            source={ this.imagesTemplates['As'] }
-            style={{width:60, height:50}}
-          />
-          </Card>
-        </View>
+        <Card >
+          <View style={styles.CardStyle}>
+            <Text style={styles.CardText}>{ this.tableType }</Text>
+            <Text style={styles.CardTextFont}>ABCDE</Text>
+          </View>
+        </Card>
+      </View>
     );
   }
 }
@@ -41,6 +35,15 @@ const styles = {
     //marginLeft: 20,
   },
   CardStyle : {
+    marginLeft: 10,
+    marginRight:10
+  },
+  CardTextFont: {
+    marginTop: 10,
+    fontFamily: 'cards',
+    fontSize: 48,
+    width: '100%',
+    textAlign: 'center'
   }
 };
 

@@ -30,6 +30,6 @@ import PokerAnalyserCard from '../../src/PokerAnalyserCard';
 
 storiesOf('PokerApp', module)
   .addDecorator(getStory => <CenterView>{getStory()}</CenterView>)
-  .add('with text', () => (
+  .add('Show Cards', () => (
     <PokerAnalyserCard table={getTableData()}/>
   ));
