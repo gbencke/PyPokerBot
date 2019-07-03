@@ -5,7 +5,6 @@
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
     "run-storybook": "export REACT_APP_USE_SB=true ; react-native start --reset-cache",
-    "storybook": "start-storybook -p 6006",
     "test": "jest"
   },
   "dependencies": {
