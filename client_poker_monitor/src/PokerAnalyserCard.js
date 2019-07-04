@@ -5,6 +5,7 @@ import { getCardCode } from './helpers/getCardCode';
 import FitImage from 'react-native-fit-image';
 
 const CardTemplate = require('./templates/card2.jpg');
+const factor = 15; 
 
 export default class PokerAnalyserCard extends Component {
 
@@ -27,8 +28,6 @@ export default class PokerAnalyserCard extends Component {
 
   RenderCard(key){
 
-    const factor = 15; 
-
     const PlayingCardViewStyle = { 
       width : '16%', 
       flexDirection: 'row' ,
@@ -50,17 +49,33 @@ export default class PokerAnalyserCard extends Component {
             source = { CardTemplate }
             style = { RenderedCardStyle } />
         </View>
-        <Text style={{width:'100%', textAlign:'center'}}>AA</Text>
+        <Text style={{width:'100%', textAlign:'center'}}>{`AA - ${key}`}</Text>
       </View>
     );
   }
 
   RenderNoCard(key){
+    const NoCardStyle = { 
+      flex: 1, 
+      justifyContent:'flex-end',
+      alignItems:'center',
+    };
+
+    const RenderedCardStyle = { 
+      width: Dimensions.get('window').width / factor * 2,
+      height: Dimensions.get('window').height / factor ,
+      borderWidth: 1,
+      borderRadius : 1,
+      borderStyle: 'dashed',
+      borderColor: '#000'
+    };
+
     return (
-      <View key={ key } style={{ flex: 1, justifyContent:'flex-end',alignItems:'center'}}>
-        <Text>No</Text>
+      <View key={ key } style={NoCardStyle}>
+        <Text style= { RenderedCardStyle }></Text>
+        <Text>{`No - ${key}`}</Text>
       </View>
-    )
+    );
   }
 
   RenderPlayersCards(){
@@ -76,6 +91,25 @@ export default class PokerAnalyserCard extends Component {
           <View style={styles.CardStyle}>
             <Text style={styles.CardText}>{ this.getTableType() }</Text>
               { this.RenderPlayersCardsView() }
+          </View>
+          <View style={styles.CardStyle}>
+            <Text>{`PHASE:${this.table.hand_analisys.hand_phase}`}</Text>
+          </View>
+          <View style={styles.CardStyle}>
+            <Text>CURRENT HAND:</Text>
+          </View>
+          <View style={styles.CardStyle}>
+            <Text style={styles.CardTextFont}>
+                { getCardCode(this.table.hero.hero_cards) }
+            </Text>
+          </View>
+          <View style={styles.CardStyle}>
+            <Text>FLOP:</Text>
+          </View>
+          <View style={styles.CardStyle}>
+            <Text style={styles.CardTextFont}>
+                { getCardCode(this.table.flop.join('')) }
+            </Text>
           </View>
         </Card>
       </View>
