@@ -3,6 +3,8 @@ import { View } from 'react-native';
 import { Card } from 'react-native-material-ui';
 import PokerAnalyserPlayersCards from './PokerAnalyserPlayersCards';
 import PokerAnalyserHandStatus from './PokerAnalyserHandStatus';
+import PokerAnalyserCommands from './PokerAnalyserCommands';
+import PokerAnalyserDecision from './PokerAnalyserDecision';
 
 export default class PokerAnalyserCard extends Component {
 
@@ -17,6 +19,8 @@ export default class PokerAnalyserCard extends Component {
         <Card >
           <PokerAnalyserPlayersCards table={this.table}/>
           <PokerAnalyserHandStatus table={this.table}/>
+          <PokerAnalyserCommands table={this.table}/>
+          <PokerAnalyserDecision table={this.table}/>
         </Card>
       </View>
     );
