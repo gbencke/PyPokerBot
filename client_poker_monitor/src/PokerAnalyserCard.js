@@ -15,75 +15,7 @@ export default class PokerAnalyserCard extends Component {
     this.table = props.table;
   }
 
-
-  RenderPlayersCardsView(){
-    return (
-      <View style={styles.PlayersCardsView}>
-          { this.RenderPlayersCards() }
-      </View>
-    );
-  }
-
-  RenderCard(key){
-
-    const PlayingCardViewStyle = { 
-      width : '16%', 
-      flexDirection: 'row' ,
-      justifyContent: 'space-between'
-    };
-
-    const RenderedCardStyle = { 
-      width: Dimensions.get('window').width / factor ,
-      height: Dimensions.get('window').height / factor 
-    };
-
-    return (
-      <View key={ key } style={ {flexDirection: 'column', width: '16%' }}>
-        <View style= { PlayingCardViewStyle }>
-          <FitImage
-            source = { CardTemplate }
-            style = { RenderedCardStyle } />
-          <FitImage
-            source = { CardTemplate }
-            style = { RenderedCardStyle } />
-        </View>
-        <Text style={{width:'100%', textAlign:'center'}}>{`AA - ${key}`}</Text>
-      </View>
-    );
-  }
-
-  RenderNoCard(key){
-    const NoCardStyle = { 
-      flex: 1, 
-      justifyContent:'flex-end',
-      alignItems:'center',
-    };
-
-    const RenderedCardStyle = { 
-      width: Dimensions.get('window').width / factor * 2,
-      height: Dimensions.get('window').height / factor ,
-      borderWidth: 1,
-      borderRadius : 1,
-      borderStyle: 'dashed',
-      borderColor: '#000'
-    };
-
-    return (
-      <View key={ key } style={NoCardStyle}>
-        <Text style= { RenderedCardStyle }></Text>
-        <Text>{`No - ${key}`}</Text>
-      </View>
-    );
-  }
-
-  RenderPlayersCards(){
-    return this.table.cards.map( (item, i) => {
-      return item ? this.RenderCard(i) : this.RenderNoCard(i) 
-    });
-  }
-
   render(){
-    console.log(`Card:${JSON.stringify(styles.WithCardRenderedCardStyle)}`);
     return (
       <View style={styles.ViewStyle}>
         <Card >
