@@ -92,24 +92,27 @@ export default class PokerAnalyserCard extends Component {
             <Text style={styles.CardText}>{ this.getTableType() }</Text>
               { this.RenderPlayersCardsView() }
           </View>
-          <View style={styles.CardStyle}>
-            <Text>{`PHASE:${this.table.hand_analisys.hand_phase}`}</Text>
-          </View>
-          <View style={styles.CardStyle}>
-            <Text>CURRENT HAND:</Text>
-          </View>
-          <View style={styles.CardStyle}>
-            <Text style={styles.CardTextFont}>
-                { getCardCode(this.table.hero.hero_cards) }
-            </Text>
-          </View>
-          <View style={styles.CardStyle}>
-            <Text>FLOP:</Text>
-          </View>
-          <View style={styles.CardStyle}>
-            <Text style={styles.CardTextFont}>
-                { getCardCode(this.table.flop.join('')) }
-            </Text>
+          <View style={{ flexDirection: "row" }}>
+            <View style={{ flexDirection: "column"}}>
+              <View style={styles.CardStyle}>
+                <Text>CURRENT HAND:</Text>
+              </View>
+              <View style={styles.CardStyle}>
+                <Text style={styles.CardTextFont}>
+                    { getCardCode(this.table.hero.hero_cards) }
+                </Text>
+              </View>
+            </View>
+            <View style={{ flexDirection: "column"}}>
+              <View style={styles.CardStyle}>
+                <Text>FLOP({`${this.table.hand_analisys.hand_phase}`})</Text>
+              </View>
+              <View style={styles.CardStyle}>
+                <Text style={styles.CardTextFont}>
+                    { getCardCode(this.table.flop.join('')) }
+                </Text>
+              </View>
+            </View>
           </View>
         </Card>
       </View>
