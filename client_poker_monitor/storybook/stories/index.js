@@ -25,11 +25,11 @@ storiesOf('Button', module)
     </Button>
   ));
 
-import getTableData from '../../src/test/tableData';
+import { getTableData } from '../../src/test/tableData';
 import PokerAnalyserCard from '../../src/PokerAnalyserCard';
 
 storiesOf('PokerApp', module)
   .addDecorator(getStory => <CenterView>{getStory()}</CenterView>)
   .add('Show Cards', () => (
-    <PokerAnalyserCard table={getTableData()}/>
+    <PokerAnalyserCard table={getTableData(0)}/>
   ));
