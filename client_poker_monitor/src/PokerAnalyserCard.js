@@ -3,6 +3,7 @@ import { Dimensions, Image, View, Text } from 'react-native';
 import { Card } from 'react-native-material-ui';
 import { getCardCode } from './helpers/getCardCode';
 import FitImage from 'react-native-fit-image';
+import PokerAnalyserPlayersCards from './PokerAnalyserPlayersCards';
 
 const CardTemplate = require('./templates/card2.jpg');
 const factor = 15; 
@@ -14,9 +15,6 @@ export default class PokerAnalyserCard extends Component {
     this.table = props.table;
   }
 
-  getTableType(){
-    return  `${this.table.image_platform} (${this.table.image_tabletype})`;
-  }
 
   RenderPlayersCardsView(){
     return (
@@ -85,13 +83,11 @@ export default class PokerAnalyserCard extends Component {
   }
 
   render(){
+    console.log(`Card:${JSON.stringify(styles.WithCardRenderedCardStyle)}`);
     return (
       <View style={styles.ViewStyle}>
         <Card >
-          <View style={styles.CardStyle}>
-            <Text style={styles.CardText}>{ this.getTableType() }</Text>
-              { this.RenderPlayersCardsView() }
-          </View>
+          <PokerAnalyserPlayersCards table={this.table}/>
           <View style={{ flexDirection: "row" }}>
             <View style={{ flexDirection: "column"}}>
               <View style={styles.CardStyle}>
