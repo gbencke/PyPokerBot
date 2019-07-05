@@ -4,6 +4,7 @@ import { Card } from 'react-native-material-ui';
 import { getCardCode } from './helpers/getCardCode';
 import FitImage from 'react-native-fit-image';
 import PokerAnalyserPlayersCards from './PokerAnalyserPlayersCards';
+import PokerAnalyserHandStatus from './PokerAnalyserHandStatus';
 
 const CardTemplate = require('./templates/card2.jpg');
 const factor = 15; 
@@ -20,28 +21,7 @@ export default class PokerAnalyserCard extends Component {
       <View style={styles.ViewStyle}>
         <Card >
           <PokerAnalyserPlayersCards table={this.table}/>
-          <View style={{ flexDirection: "row" }}>
-            <View style={{ flexDirection: "column"}}>
-              <View style={styles.CardStyle}>
-                <Text>CURRENT HAND:</Text>
-              </View>
-              <View style={styles.CardStyle}>
-                <Text style={styles.CardTextFont}>
-                    { getCardCode(this.table.hero.hero_cards) }
-                </Text>
-              </View>
-            </View>
-            <View style={{ flexDirection: "column"}}>
-              <View style={styles.CardStyle}>
-                <Text>FLOP({`${this.table.hand_analisys.hand_phase}`})</Text>
-              </View>
-              <View style={styles.CardStyle}>
-                <Text style={styles.CardTextFont}>
-                    { getCardCode(this.table.flop.join('')) }
-                </Text>
-              </View>
-            </View>
-          </View>
+          <PokerAnalyserHandStatus table={this.table}/>
         </Card>
       </View>
     );
@@ -49,31 +29,12 @@ export default class PokerAnalyserCard extends Component {
 }
 
 const styles = {
-  PlayingCard: {
-    flexDirection: 'row',
-    justifyContent: 'center'
-  },
   ViewStyle: {
     width: '100%',
     paddingRight: 12,
     paddingLeft: 12,
     marginTop: 30,
     height: 400
-  },
-  CardStyle : {
-    marginLeft: 10,
-    marginRight:10
-  },
-  CardTextFont: {
-    marginTop: 10,
-    fontFamily: 'cards',
-    fontSize: 48,
-    width: '100%',
-    textAlign: 'center'
-  },
-  PlayersCardsView: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
   }
 };
 

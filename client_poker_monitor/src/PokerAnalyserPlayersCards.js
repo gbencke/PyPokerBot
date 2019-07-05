@@ -69,26 +69,9 @@ export default class PokerAnalyserPlayersCards extends Component {
 }
 
 const styles = {
-  PlayingCard: {
-    flexDirection: 'row',
-    justifyContent: 'center'
-  },
-  ViewStyle: {
-    width: '100%',
-    paddingRight: 12,
-    paddingLeft: 12,
-    marginTop: 30
-  },
   CardStyle : {
     marginLeft: 10,
     marginRight:10
-  },
-  CardTextFont: {
-    marginTop: 10,
-    fontFamily: 'cards',
-    fontSize: 48,
-    width: '100%',
-    textAlign: 'center'
   },
   PlayersCardsView: {
     flexDirection: 'row',
