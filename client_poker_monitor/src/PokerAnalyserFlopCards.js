@@ -1,15 +1,8 @@
 
 import React, {Component} from 'react';
-import { Dimensions, Image, View, Text } from 'react-native';
+import { View, Text } from 'react-native';
 import { Card } from 'react-native-material-ui';
 import { getCardCode } from './helpers/getCardCode';
-import FitImage from 'react-native-fit-image';
-import PokerAnalyserPlayersCards from './PokerAnalyserPlayersCards';
-import PokerAnalyserHandStatus from './PokerAnalyserHandStatus';
-import PokerAnalyserHeroHand from './PokerAnalyserHeroHand';
-
-const CardTemplate = require('./templates/card2.jpg');
-const factor = 15; 
 
 export default class PokerAnalyserFlopCards extends Component {
 

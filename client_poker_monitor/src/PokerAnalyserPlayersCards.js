@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import { Dimensions, Image, View, Text } from 'react-native';
 import { Card } from 'react-native-material-ui';
-import { getCardCode } from './helpers/getCardCode';
 import FitImage from 'react-native-fit-image';
 
 const CardTemplate = require('./templates/card2.jpg');
