@@ -1523,7 +1523,7 @@ const tableData = [{
 }];
 
 export function getNumTableData(){
-  return tableData.lenght;
+  return tableData.length;
 }
 
 export function getTableData(index){
