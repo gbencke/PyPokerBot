@@ -12,24 +12,17 @@ import Welcome from './Welcome';
 
 storiesOf('Welcome', module).add('to Storybook', () => <Welcome showApp={linkTo('Button')} />);
 
-storiesOf('Button', module)
-  .addDecorator(getStory => <CenterView>{getStory()}</CenterView>)
-  .add('with text', () => (
-    <Button onPress={action('clicked-text')}>
-      <Text>Hello Button</Text>
-    </Button>
-  ))
-  .add('with some emoji', () => (
-    <Button onPress={action('clicked-emoji')}>
-      <Text>😀 😎 👍 💯</Text>
-    </Button>
-  ));
-
-import { getTableData } from '../../src/test/tableData';
+import { getNumTableData, getTableData } from '../../src/test/tableData';
 import PokerAnalyserCard from '../../src/PokerAnalyserCard';
 
 storiesOf('PokerApp', module)
   .addDecorator(getStory => <CenterView>{getStory()}</CenterView>)
-  .add('Show Cards', () => (
+  .add('Show Cards (0)', () => (
     <PokerAnalyserCard table={getTableData(0)}/>
+  ));
+
+storiesOf('PokerApp', module)
+  .addDecorator(getStory => <CenterView>{getStory()}</CenterView>)
+  .add('Show Cards (1)', () => (
+    <PokerAnalyserCard table={getTableData(getNumTableData()-1)}/>
   ));
