@@ -26,3 +26,11 @@ storiesOf('PokerApp', module)
   .add('Show Cards (1)', () => (
     <PokerAnalyserCard table={getTableData(getNumTableData()-1)}/>
   ));
+
+import TestAnimationCard from '../../src/test/TestAnimationCard';
+
+storiesOf('PokerApp', module)
+  .addDecorator(getStory => <CenterView>{getStory()}</CenterView>)
+  .add('TestAnimation', () => (
+    <TestAnimationCard/>
+  ));
