@@ -34,3 +34,11 @@ storiesOf('PokerApp', module)
   .add('TestAnimation', () => (
     <TestAnimationCard/>
   ));
+
+import PokerAnalyserHeader from '../../src/PokerAnalyserHeader';
+
+storiesOf('PokerApp', module)
+  .addDecorator(getStory => <CenterView>{getStory()}</CenterView>)
+  .add('HeaderTest', () => (
+    <PokerAnalyserHeader/>
+  ));
