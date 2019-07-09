@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Text, View } from "react-native";
+import { ToastAndroid, Text, View } from "react-native";
 import {
   Dialog,
   Toolbar,
@@ -9,15 +9,12 @@ import {
 export default class PokerAnalyserHeader extends Component {
   constructor(props) {
     super(props);
-    this.state = { historyDialog: false };
+    this.state = {};
   }
 
   DialogPressed(x) {
-    if (x === "ok") {
-    }
-    if (x === "cancel") {
-    }
-    this.setState({ historyDialog: false });
+    ToastAndroid.show(`Pressed:${x}`, ToastAndroid.SHORT);
+    this.setState({ historyDialog: false, aboutDialog: false});
   }
 
   MenuPressed(label) {
@@ -26,10 +23,11 @@ export default class PokerAnalyserHeader extends Component {
       this.setState({ historyDialog: true });
     } else {
       console.log("About");
+      this.setState({ aboutDialog: true });
     }
   }
 
-  renderDialog() {
+  renderHistoryDialog() {
     return (
       <View style={styles.dialogStyle}>
         <Dialog>
@@ -37,7 +35,27 @@ export default class PokerAnalyserHeader extends Component {
             <Text>Teste History</Text>
           </Dialog.Title>
           <Dialog.Content>
-            <Text>Conteudo</Text>
+            <Text>Conteudo History</Text>
+          </Dialog.Content>
+          <Dialog.Actions>
+            <DialogDefaultActions
+              actions={["cancel", "ok"]}
+              onActionPress={x => this.DialogPressed(x)}
+            />
+          </Dialog.Actions>
+        </Dialog>
+      </View>
+    );
+  }
+  renderAboutDialog() {
+    return (
+      <View style={styles.dialogStyle}>
+        <Dialog>
+          <Dialog.Title>
+            <Text>Teste About</Text>
+          </Dialog.Title>
+          <Dialog.Content>
+            <Text>Conteudo About</Text>
           </Dialog.Content>
           <Dialog.Actions>
             <DialogDefaultActions
@@ -66,7 +84,8 @@ export default class PokerAnalyserHeader extends Component {
             onRightElementPress={label => this.MenuPressed(label)}
           />
         </View>
-        {this.state.historyDialog ? this.renderDialog() : null}
+        {this.state.historyDialog ? this.renderHistoryDialog() : null}
+        {this.state.aboutDialog ? this.renderAboutDialog() : null}
       </View>
     );
   }
