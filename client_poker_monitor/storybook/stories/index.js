@@ -1,44 +1,40 @@
-import React from 'react';
-import { Text } from 'react-native';
+import React from "react";
+import { Text } from "react-native";
 
-import { storiesOf } from '@storybook/react-native';
-import { action } from '@storybook/addon-actions';
-import { linkTo } from '@storybook/addon-links';
+import { storiesOf } from "@storybook/react-native";
+import { action } from "@storybook/addon-actions";
+import { linkTo } from "@storybook/addon-links";
 
-import Button from './Button';
-import CenterView from './CenterView';
-import Welcome from './Welcome';
+import Button from "./Button";
+import CenterView from "./CenterView";
+import Welcome from "./Welcome";
 
+storiesOf("Welcome", module).add("to Storybook", () => (
+  <Welcome showApp={linkTo("Button")} />
+));
 
-storiesOf('Welcome', module).add('to Storybook', () => <Welcome showApp={linkTo('Button')} />);
+import { getNumTableData, getTableData } from "../../src/test/tableData";
+import PokerAnalyserCard from "../../src/PokerAnalyserCard";
 
-import { getNumTableData, getTableData } from '../../src/test/tableData';
-import PokerAnalyserCard from '../../src/PokerAnalyserCard';
-
-storiesOf('PokerApp', module)
+storiesOf("PokerApp", module)
   .addDecorator(getStory => <CenterView>{getStory()}</CenterView>)
-  .add('Show Cards (0)', () => (
-    <PokerAnalyserCard table={getTableData(0)}/>
+  .add("Show Cards (0)", () => <PokerAnalyserCard table={getTableData(0)} />);
+
+storiesOf("PokerApp", module)
+  .addDecorator(getStory => <CenterView>{getStory()}</CenterView>)
+  .add("Show Cards (1)", () => (
+    <PokerAnalyserCard table={getTableData(getNumTableData() - 1)} />
   ));
 
-storiesOf('PokerApp', module)
+import TestAnimationCard from "../../src/test/TestAnimationCard";
+
+storiesOf("PokerApp", module)
   .addDecorator(getStory => <CenterView>{getStory()}</CenterView>)
-  .add('Show Cards (1)', () => (
-    <PokerAnalyserCard table={getTableData(getNumTableData()-1)}/>
-  ));
+  .add("TestAnimation", () => <TestAnimationCard />);
 
-import TestAnimationCard from '../../src/test/TestAnimationCard';
+import TestHeader from "../../src/test/TestHeader";
+import PokerAnalyserHeader from "../../src/PokerAnalyserHeader";
 
-storiesOf('PokerApp', module)
+storiesOf("PokerApp", module)
   .addDecorator(getStory => <CenterView>{getStory()}</CenterView>)
-  .add('TestAnimation', () => (
-    <TestAnimationCard/>
-  ));
-
-import PokerAnalyserHeader from '../../src/PokerAnalyserHeader';
-
-storiesOf('PokerApp', module)
-  .addDecorator(getStory => <CenterView>{getStory()}</CenterView>)
-  .add('HeaderTest', () => (
-    <PokerAnalyserHeader/>
-  ));
+  .add("HeaderTest", () => <TestHeader />);
