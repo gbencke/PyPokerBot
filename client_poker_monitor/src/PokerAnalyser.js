@@ -1,14 +1,11 @@
 import React, { Component } from "react";
-import PokerAnalyserContainer from "./PokerAnalyserContainer";
 import PokerAnalyserConnect from "./PokerAnalyserConnect";
 import PokerAnalyserHeader from "./PokerAnalyserHeader";
 import PokerAnalyserCard from "./PokerAnalyserCard";
 import getTableData from "./test/tableData";
 import styled from "styled-components/native";
 
-const PokerAnalyserView = styled.View`
-
-`;
+const PokerAnalyserView = styled.View``;
 
 export default class PokerAnalyser extends Component {
   constructor(props) {

@@ -14,8 +14,7 @@ const PokerAnalyserDecisionView = styled.View`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  margin-top: 40;
-  margin-bottom: 20;
+  margin-top: 20;
   margin-left: 10;
   margin-right: 10;
 `;

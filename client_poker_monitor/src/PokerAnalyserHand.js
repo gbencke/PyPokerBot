@@ -33,7 +33,7 @@ export default PokerAnalyserFlopCards = props => {
   }
 
   if (props.flop) {
-    HandMessage = `FLOP(${props.table.hand_analisys.hand_phase})`;
+    HandMessage = `PHASE:${props.table.hand_analisys.hand_phase}`;
     CardsToShow = getCardCode(props.table.flop.join(""));
   }
 

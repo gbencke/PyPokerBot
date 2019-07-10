@@ -5,6 +5,7 @@ import PokerAnalyserPlayersCards from "./PokerAnalyserPlayersCards";
 import PokerAnalyserHandStatus from "./PokerAnalyserHandStatus";
 import PokerAnalyserCommands from "./PokerAnalyserCommands";
 import PokerAnalyserDecision from "./PokerAnalyserDecision";
+import PokerAnalyserTableType from "./PokerAnalyserTableType";
 import styled from "styled-components/native";
 
 const PokerAnalyserCardView = styled.View`
@@ -19,6 +20,7 @@ export default PokerAnalyserCard = props => {
   return (
     <PokerAnalyserCardView>
       <Card>
+        <PokerAnalyserTableType table={props.table} />
         <PokerAnalyserPlayersCards table={props.table} />
         <PokerAnalyserHandStatus table={props.table} />
         <PokerAnalyserCommands table={props.table} />
