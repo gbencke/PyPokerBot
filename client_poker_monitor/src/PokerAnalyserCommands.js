@@ -19,7 +19,6 @@ const CommandsView = styled.View`
 export default PokerAnalyserCommands = props => {
   getCommandText = index => {
     let ret = props.table.commands[index][2].trim();
-    console.log(ret);
     ret = ret.replace("[1]", "CALL");
     if (ret === "20") {
       return "FOLD";

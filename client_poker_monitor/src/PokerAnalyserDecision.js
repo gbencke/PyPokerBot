@@ -21,7 +21,6 @@ const PokerAnalyserDecisionView = styled.View`
 `;
 
 export default PokerAnalyserDecision = props => {
-  console.log(props.table.hand_analisys);
   let handEquity = props.table.hand_analisys.result[0][1] * 100;
   if (!isNaN(handEquity)) {
     handEquity = handEquity.toFixed(2);
