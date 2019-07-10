@@ -7,6 +7,9 @@ const PokerAnalyserTableTypeView = styled.View`
     margin-left: 10;
     margin-right: 10;
     margin-bottom: 20;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
 `;
 
 const TableTypeText = styled.Text`

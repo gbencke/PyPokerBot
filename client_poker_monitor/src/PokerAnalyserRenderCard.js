@@ -20,6 +20,7 @@ const WithCardPlayingCardViewStyle = styled.View`
 const TextPosition = styled.Text`
   width: 100%;
   text-align: center;
+  ${ props => props.hero ? 'color:red;' : null}
 `;
 
 const styles = {
@@ -32,7 +33,7 @@ const styles = {
 export default PokerAnalyserRenderCard = props => {
   return (
     <RenderCardView>
-      <WithCardPlayingCardViewStyle>
+      <WithCardPlayingCardViewStyle hero={props.hero}>
         <FitImage
           source={CardTemplate}
           style={styles.WithCardRenderedCardStyle}
@@ -42,7 +43,7 @@ export default PokerAnalyserRenderCard = props => {
           style={styles.WithCardRenderedCardStyle}
         />
       </WithCardPlayingCardViewStyle>
-      <TextPosition>{`${props.pos}`}</TextPosition>
+      <TextPosition hero={props.hero} >{`${props.posDesc}`}</TextPosition>
     </RenderCardView>
   );
 };

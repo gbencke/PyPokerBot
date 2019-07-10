@@ -17,12 +17,43 @@ const CardStyle = styled.View`
 `;
 
 export default PokerAnalyserPlayersCards = props => {
+  getHeroPos = () => {
+    return props.table.hero.hero_pos;
+  };
+
+  getPosDescArray = () => {
+    const heroPos = props.table.hero.position;
+
+    switch (heroPos) {
+      case "BUTTON":
+      default:
+        return ["SB", "BB", "MP", "LP", "LP", "BUTTON"];
+    }
+  };
+
+  posDescs = getPosDescArray();
+  heroPos = getHeroPos();
+
+  getPosDesc = pos => {
+    return posDescs[pos];
+  };
+
   RenderPlayersCards = () => {
     return props.table.cards.map((item, i) => {
       return item ? (
-        <PokerAnalyserRenderCard pos={i} key={i.toString()} />
+        <PokerAnalyserRenderCard
+          hero={i == heroPos}
+          posDesc={getPosDesc(i)}
+          pos={i}
+          key={i.toString()}
+        />
       ) : (
-        <PokerAnalyserRenderNoCard pos={i} key={i.toString()} />
+        <PokerAnalyserRenderNoCard
+          hero={i == heroPos}
+          posDesc={getPosDesc(i)}
+          pos={i}
+          key={i.toString()}
+        />
       );
     });
   };

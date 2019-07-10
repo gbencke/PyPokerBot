@@ -17,14 +17,14 @@ const NoRenderedCardStyle = styled.Text`
   border-width: 1;
   border-radius: 1;
   border-style: dashed;
-  border-color: #000;
+  ${props => (props.hero ? "border-color: red;" : "border-color: #000")}
 `;
 
 export default PokerAnalyserRenderCard = props => {
   return (
     <NoCardStyle>
       <NoRenderedCardStyle></NoRenderedCardStyle>
-      <Text>{`${props.pos}`}</Text>
+      <Text>{`${props.posDesc}`}</Text>
     </NoCardStyle>
   );
 };
