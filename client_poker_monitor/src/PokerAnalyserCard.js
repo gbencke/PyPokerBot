@@ -17,6 +17,7 @@ const PokerAnalyserCardView = styled.View`
 `;
 
 export default PokerAnalyserCard = props => {
+
   return (
     <PokerAnalyserCardView>
       <Card>
