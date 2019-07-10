@@ -2,7 +2,6 @@
 import React, {Component} from 'react';
 import { View, Text, TextInput } from 'react-native';
 import { Button, Container, Card } from 'react-native-material-ui';
-import PokerContainer from './PokerContainer';
 
 export default class PokerAnalyserConnect extends Component {
 
