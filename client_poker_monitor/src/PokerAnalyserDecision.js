@@ -1,50 +1,39 @@
-import React, {Component} from 'react';
-import { Button } from 'react-native-material-ui';
-import { Text, View } from 'react-native';
+import React, { Component } from "react";
+import { Button } from "react-native-material-ui";
+import { Text, View } from "react-native";
+import styled from "styled-components/native";
+import BlinkView from "react-native-blink-view";
 
-export default class PokerAnalyserDecision extends Component {
+const DecisionText = styled.Text`
+  font-size: 36;
+  font-weight: 800;
+`;
 
-  constructor(props){
-    super(props)
-    this.table = props.table;
-    this.state = { currentOpacity : 1.0 }
+const PokerAnalyserDecisionView = styled.View`
+  width: 100%;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: 40;
+  margin-bottom: 20;
+  margin-left: 10;
+  margin-right: 10;
+`;
+
+export default PokerAnalyserDecision = props => {
+  console.log(props.table.hand_analisys);
+  let handEquity = props.table.hand_analisys.result[0][1] * 100;
+  if (!isNaN(handEquity)) {
+    handEquity = handEquity.toFixed(2);
+    handEquity = `${handEquity}% for a winning hand`;
+  } else {
+    handEquity = "";
   }
 
-  componentDidMount(){
-    this.interval = setInterval(() => {
-      nextState = this.state.currentOpacity - 0.1;
-      console.log(`nextState:${nextState}`);
-      if(nextState < 0.3){
-        nextState = 1.0;
-      }
-      this.setState ({ currentOpacity : nextState });
-    }, 100);
-  }
-
-  render(){
-    
-    let currentStyle = {...styles.CommandsView, opacity : this.state.currentOpacity };
-
-    return (
-      <View style={currentStyle}>
-        <Text style = {styles.DecisionText }> { this.table.decision.decision } </Text>
-      </View>
-    );
-  }
-}
-
-let styles = {
-  DecisionText : {
-    fontSize: 36,
-    fontWeight: '800'
-  },
-  CommandsView : {
-    width: '100%',
-    flexDirection: "row",
-    justifyContent: "center",
-    marginTop: 20,
-    marginBottom: 20,
-    marginLeft: 10,
-    marginRight:10
-  },
+  return (
+    <PokerAnalyserDecisionView>
+      <DecisionText> {props.table.decision.decision} </DecisionText>
+      <Text>{handEquity}</Text>
+    </PokerAnalyserDecisionView>
+  );
 };

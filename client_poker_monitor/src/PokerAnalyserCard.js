@@ -1,39 +1,29 @@
-import React, {Component} from 'react';
-import { View } from 'react-native';
-import { Card } from 'react-native-material-ui';
-import PokerAnalyserPlayersCards from './PokerAnalyserPlayersCards';
-import PokerAnalyserHandStatus from './PokerAnalyserHandStatus';
-import PokerAnalyserCommands from './PokerAnalyserCommands';
-import PokerAnalyserDecision from './PokerAnalyserDecision';
+import React, { Component } from "react";
+import { View } from "react-native";
+import { Card } from "react-native-material-ui";
+import PokerAnalyserPlayersCards from "./PokerAnalyserPlayersCards";
+import PokerAnalyserHandStatus from "./PokerAnalyserHandStatus";
+import PokerAnalyserCommands from "./PokerAnalyserCommands";
+import PokerAnalyserDecision from "./PokerAnalyserDecision";
+import styled from "styled-components/native";
 
-export default class PokerAnalyserCard extends Component {
+const PokerAnalyserCardView = styled.View`
+  width: 100%;
+  padding-right: 12;
+  padding-left: 12;
+  margin-top: 30;
+  height: 400;
+`;
 
-  constructor(props){
-    super(props)
-    this.table = props.table;
-  }
-
-  render(){
-    return (
-      <View style={styles.ViewStyle}>
-        <Card >
-          <PokerAnalyserPlayersCards table={this.table}/>
-          <PokerAnalyserHandStatus table={this.table}/>
-          <PokerAnalyserCommands table={this.table}/>
-          <PokerAnalyserDecision table={this.table}/>
-        </Card>
-      </View>
-    );
-  }
-}
-
-const styles = {
-  ViewStyle: {
-    width: '100%',
-    paddingRight: 12,
-    paddingLeft: 12,
-    marginTop: 30,
-    height: 400
-  }
+export default PokerAnalyserCard = props => {
+  return (
+    <PokerAnalyserCardView>
+      <Card>
+        <PokerAnalyserPlayersCards table={props.table} />
+        <PokerAnalyserHandStatus table={props.table} />
+        <PokerAnalyserCommands table={props.table} />
+        <PokerAnalyserDecision table={props.table} />
+      </Card>
+    </PokerAnalyserCardView>
+  );
 };
-

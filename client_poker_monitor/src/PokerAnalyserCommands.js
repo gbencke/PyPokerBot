@@ -1,53 +1,46 @@
-import React, {Component} from 'react';
-import { Button } from 'react-native-material-ui';
-import { Text, View } from 'react-native';
+import React, { Component } from "react";
+import { Button } from "react-native-material-ui";
+import { Text, View } from "react-native";
+import styled from "styled-components/native";
 
-export default class PokerAnalyserCommands extends Component {
+const ButtonCommandsView = styled.View`
+  margin-top: 10;
+  flex-direction: row;
+  justify-content: space-between;
+`;
 
-  constructor(props){
-    super(props)
-    this.table = props.table;
-  }
+const CommandsView = styled.View`
+  flex-direction: column;
+  margin-top: 40;
+  margin-left: 10;
+  margin-right: 10;
+`;
 
-  getCommandText(index){
-    let ret = this.table.commands[index][2].trim();
+export default PokerAnalyserCommands = props => {
+  getCommandText = index => {
+    let ret = props.table.commands[index][2].trim();
     console.log(ret);
-    ret = ret.replace('[1]','CALL');
-    if(ret==='20'){
-      return 'FOLD';
+    ret = ret.replace("[1]", "CALL");
+    if (ret === "20") {
+      return "FOLD";
     }
     return ret;
-  }
+  };
 
-  render(){
-    return (
-      <View style={ styles.CommandsView }>
-        <Text>AVAILABLE COMMANDS</Text>
-        <View style={ styles.ButtonCommandsView }>
-          <Button style= { styles.ButtonStyle } raised accent text={ this.getCommandText(0) }/>
-          <Button style= { styles.ButtonStyle } raised accent text={ this.getCommandText(1) }/>
-          <Button style= { styles.ButtonStyle } raised accent text={ this.getCommandText(2) }/>
-        </View>
-      </View>
-    );
-  }
-}
-
-const styles = {
-  ButtonStyle : {
-    container : {
+  const ButtonStyle = {
+    container: {
       minWidth: 100
     }
-  },
-  CommandsView : {
-    flexDirection: "column",
-    marginTop: 10,
-    marginLeft: 10,
-    marginRight:10
-  },
-  ButtonCommandsView : {
-    marginTop:10,
-    flexDirection: "row",
-    justifyContent: "space-between"
-  }
+  };
+
+  return (
+    <CommandsView>
+      <Text>AVAILABLE COMMANDS</Text>
+      <ButtonCommandsView>
+        <Button style={ButtonStyle} raised accent text={getCommandText(0)} />
+        <Button style={ButtonStyle} raised accent text={getCommandText(1)} />
+        <Button style={ButtonStyle} raised accent text={getCommandText(2)} />
+      </ButtonCommandsView>
+    </CommandsView>
+  );
 };
