@@ -57,7 +57,6 @@ export default class PokerAnalyserPlayersCards extends Component {
   }
 
   render(){
-    console.log(`PlayersCard:${JSON.stringify(styles.WithCardRenderedCardStyle)}`);
     return (
       <View style={styles.CardStyle}>
         <Text style={styles.CardText}>{ this.getTableType() }</Text>

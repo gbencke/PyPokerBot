@@ -1,22 +1,18 @@
-import React, {Component} from 'react';
-import { View } from 'react-native';
-import PokerAnalyserHeroHand from './PokerAnalyserHeroHand';
-import PokerAnalyserFlopCards from './PokerAnalyserFlopCards';
+import React, { Component } from "react";
+import { View } from "react-native";
+import PokerAnalyserHand from "./PokerAnalyserHand";
+import styled from "styled-components/native";
 
-export default class PokerAnalyserCard extends Component {
+const PokerAnalyserCardView = styled.View`
+  margin-top: 20;
+  flex-direction: row;
+`;
 
-  constructor(props){
-    super(props)
-    this.table = props.table;
-  }
-
-  render(){
-    return (
-      <View style={{ flexDirection: "row" }}>
-        <PokerAnalyserHeroHand table={this.table}/>
-        <PokerAnalyserFlopCards table={this.table}/>
-      </View>
-    );
-  }
-}
-
+export default PokerAnalyserCard = props => {
+  return (
+    <PokerAnalyserCardView>
+      <PokerAnalyserHand hero table={props.table} />
+      <PokerAnalyserHand flop table={props.table} />
+    </PokerAnalyserCardView>
+  );
+};
