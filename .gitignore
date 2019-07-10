@@ -27,3 +27,5 @@ client/test/
 node_modules/
 .gradle/
 client.poker.monitor/android/app/build/
+yarn.lock
+
