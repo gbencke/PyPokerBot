@@ -3,6 +3,7 @@ import { Button } from "react-native-material-ui";
 import { Text, View } from "react-native";
 import styled from "styled-components/native";
 import BlinkView from "react-native-blink-view";
+import { getHandEquity } from "./helpers/utils";
 
 const DecisionText = styled.Text`
   font-size: 36;
@@ -20,13 +21,10 @@ const PokerAnalyserDecisionView = styled.View`
 `;
 
 export default PokerAnalyserDecision = props => {
-  let handEquity = props.table.hand_analisys.result[0][1] * 100;
-  if (!isNaN(handEquity)) {
-    handEquity = handEquity.toFixed(2);
-    handEquity = `${handEquity}% for a winning hand`;
-  } else {
-    handEquity = "";
-  }
+  const handEquity = getHandEquity(
+    props.table.hand_analisys.result[0][1] * 100,
+    `% for a winning hand`
+  );
 
   return (
     <PokerAnalyserDecisionView>

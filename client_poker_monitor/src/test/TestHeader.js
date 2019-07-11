@@ -17,17 +17,17 @@ export default class TestHeader extends Component {
   }
 
   AboutPressed() {
-    ToastAndroid.show(`Pressed: About`, ToastAndroid.SHORT);
+    //ToastAndroid.show(`Pressed: About`, ToastAndroid.SHORT);
     this.setState({ showHistory: false, showAbout: true });
   }
 
   PressedOk() {
-    ToastAndroid.show(`Pressed: OK`, ToastAndroid.SHORT);
+    //ToastAndroid.show(`Pressed: OK`, ToastAndroid.SHORT);
     this.setState({ showHistory: false, showAbout: false });
   }
 
   PressedCancel() {
-    ToastAndroid.show(`Pressed: Cancel`, ToastAndroid.SHORT);
+    //ToastAndroid.show(`Pressed: Cancel`, ToastAndroid.SHORT);
     this.setState({ showHistory: false, showAbout: false });
   }
 
@@ -49,6 +49,7 @@ export default class TestHeader extends Component {
           <HistoryDialog
             onOk={PressedOk}
             onCancel={PressedCancel}
+            tables={this.props.tables}
           />
         ) : null}
         {showAbout ? (

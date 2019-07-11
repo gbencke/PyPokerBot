@@ -1,41 +1,85 @@
 import React, { Component } from "react";
-import { Text, View } from "react-native";
+import { Text, View, Dimensions } from "react-native";
 import { Dialog, DialogDefaultActions } from "react-native-material-ui";
+import styled from "styled-components/native";
+import { getHandEquity, getPhaseName } from "./helpers/utils";
+
+const ToolBarHeight = 60;
+const DialogFactor = 0.4;
+const DialogWidth = Dimensions.get("window").width * 1;
+const MaxHeight = Dimensions.get("window").height * DialogFactor;
+const DialogTop = Dimensions.get("window").height / 2 - MaxHeight / 2;
+
+const HistoryDialogView = styled.View`
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+  max-height: ${MaxHeight};
+  min-width: ${DialogWidth};
+  top: ${DialogTop - ToolBarHeight};
+`;
+
+const TableListView = styled.ScrollView`
+  border-width: 1;
+  border-color: #000000;
+  max-height: ${Dimensions.get("window").height * DialogFactor};
+`;
 
 export default HistoryDialog = props => {
   DialogPressed = x => {
     if (props.onOk && x === "OK") {
       props.onOk();
     }
-    if (props.onCancel && x === "CANCEL") {
-      props.onCancel();
-    }
+  };
+
+  renderTables = tables => {
+    return tables.map(x => {
+      let handEquity = "";
+
+      if (x.hand_analisys.result) {
+        handEquity = getHandEquity(x.hand_analisys.result[0][1] * 100, `%`);
+      }
+
+      return (
+        <View
+          style={{
+            flexDirection: "row",
+            borderTopColor: '#FFFFFF',
+            borderStyle: "dotted",
+            borderWidth: 1,
+            borderColor: "#000",
+            borderRadius: 1
+          }}
+        >
+          <Text style={{ width: "20%" }}>{x.hero.hero_cards}</Text>
+          <Text style={{ width: "30%" }}>
+            {getPhaseName(x.hand_analisys.hand_phase)}
+          </Text>
+          <Text style={{ width: "30%" }}>{x.hero.position}</Text>
+          <Text style={{ width: "40%" }}>{handEquity}</Text>
+        </View>
+      );
+    });
   };
 
   return (
-    <View style={styles.dialogStyle}>
+    <HistoryDialogView>
       <Dialog>
         <Dialog.Title>
-          <Text>Teste History</Text>
+          <Text>Table History</Text>
         </Dialog.Title>
         <Dialog.Content>
-          <Text>Conteudo History</Text>
+          <Text>Received Tables</Text>
+          <TableListView>{renderTables(props.tables)}</TableListView>
+          <Text>Tap to open...</Text>
         </Dialog.Content>
         <Dialog.Actions>
           <DialogDefaultActions
-            actions={["OK", "CANCEL"]}
-            onActionPress={x => this.DialogPressed(x)}
+            actions={["OK"]}
+            onActionPress={x => DialogPressed(x)}
           />
         </Dialog.Actions>
       </Dialog>
-    </View>
+    </HistoryDialogView>
   );
-};
-
-const styles = {
-  dialogStyle: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center"
-  }
 };

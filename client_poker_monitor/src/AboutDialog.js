@@ -16,15 +16,21 @@ const AboutDialog = props => {
     <View style={styles.dialogStyle}>
       <Dialog>
         <Dialog.Title>
-          <Text>Teste About</Text>
+          <Text>About Poker Analyser</Text>
         </Dialog.Title>
         <Dialog.Content>
-          <Text>Conteudo About</Text>
+          <Text>
+            This is a Mobile App to be used to control the PyPokerBot
+            application, which controls remotely poker tables and calculates
+            winning odds and table equities for playing hands
+          </Text>
+          <Text>MIT Licensed</Text>
+          <Text>Guilherme Bencke, 2019</Text>
         </Dialog.Content>
         <Dialog.Actions>
           <DialogDefaultActions
-            actions={["OK", "CANCEL"]}
-            onActionPress={x => this.DialogPressed(x)}
+            actions={["OK"]}
+            onActionPress={x => DialogPressed(x)}
           />
         </Dialog.Actions>
       </Dialog>

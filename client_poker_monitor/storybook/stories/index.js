@@ -13,7 +13,11 @@ storiesOf("Welcome", module).add("to Storybook", () => (
   <Welcome showApp={linkTo("Button")} />
 ));
 
-import { getNumTableData, getTableData } from "../../src/test/tableData";
+import {
+  getAllTableData,
+  getNumTableData,
+  getTableData
+} from "../../src/test/tableData";
 import PokerAnalyserCard from "../../src/PokerAnalyserCard";
 
 storiesOf("PokerApp", module)
@@ -37,4 +41,4 @@ import PokerAnalyserHeader from "../../src/PokerAnalyserHeader";
 
 storiesOf("PokerApp", module)
   .addDecorator(getStory => <CenterView>{getStory()}</CenterView>)
-  .add("HeaderTest", () => <TestHeader />);
+  .add("HeaderTest", () => <TestHeader tables={getAllTableData()} />);
