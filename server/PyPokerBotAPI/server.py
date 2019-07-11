@@ -1,3 +1,4 @@
+import json
 import os
 import logging
 import sys
@@ -28,7 +29,6 @@ print('log_location:{}'.format(log_location))
 logging.basicConfig(format=settings['LOG_FORMAT'],
                     level=settings['LOG_LEVEL'],
                     filename=log_location)
-#logging.getLogger().addHandler(logging.StreamHandler())
 
 socketio = SocketIO(app)
 lookup_table_utils = LookupTable()
@@ -50,8 +50,23 @@ def ping():
     return "PONG"
 
 
+@app.route('/table/<tableid>', methods=['GET'])
+def table_status_get(tableid):
+    global table_status
+    logging.debug('Get table...')
+    str_tableid = str(tableid)
+
+    if str_tableid not in table_status:
+        return "{}"
+
+    table_status = table_status[str_tableid]
+    logging.debug("Sending status for table:{} ".format(tableid))
+    return str(table_status)
+
+
 @app.route('/table/<tableid>', methods=['POST'])
-def table(tableid):
+def table_status_post(tableid):
+    global table_status
     str_tableid = str(tableid)
     table_status[str_tableid] = request.get_json()
     logging.debug("Status for table:{} was received".format(tableid))
