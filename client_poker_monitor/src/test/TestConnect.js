@@ -2,12 +2,13 @@ import React, { Component } from "react";
 import { ToastAndroid, Text, View } from "react-native";
 import { Toolbar } from "react-native-material-ui";
 import PokerAnalyserConnect from "../PokerAnalyserConnect";
+import { testConnection } from "../api/PokerBotServerAPI";
 
 export default class TestConnect extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      initialAddress: "http://192.168.0.10:3000",
+      initialAddress: "http://192.168.0.10:5000",
       connectText: "Enter PokerBot Server URL and press Connect",
       connectState: "disconnected"
     };
@@ -16,8 +17,31 @@ export default class TestConnect extends Component {
   }
 
   pressedConnect(address) {
-    if(this.state.connectState === 'disconnected'){
+    if (this.state.connectState !== "connected") {
       console.log(`Connecting to address:${address}`);
+      testConnection(
+        address,
+        () => {
+          this.setState({
+            ...this.state,
+            connectState: "connected",
+            connectText: "Successfully Connected..."
+          });
+        },
+        errorMessage => {
+          this.setState({
+            ...this.state,
+            connectState: "error",
+            connectText: errorMessage
+          });
+        }
+      );
+    } else {
+      this.setState({
+        ...this.state,
+        connectState: "disconnected",
+        connectText: "Enter PokerBot Server URL and press Connect"
+      });
     }
   }
 
