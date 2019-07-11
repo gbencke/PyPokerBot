@@ -1,112 +1,94 @@
-import React, {Component} from 'react';
-import { Text,Dimensions, View } from 'react-native';
-import { Button, Card } from 'react-native-material-ui';
+import React, { Component } from "react";
+import { Text, Dimensions, View } from "react-native";
+import { Button, Card } from "react-native-material-ui";
+import { getNumTableData, getTableData } from "./tableData";
 
-const currentDimensions = Dimensions.get('window');
+const currentDimensions = Dimensions.get("window");
 
 export default class TestAnimationCard extends Component {
-
-  constructor(props){
-    super(props)
-    this.state = { cardA:'A', cardB: 'B', animating : false, step : 0 }
+  constructor(props) {
+    super(props);
+    this.state = {
+      cardA: <PokerAnalyserCard table={getTableData(0)} />,
+      cardB: <PokerAnalyserCard table={getTableData(getNumTableData() - 1)} />,
+      animating: false,
+      step: 0
+    };
     this.testePress = this.testePress.bind(this);
     this.intervalStep = this.intervalStep.bind(this);
   }
 
-  intervalStep(){
+  intervalStep() {
+    console.log("intervalStep ok...");
     let newState = {};
 
-    width2ndPos = this.calculate2ndCard( currentDimensions.width, this.state.step);
-    console.log(width2ndPos);
-    if ( width2ndPos < 11 ) {
-      newState = {...this.state, animation : false, step : 0 };
+    width2ndPos = this.calculate2ndCard(
+      currentDimensions.width,
+      this.state.step
+    );
+    if (width2ndPos < 11) {
+      newState = { ...this.state, animation: false, step: 0 };
       newState.cardA = newState.cardB;
-      clearInterval(this.state.timer);
-    }else{
-      newState = {...this.state, step: this.state.step+=16 };
+    } else {
+      newState = { ...this.state, step: (this.state.step += 32) };
+      setTimeout(() => this.intervalStep(), 0);
     }
     this.setState(newState);
   }
 
-  testePress(){
+  testePress() {
+    if (!this.state.animation) {
+      setTimeout(() => this.intervalStep(), 0);
 
-    let Animate = setInterval( () => this.intervalStep(), 1);
-
-    let pressedState = {...this.state, animation: true, timer : Animate}
-    this.setState(pressedState);
-
+      let pressedState = { ...this.state, animation: true };
+      this.setState(pressedState);
+    } else {
+      let pressedState = { ...this.state, animation: false };
+      this.setState(pressedState);
+    }
   }
 
-  calculate2ndCard(totalWidth, step){
-    return parseInt(((totalWidth * 0.8 * 0.9) + 10 ) - (step * 1));
+  calculate2ndCard(totalWidth, step) {
+    return parseInt(totalWidth + 10 - step * 1);
   }
 
-  render(){
-
+  render() {
     const newStyle = {
-      ...styles.MovableCard, 
-      width:currentDimensions.width / 10, 
-      height: currentDimensions.height / 20,
-      position: 'absolute',
-      top: 10,
-      left: 10 - (this.state.step * 1)
+      ...styles.MovableCard,
+      position: "absolute",
+      top: 0,
+      left: 0 - this.state.step * 1
     };
 
     const newCardnewStyle = {
       ...newStyle,
-      left: this.calculate2ndCard(
-        currentDimensions.width, 
-        this.state.step)
+      left: this.calculate2ndCard(currentDimensions.width, this.state.step)
     };
 
     return (
       <View style={styles.ViewStyle}>
+        <Button onPress={this.testePress} raised accent text="Run Animation" />
         <View style={styles.CardStyle}>
-          <View style={newStyle}>
-            <Text>{this.state.cardA}</Text>
-          </View>
-          <View style={newCardnewStyle}>
-            <Text>{this.state.cardB}</Text>
-          </View>
+          <View style={newStyle}>{this.state.cardA}</View>
+          <View style={newCardnewStyle}>{this.state.cardB}</View>
         </View>
-        <Button onPress={ this.testePress } raised accent text="Run Animation"/>
       </View>
     );
   }
 }
 
 let styles = {
-  MovableCard: {
-    borderWidth: 2,
-    borderColor: '$000',
-  },
-  ViewStyle:{
-    backgoundColor: '#FFF',
-    width: '90%',
-    paddingRight: 12,
-    paddingLeft: 12,
+  MovableCard: {},
+  ViewStyle: {
     marginTop: 30,
-    marginLeft: 30,
-    marginRight: 30,
-    borderWidth: 2,
-    borderColor: '$FFF',
-    height: '70%',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    overflow:'hidden'
+    width: currentDimensions.width,
+    justifyContent: "space-between",
+    alignItems: "flex-start",
+    overflow: "hidden"
   },
   CardStyle: {
-    backgoundColor: '#FFF',
-    width: '90%',
-    paddingRight: 12,
-    paddingLeft: 12,
-    marginTop: 30,
-    marginLeft: 30,
-    marginRight: 30,
-    borderWidth: 2,
-    borderColor: '$FFF',
-    height: '70%',
-    overflow:'hidden'
+    width: currentDimensions.width,
+    overflow: "hidden",
+    height: "100%"
   }
 };
-
