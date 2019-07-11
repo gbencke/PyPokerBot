@@ -46,4 +46,4 @@ storiesOf("PokerApp", module)
 import TestConnect from "../../src/test/TestConnect";
 storiesOf("PokerApp", module)
   .addDecorator(getStory => <CenterView>{getStory()}</CenterView>)
-  .add("ConnectText", () => <TestConnect />);
+  .add("ConnectTest", () => <TestConnect />);
