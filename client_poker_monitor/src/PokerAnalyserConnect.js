@@ -1,54 +1,62 @@
-
-import React, {Component} from 'react';
-import { View, Text, TextInput } from 'react-native';
-import { Button, Container, Card } from 'react-native-material-ui';
+import React, { Component } from "react";
+import { View, Text, TextInput } from "react-native";
+import { Button, Container, Card } from "react-native-material-ui";
 
 export default class PokerAnalyserConnect extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { currentAddress: props.initialAddress };
+    this.props = props;
 
-  constructor(props){
-    super(props)
-    this.ConnectInfoText = "Please Enter your Connection Info to the Poker Client";
-    this.pressConnect = this.pressConnect.bind(this);
-    this.renderButton = this.renderButton.bind(this);
+    this.changeText = this.changeText.bind(this);
+    this.pressedConnect = this.pressedConnect.bind(this);
   }
 
-  pressConnect(){
-    console.log("pressConnect");
-    this.props.pressConnect(!this.props.connected);
+  pressedConnect() {
+    this.props.pressConnect(this.state.currentAddress);
   }
 
-  renderButton(){
-    if(this.props.connected){
+  renderButton() {
+    if (this.props.status === "Connected") {
       return (
-        <Button 
-          style = { styles.DisconnectButton } 
-          raised 
-          accent 
-          onPress={this.pressConnect}
-          text="Disconnect"/>
+        <Button
+          style={styles.DisconnectButton}
+          raised
+          accent
+          onPress={this.pressedConnect}
+          text="Disconnect"
+        />
       );
-    }else{
+    } else {
       return (
-        <Button 
-          style = { styles.ConnectButton } 
-          raised 
-          primary 
-          onPress={this.pressConnect}
-          text="Connect"/>
+        <Button
+          style={styles.ConnectButton}
+          raised
+          primary
+          onPress={this.pressedConnect}
+          text="Connect"
+        />
       );
     }
   }
 
-  render(){
+  changeText(x) {
+    this.setState({ ...this.state, currentAddress: x });
+  }
 
+  render() {
     return (
-      <View style = {{ }}>
+      <View style={{}}>
         <View style={styles.LabelView}>
-          <Text style={styles.LabelText} >{this.ConnectInfoText}</Text>
+          <Text style={styles.LabelText}>{this.props.ConnectTextInfo}</Text>
         </View>
         <View style={styles.ConnectView}>
-          <TextInput style= { styles.ConnectTextField } />
-            { this.renderButton() }
+          <TextInput
+            value={this.state.currentAddress}
+            style={styles.ConnectTextField}
+            onChangeText={this.changeText}
+          />
+          {this.renderButton()}
         </View>
       </View>
     );
@@ -56,36 +64,36 @@ export default class PokerAnalyserConnect extends Component {
 }
 
 const styles = {
-  LabelView : {
+  LabelView: {
     marginTop: 12,
     marginBottom: 12,
-    alignItens: 'center',
-    justifyContent: 'center',
+    alignItens: "center",
+    justifyContent: "center"
   },
-  LabelText : {
-    fontFamily : 'Arial',
+  LabelText: {
+    fontFamily: "Arial",
     fontSize: 16,
-    textAlign: 'center'
+    textAlign: "center"
   },
-  ConnectView : {
-    flexDirection : 'row',
-    alignItens: 'space-between',
-    justifyContent: 'space-between',
+  ConnectView: {
+    flexDirection: "row",
+    alignItens: "space-between",
+    justifyContent: "space-between",
     marginRight: 20,
-    marginLeft: 20,
+    marginLeft: 20
   },
-  ConnectTextField : {
+  ConnectTextField: {
     paddingTop: 4,
     paddingBottom: 4,
     flex: 1,
     marginRight: 20,
     borderWidth: 1,
-    borderColor: '#ddd',
+    borderColor: "#ddd"
   },
-  ConnectButton : {
-    flex: 1,
+  ConnectButton: {
+    flex: 1
   },
-  DisconnectButton : {
-    flex: 1,
+  DisconnectButton: {
+    flex: 1
   }
-}
+};

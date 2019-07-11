@@ -42,3 +42,8 @@ import PokerAnalyserHeader from "../../src/PokerAnalyserHeader";
 storiesOf("PokerApp", module)
   .addDecorator(getStory => <CenterView>{getStory()}</CenterView>)
   .add("HeaderTest", () => <TestHeader tables={getAllTableData()} />);
+
+import TestConnect from "../../src/test/TestConnect";
+storiesOf("PokerApp", module)
+  .addDecorator(getStory => <CenterView>{getStory()}</CenterView>)
+  .add("ConnectText", () => <TestConnect />);
