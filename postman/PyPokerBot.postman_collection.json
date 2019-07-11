@@ -32,6 +32,85 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "Ping",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{serverURL}}/ping",
+					"host": [
+						"{{serverURL}}"
+					],
+					"path": [
+						"ping"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Post Table Status",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n   \"seats\": 6,\n   \"commands\": [\n      [\n         \"\",\n         \"\",\n         \"20 \"\n      ],\n      [\n         \"\",\n         1.0,\n         \"[1] $0.02 \"\n      ],\n      [\n         \"RAISE\",\n         2.0,\n         \"Raise To $0.04 \"\n      ]\n   ],\n   \"cards\": [\n      true,\n      false,\n      false,\n      true,\n      true,\n      true\n   ],\n   \"nocards\": [\n      false,\n      true,\n      false,\n      false,\n      false,\n      false\n   ],\n   \"button\": [\n      false,\n      false,\n      false,\n      false,\n      true,\n      false\n   ],\n   \"flop\": [\n      \"\",\n      \"\",\n      \"\",\n      \"\",\n      \"\",\n      \"\"\n   ],\n   \"hero\": {\n      \"hero_cards\": \"8h6s\",\n      \"position\": \"MP\",\n      \"hero_pos\": 3\n   },\n   \"hand_analisys\": {\n      \"hand_phase\": \"PREFLOP\",\n      \"result\": [\n         [\n            \"8h6s:XX\",\n            0.4318955\n         ]\n      ]\n   },\n   \"decision\": {\n      \"decision\": \"FOLD OR CHECK\",\n      \"raise_strategy\": \"0\"\n   },\n   \"command\": {\n      \"to_execute\": 0\n   },\n   \"image_platform\": \"POKERSTARS\",\n   \"image_tabletype\": \"6-SEATS\"\n}\n"
+				},
+				"url": {
+					"raw": "{{serverURL}}/table/1",
+					"host": [
+						"{{serverURL}}"
+					],
+					"path": [
+						"table",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Table Status",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{serverURL}}/table/1",
+					"host": [
+						"{{serverURL}}"
+					],
+					"path": [
+						"table",
+						"1"
+					]
+				}
+			},
+			"response": []
 		}
 	]
 }
