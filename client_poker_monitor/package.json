@@ -10,7 +10,8 @@
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
     "run-storybook": "export REACT_APP_USE_SB=true ; react-native start --reset-cache",
-    "test": "jest"
+    "test": "jest",
+    "start-iPhone5s" : "ios-sim start --devicetypeid 'iPhone-5s, 12.1'"
   },
   "dependencies": {
     "@emotion/core": "10.0.14",
@@ -51,3 +52,4 @@
     "preset": "react-native"
   }
 }
+
