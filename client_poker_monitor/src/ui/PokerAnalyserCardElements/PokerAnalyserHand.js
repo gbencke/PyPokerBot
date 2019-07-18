@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { View, Text } from "react-native";
 import { Card } from "react-native-material-ui";
-import { getCardCode } from "./helpers/getCardCode";
+import { getCardCode } from "../../helpers/getCardCode";
 import styled from "styled-components/native";
 
 const CardStyleView = styled.View`

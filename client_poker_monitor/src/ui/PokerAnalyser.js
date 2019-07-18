@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import PokerAnalyserConnect from "./PokerAnalyserConnect";
 import PokerAnalyserHeader from "./PokerAnalyserHeader";
 import PokerAnalyserCard from "./PokerAnalyserCard";
-import getTableData from "./test/tableData";
+import getTableData from "../test/tableData";
 import styled from "styled-components/native";
 
 const PokerAnalyserView = styled.View``;

@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Text, View, Dimensions } from "react-native";
 import { Dialog, DialogDefaultActions } from "react-native-material-ui";
 import styled from "styled-components/native";
-import { getHandEquity, getPhaseName } from "./helpers/utils";
+import { getHandEquity, getPhaseName } from "../../helpers/utils";
 
 const ToolBarHeight = 60;
 const DialogFactor = 0.4;

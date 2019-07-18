@@ -1,9 +1,8 @@
 import React, { Component } from "react";
 import { ToastAndroid, Text, View } from "react-native";
-import { Toolbar } from "react-native-material-ui";
-import PokerAnalyserHeader from "../PokerAnalyserHeader";
-import HistoryDialog from "../HistoryDialog";
-import AboutDialog from "../AboutDialog";
+import PokerAnalyserHeader from "../ui/PokerAnalyserHeader";
+import HistoryDialog from "../ui/dialog/HistoryDialog";
+import AboutDialog from "../ui/dialog/AboutDialog";
 
 export default class TestHeader extends Component {
 

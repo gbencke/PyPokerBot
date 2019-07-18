@@ -18,7 +18,7 @@ import {
   getNumTableData,
   getTableData
 } from "../../src/test/tableData";
-import PokerAnalyserCard from "../../src/PokerAnalyserCard";
+import PokerAnalyserCard from "../../src/ui/PokerAnalyserCard";
 
 storiesOf("PokerApp", module)
   .addDecorator(getStory => <CenterView>{getStory()}</CenterView>)
@@ -37,7 +37,6 @@ storiesOf("PokerApp", module)
   .add("TestAnimation", () => <TestAnimationCard />);
 
 import TestHeader from "../../src/test/TestHeader";
-import PokerAnalyserHeader from "../../src/PokerAnalyserHeader";
 
 storiesOf("PokerApp", module)
   .addDecorator(getStory => <CenterView>{getStory()}</CenterView>)

@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { ToastAndroid, Text, View } from "react-native";
 import { Toolbar } from "react-native-material-ui";
-import PokerAnalyserConnect from "../PokerAnalyserConnect";
+import PokerAnalyserConnect from "../ui/PokerAnalyserConnect";
 import { testConnection } from "../api/PokerBotServerAPI";
 
 export default class TestConnect extends Component {

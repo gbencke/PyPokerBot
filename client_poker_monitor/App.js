@@ -7,8 +7,8 @@
  */
 
 import React, {Component} from 'react';
-import PokerAnalyser from './src/PokerAnalyser'
-import ErrorBoundary from './src/ErrorBoundary'
+import PokerAnalyser from './src/ui/PokerAnalyser'
+import ErrorBoundary from './src/ui/ErrorBoundary'
 import StorybookUI from './storybook'
 
 /* ieslint-disable-next-line */

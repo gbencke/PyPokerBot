@@ -1,11 +1,11 @@
 import React, { Component } from "react";
 import { Dimensions,View } from "react-native";
 import { Card } from "react-native-material-ui";
-import PokerAnalyserPlayersCards from "./PokerAnalyserPlayersCards";
-import PokerAnalyserHandStatus from "./PokerAnalyserHandStatus";
-import PokerAnalyserCommands from "./PokerAnalyserCommands";
-import PokerAnalyserDecision from "./PokerAnalyserDecision";
-import PokerAnalyserTableType from "./PokerAnalyserTableType";
+import PokerAnalyserPlayersCards from "./PokerAnalyserCardElements/PokerAnalyserPlayersCards";
+import PokerAnalyserHandStatus from "./PokerAnalyserCardElements/PokerAnalyserHandStatus";
+import PokerAnalyserCommands from "./PokerAnalyserCardElements/PokerAnalyserCommands";
+import PokerAnalyserDecision from "./PokerAnalyserCardElements/PokerAnalyserDecision";
+import PokerAnalyserTableType from "./PokerAnalyserCardElements/PokerAnalyserTableType";
 import styled from "styled-components/native";
 
 const PokerAnalyserCardView = styled.View`

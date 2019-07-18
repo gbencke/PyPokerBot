@@ -3,7 +3,7 @@ import { Button } from "react-native-material-ui";
 import { Text, View } from "react-native";
 import styled from "styled-components/native";
 import BlinkView from "react-native-blink-view";
-import { getHandEquity } from "./helpers/utils";
+import { getHandEquity } from "../../helpers/utils";
 
 const DecisionText = styled.Text`
   font-size: 36;
