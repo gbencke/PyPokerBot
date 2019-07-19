@@ -28,9 +28,17 @@ PokerStories.add("Show Cards (0)", () => {
   );
 });
 
-PokerStories.add("Show Cards (1)", () => (
-  <PokerAnalyserCard table={getTableData(getNumTableData() - 1)} />
-));
+PokerStories.add("Show Cards (1)", () => {
+  const width = number("width", 410);
+
+  return (
+    <PokerAnalyserCard
+      noMargin={true}
+      width={width}
+      table={getTableData(getNumTableData() - 1)}
+    />
+  );
+});
 
 PokerStories.add("TestAnimation", () => <TestAnimationCard />);
 
