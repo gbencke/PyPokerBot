@@ -6,29 +6,29 @@
  * @flow
  */
 
-import React, {Component} from 'react';
-import PokerAnalyser from './src/ui/PokerAnalyser'
-import ErrorBoundary from './src/ui/ErrorBoundary'
-import StorybookUI from './storybook'
+import React, { Component } from "react";
+import PokerAnalyser from "./src/ui/PokerAnalyser";
+import ErrorBoundary from "./src/ui/ErrorBoundary";
+import StorybookUI from "./storybook";
 
 /* ieslint-disable-next-line */
 export default class App extends Component {
-
-  constructor(props){
+  constructor(props) {
     super(props);
     this.useStoryBook = process.env.REACT_APP_USE_SB;
     this.resolveUI.bind(this);
   }
 
-  resolveUI(){
-    if(this.useStoryBook){
-      return <StorybookUI/>;
-    }else{
-      return <PokerAnalyser/>;
+  resolveUI() {
+    if (this.useStoryBook) {
+      return <StorybookUI />;
+    } else {
+      return <PokerAnalyser />;
     }
   }
 
   render() {
-    return <ErrorBoundary>{ this.resolveUI() }</ErrorBoundary>
+    console.disableYellowBox = true;
+    return <ErrorBoundary>{this.resolveUI()}</ErrorBoundary>;
   }
 }
