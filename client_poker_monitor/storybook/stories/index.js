@@ -1,5 +1,5 @@
 import React from "react";
-import { View } from "react-native";
+import { Dimensions } from "react-native";
 
 import { storiesOf } from "@storybook/react-native";
 import { withKnobs, number } from "@storybook/addon-knobs";
@@ -15,13 +15,18 @@ import {
 } from "../../src/test/tableData";
 import PokerAnalyserCard from "../../src/ui/PokerAnalyserCard";
 
+const currentDimensions = Dimensions.get("window");
+
 const PokerStories = storiesOf("PokerApp", module);
 
 PokerStories.addDecorator(withKnobs);
 //PokerStories.addDecorator(getStory => <View>{getStory()}</View>);
 
 PokerStories.add("Show Cards (0)", () => {
-  const width = number("width", 410);
+  const currentWidth = Math.floor(Dimensions.get("window").width / 10) * 10;
+  const width = number("width", currentWidth);
+
+  if (isNaN(width)) return null;
 
   return (
     <PokerAnalyserCard noMargin={true} width={width} table={getTableData(0)} />

@@ -18,6 +18,8 @@ const PokerAnalyserCardView = styled.View`
 `;
 
 export default PokerAnalyserCard = props => {
+  if (props.width < 100 || props.width > 1000) return null;
+
   console.log(
     `Device Width:${Dimensions.get("window").width}, props.width:${props.width}`
   );
