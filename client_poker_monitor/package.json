@@ -10,6 +10,7 @@
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
     "run-storybook": "export REACT_APP_USE_SB=true ; react-native start --reset-cache",
+    "run": "react-native start --reset-cache",
     "test": "jest",
     "run-ios": "react-native run-ios --simulator='iPhone 5s'"
   },
