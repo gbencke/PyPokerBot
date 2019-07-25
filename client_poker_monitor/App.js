@@ -3,7 +3,6 @@
  * https://github.com/facebook/react-native
  *
  * @format
- * @flow
  */
 
 import React, { Component } from "react";
@@ -11,7 +10,7 @@ import PokerAnalyser from "./src/ui/PokerAnalyser";
 import ErrorBoundary from "./src/ui/ErrorBoundary";
 import StorybookUI from "./storybook";
 
-/* ieslint-disable-next-line */
+/* eslint-disable-next-line */
 export default class App extends Component {
   constructor(props) {
     super(props);
