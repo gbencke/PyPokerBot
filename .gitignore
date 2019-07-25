@@ -29,3 +29,5 @@ node_modules/
 client.poker.monitor/android/app/build/
 yarn.lock
 *.code-workspace
+.vscode/
+
