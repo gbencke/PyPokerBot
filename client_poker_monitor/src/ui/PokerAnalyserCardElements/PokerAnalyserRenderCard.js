@@ -8,32 +8,45 @@ const factor = 15;
 
 const RenderCardView = styled.View`
   flex-direction: column;
-  width: 16%;
+  margin-left: 2px;
+  margin-right: 2px;
+  width: ${props => parseInt(props.width / (props.totalCards + 1))}px;
 `;
 
 const WithCardPlayingCardViewStyle = styled.View`
-  width: 16%;
   flex-direction: row;
   justify-content: space-between;
+  width: ${props => parseInt(props.width / (props.totalCards + 1))}px;
 `;
 
 const TextPosition = styled.Text`
   width: 100%;
   text-align: center;
-  ${ props => props.hero ? 'color:red;' : null}
+  font-size: ${props => parseInt((12 / 420) * props.width)}px;
+  ${props => (props.hero ? "color:red;" : null)}
 `;
 
-const styles = {
-  WithCardRenderedCardStyle: {
-    width: Dimensions.get("window").width / factor,
-    height: Dimensions.get("window").height / factor
-  }
-};
-
 export default PokerAnalyserRenderCard = props => {
+  const styles = {
+    WithCardRenderedCardStyle: {
+      marginLeft: 2,
+      marginRight: 2,
+      width: parseInt(props.width / (props.totalCards + 1) / 4),
+      height: Dimensions.get("window").height / factor
+    }
+  };
+
+  console.log(
+    `WithCardRenderedCardStyle:${styles.WithCardRenderedCardStyle.width}`
+  );
+
   return (
-    <RenderCardView>
-      <WithCardPlayingCardViewStyle hero={props.hero}>
+    <RenderCardView width={props.width} totalCards={props.totalCards}>
+      <WithCardPlayingCardViewStyle
+        width={props.width}
+        totalCards={props.totalCards}
+        hero={props.hero}
+      >
         <FitImage
           source={CardTemplate}
           style={styles.WithCardRenderedCardStyle}
@@ -43,7 +56,10 @@ export default PokerAnalyserRenderCard = props => {
           style={styles.WithCardRenderedCardStyle}
         />
       </WithCardPlayingCardViewStyle>
-      <TextPosition hero={props.hero} >{`${props.posDesc}`}</TextPosition>
+      <TextPosition
+        width={props.width}
+        hero={props.hero}
+      >{`${props.posDesc}`}</TextPosition>
     </RenderCardView>
   );
 };

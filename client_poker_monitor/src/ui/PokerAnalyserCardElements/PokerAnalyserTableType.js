@@ -4,16 +4,17 @@ import { Card } from "react-native-material-ui";
 import styled from "styled-components/native";
 
 const PokerAnalyserTableTypeView = styled.View`
-    margin-left: 10;
-    margin-right: 10;
-    margin-bottom: 20;
-    width: 100%;
-    justify-content: center;
-    align-items: center;
+  margin-left: 5%;
+  margin-right: 5%;
+  margin-bottom: 5%;
+  margin-top: 5%;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
 `;
 
 const TableTypeText = styled.Text`
-    font-size: 24;
+  font-size: ${props => parseInt((24 / 420) * props.width)}px;
 `;
 
 export default PokerAnalyserTableType = props => {
@@ -22,10 +23,8 @@ export default PokerAnalyserTableType = props => {
   };
 
   return (
-    <PokerAnalyserTableTypeView>
-      <TableTypeText>{this.getTableType()}</TableTypeText>
+    <PokerAnalyserTableTypeView width={props.width}>
+      <TableTypeText width={props.width}>{this.getTableType()}</TableTypeText>
     </PokerAnalyserTableTypeView>
   );
 };
-
-

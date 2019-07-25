@@ -25,8 +25,6 @@ export default PokerAnalyserFlopCards = props => {
   let HandMessage = "Error!!";
   let CardsToShow = "";
 
-  console.log(props);
-
   if (props.hero) {
     HandMessage = `CURRENT HAND:`;
     CardsToShow = getCardCode(props.table.hero.hero_cards);

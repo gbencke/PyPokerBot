@@ -26,11 +26,11 @@ export default PokerAnalyserCard = props => {
 
   return (
     <PokerAnalyserCardView width={props.width} noMargin={props.noMargin}>
-      <PokerAnalyserTableType table={props.table} />
-      <PokerAnalyserPlayersCards table={props.table} />
-      <PokerAnalyserHandStatus table={props.table} />
-      <PokerAnalyserCommands table={props.table} />
-      <PokerAnalyserDecision table={props.table} />
+      <PokerAnalyserTableType width={props.width} table={props.table} />
+      <PokerAnalyserPlayersCards width={props.width} table={props.table} />
+      <PokerAnalyserHandStatus width={props.width} table={props.table} />
+      <PokerAnalyserCommands width={props.width} table={props.table} />
+      <PokerAnalyserDecision width={props.width} table={props.table} />
     </PokerAnalyserCardView>
   );
 };
