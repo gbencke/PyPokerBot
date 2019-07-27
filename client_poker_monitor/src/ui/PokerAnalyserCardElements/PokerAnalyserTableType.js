@@ -15,6 +15,7 @@ const PokerAnalyserTableTypeView = styled.View`
 
 const TableTypeText = styled.Text`
   font-size: ${props => parseInt((24 / 420) * props.width)}px;
+  color: #000000;
 `;
 
 export default PokerAnalyserTableType = props => {

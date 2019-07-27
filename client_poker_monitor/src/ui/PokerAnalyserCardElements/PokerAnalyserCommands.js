@@ -4,6 +4,7 @@ import styled from "styled-components/native";
 
 const AvailableCommandsText = styled.Text`
   font-size: ${ props => parseInt((20 / 410) * props.totalWidth)};
+  color: #000000;
 `;
 
 const ButtonCommandsView = styled.View`

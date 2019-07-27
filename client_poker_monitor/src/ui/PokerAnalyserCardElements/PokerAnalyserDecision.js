@@ -1,13 +1,18 @@
-import React, { Component } from "react";
-import { Button } from "react-native-material-ui";
-import { Text, View } from "react-native";
+import React from "react";
 import styled from "styled-components/native";
-import BlinkView from "react-native-blink-view";
 import { getHandEquity } from "../../helpers/utils";
 
+const HandEquityText = styled.Text`
+  font-size: ${props => parseInt((18 / 410) * props.totalWidth)};
+  text-align: center;
+  color: #000000;
+`;
+
 const DecisionText = styled.Text`
-  font-size: 36;
+  font-size: ${props => parseInt((36 / 410) * props.totalWidth)};
   font-weight: 800;
+  text-align: center;
+  color: #000000;
 `;
 
 const PokerAnalyserDecisionView = styled.View`
@@ -16,8 +21,6 @@ const PokerAnalyserDecisionView = styled.View`
   align-items: center;
   justify-content: center;
   margin-top: 20;
-  margin-left: 10;
-  margin-right: 10;
 `;
 
 export default PokerAnalyserDecision = props => {
@@ -28,8 +31,8 @@ export default PokerAnalyserDecision = props => {
 
   return (
     <PokerAnalyserDecisionView>
-      <DecisionText> {props.table.decision.decision} </DecisionText>
-      <Text>{handEquity}</Text>
+      <DecisionText totalWidth={props.width}>{props.table.decision.decision}</DecisionText>
+      <HandEquityText totalWidth={props.width}>{handEquity}</HandEquityText>
     </PokerAnalyserDecisionView>
   );
 };
