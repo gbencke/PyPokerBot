@@ -6,6 +6,7 @@
  */
 
 import React, { Component } from "react";
+import { Platform } from "react-native";
 import PokerAnalyser from "./src/ui/PokerAnalyser";
 import ErrorBoundary from "./src/ui/ErrorBoundary";
 import StorybookUI from "./storybook";
@@ -14,7 +15,11 @@ import StorybookUI from "./storybook";
 export default class App extends Component {
   constructor(props) {
     super(props);
-    this.useStoryBook = process.env.REACT_APP_USE_SB;
+    if (Platform.OS === "ios") {
+      this.useStoryBook = true;
+    } else {
+      this.useStoryBook = process.env.REACT_APP_USE_SB;
+    }
     this.resolveUI.bind(this);
   }
 

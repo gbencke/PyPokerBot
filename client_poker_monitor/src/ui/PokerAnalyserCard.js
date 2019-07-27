@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Dimensions, View } from "react-native";
+import { Dimensions, Platform } from "react-native";
 import { Card } from "react-native-material-ui";
 import PokerAnalyserPlayersCards from "./PokerAnalyserCardElements/PokerAnalyserPlayersCards";
 import PokerAnalyserHandStatus from "./PokerAnalyserCardElements/PokerAnalyserHandStatus";
@@ -10,7 +10,7 @@ import styled from "styled-components/native";
 
 const PokerAnalyserCardView = styled.View`
   width: ${props => props.width}px;
-  margin:0 0 0 0;
+  ${Platform.OS === "ios" ? "margin-top: 30px;" : "margin:0 0 0 0;"}: 
   ${props => (props.noMargin !== true ? "padding-right: 12;" : null)}
   ${props => (props.noMargin !== true ? "padding-left: 12;" : null)}
   ${props => (props.noMargin !== true ? "margin-top: 30;" : null)}
