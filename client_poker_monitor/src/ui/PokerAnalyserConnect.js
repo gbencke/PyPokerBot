@@ -96,7 +96,7 @@ export default class PokerAnalyserConnect extends Component {
         </LabelView>
         <ConnectView>
           <ConnectTextField
-            value={this.state.currentAddress}
+            value={this.props.initialAddress}
             onChangeText={this.changeText}
           />
           {this.renderButton()}

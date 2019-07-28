@@ -1,19 +1,38 @@
 import React, { Component } from "react";
-import { ToastAndroid, Text, View } from "react-native";
-import { Toolbar } from "react-native-material-ui";
+import { View, Dimensions } from "react-native";
 import PokerAnalyserConnect from "../ui/PokerAnalyserConnect";
 import { testConnection } from "../api/PokerBotServerAPI";
+import { getDefaultURL } from "../helpers/storage";
 
 export default class TestConnect extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      initialAddress: "http://192.168.0.10:5000",
-      connectText: "Enter PokerBot Server URL and press Connect",
+      totalWidth: props.totalWidth || Dimensions.get("window").width,
+      initialAddress: props.initialAddress || "",
+      connectText:
+        props.connectText || "Enter PokerBot Server URL and press Connect",
       connectState: "disconnected"
     };
     this.pressedConnect = this.pressedConnect.bind(this);
     this.connectStatus = this.connectStatus.bind(this);
+    this._isMounted = false;
+    this.setDefaultURL = this.setDefaultURL.bind(this);
+  }
+
+  componentWillUnmount() {
+    this._isMounted = false;
+  }
+
+  setDefaultURL(x) {
+    if (this._isMounted) {
+      this.setState({ ...this.state, initialAddress: x });
+    }
+  }
+
+  componentDidMount() {
+    this._isMounted = true;
+    getDefaultURL().then(x => this.setDefaultURL(x));
   }
 
   pressedConnect(address) {
@@ -51,6 +70,7 @@ export default class TestConnect extends Component {
     return (
       <View style={styles.fullScreen}>
         <PokerAnalyserConnect
+          totalWidth={this.state.totalWidth}
           status={this.state.connectState}
           ConnectTextInfo={this.state.connectText}
           pressConnect={this.pressedConnect}

@@ -53,8 +53,17 @@ PokerStories.add("Show Cards (1)", () => {
   );
 });
 
-PokerStories.add("TestAnimation", () => <TestAnimationCard />);
+PokerStories.add("TestAnimation", () => {
+  const width = number("width", currentWidth, numberOptions);
+
+  return <TestAnimationCard totalWidth={width} />;
+});
 
 PokerStories.add("HeaderTest", () => <TestHeader tables={getAllTableData()} />);
 
-PokerStories.add("ConnectTest", () => <TestConnect />);
+
+PokerStories.add("ConnectTest", () => {
+  const width = number("width", currentWidth, numberOptions);
+
+  return <TestConnect totalWidth={width} />;
+});
