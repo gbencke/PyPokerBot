@@ -103,8 +103,8 @@ DEFAULT_SETTINGS = {
 
     "STRATEGIES": {
         "SIMPLE": {
-            "CALCULATE_URL": "http://poker_app.ddns.net:5000/calculator",
-            "TABLE_URL": "http://poker_app.ddns.net:5000/table",
+            "CALCULATE_URL": "http://poker_app.ddns.net:80/calculator",
+            "TABLE_URL": "http://poker_app.ddns.net:80/table",
             "PREFLOP": {
                 "CONFIDENCE_LEVEL": 0.44,
                 "CONFIDENCE_LEVEL_POSITION": 0.40,
