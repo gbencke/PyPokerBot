@@ -4,13 +4,12 @@
  * https://github.com/facebook/react-native
  *
  * @format
- * @flow
  */
 
 import React, {Component} from 'react';
 import { Image, View, Text } from 'react-native';
 
-/* ieslint-disable-next-line */
+/* eslint-disable-next-line */
 export default class ErrorBoundary extends Component {
 
   constructor(props){

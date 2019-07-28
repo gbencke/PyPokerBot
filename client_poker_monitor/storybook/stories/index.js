@@ -22,9 +22,17 @@ const PokerStories = storiesOf("PokerApp", module);
 PokerStories.addDecorator(withKnobs);
 //PokerStories.addDecorator(getStory => <View>{getStory()}</View>);
 
+const currentWidth = Math.floor(Dimensions.get("window").width / 10) * 10;
+
+const numberOptions = {
+  range: true,
+  min: 200,
+  max: 410,
+  step: 10
+};
+
 PokerStories.add("Show Cards (0)", () => {
-  const currentWidth = Math.floor(Dimensions.get("window").width / 10) * 10;
-  const width = number("width", currentWidth);
+  const width = number("width", currentWidth, numberOptions);
 
   if (isNaN(width)) return null;
 
@@ -34,7 +42,7 @@ PokerStories.add("Show Cards (0)", () => {
 });
 
 PokerStories.add("Show Cards (1)", () => {
-  const width = number("width", 410);
+  const width = number("width", currentWidth, numberOptions);
 
   return (
     <PokerAnalyserCard

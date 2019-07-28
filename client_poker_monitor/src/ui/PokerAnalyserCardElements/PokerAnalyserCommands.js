@@ -1,7 +1,11 @@
-import React, { Component } from "react";
+import React from "react";
 import { Button } from "react-native-material-ui";
-import { Text, View } from "react-native";
 import styled from "styled-components/native";
+
+const AvailableCommandsText = styled.Text`
+  font-size: ${ props => parseInt((20 / 410) * props.totalWidth)};
+  color: #000000;
+`;
 
 const ButtonCommandsView = styled.View`
   margin-top: 10;
@@ -12,8 +16,8 @@ const ButtonCommandsView = styled.View`
 const CommandsView = styled.View`
   flex-direction: column;
   margin-top: 40;
-  margin-left: 10;
-  margin-right: 10;
+  margin-left: 5%;
+  margin-right: 5%;
 `;
 
 export default PokerAnalyserCommands = props => {
@@ -28,13 +32,18 @@ export default PokerAnalyserCommands = props => {
 
   const ButtonStyle = {
     container: {
-      minWidth: 100
+      minWidth: parseInt((100 / 410) * props.width)
+    },
+    text: {
+      fontSize: parseInt((12 / 410) * props.width)
     }
   };
 
   return (
     <CommandsView>
-      <Text>AVAILABLE COMMANDS</Text>
+      <AvailableCommandsText totalWidth={props.width}>
+        AVAILABLE COMMANDS
+      </AvailableCommandsText>
       <ButtonCommandsView>
         <Button style={ButtonStyle} raised accent text={getCommandText(0)} />
         <Button style={ButtonStyle} raised accent text={getCommandText(1)} />

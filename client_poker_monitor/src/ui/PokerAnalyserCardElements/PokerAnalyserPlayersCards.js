@@ -1,7 +1,4 @@
-import React, { Component } from "react";
-import { Dimensions, Image, View, Text } from "react-native";
-import { Card } from "react-native-material-ui";
-import FitImage from "react-native-fit-image";
+import React from "react";
 import styled from "styled-components/native";
 import PokerAnalyserRenderCard from "./PokerAnalyserRenderCard";
 import PokerAnalyserRenderNoCard from "./PokerAnalyserRenderNoCard";
@@ -12,8 +9,8 @@ const PlayersCardView = styled.View`
 `;
 
 const CardStyle = styled.View`
-  margin-left: 10;
-  margin-right: 10;
+  margin-left: 5%;
+  margin-right: 5%;
 `;
 
 export default PokerAnalyserPlayersCards = props => {
@@ -38,10 +35,12 @@ export default PokerAnalyserPlayersCards = props => {
     return posDescs[pos];
   };
 
-  RenderPlayersCards = () => {
+  RenderPlayersCards = (totalCards, width) => {
     return props.table.cards.map((item, i) => {
       return item ? (
         <PokerAnalyserRenderCard
+          totalCards={totalCards}
+          width={width}
           hero={i == heroPos}
           posDesc={getPosDesc(i)}
           pos={i}
@@ -49,6 +48,8 @@ export default PokerAnalyserPlayersCards = props => {
         />
       ) : (
         <PokerAnalyserRenderNoCard
+          totalCards={totalCards}
+          width={width}
           hero={i == heroPos}
           posDesc={getPosDesc(i)}
           pos={i}
@@ -60,7 +61,9 @@ export default PokerAnalyserPlayersCards = props => {
 
   return (
     <CardStyle>
-      <PlayersCardView>{RenderPlayersCards()}</PlayersCardView>
+      <PlayersCardView>
+        {RenderPlayersCards(props.table.cards.length, props.width)}
+      </PlayersCardView>
     </CardStyle>
   );
 };
