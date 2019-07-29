@@ -86,6 +86,10 @@ export default class PokerAnalyserConnect extends Component {
     this.setState({ ...this.state, currentAddress: x });
   }
 
+  componentWillReceiveProps(props){
+    this.setState({...this.state, currentAddress: props.initialAddress});
+  }
+
   render() {
     return (
       <View style={{}}>
@@ -96,7 +100,7 @@ export default class PokerAnalyserConnect extends Component {
         </LabelView>
         <ConnectView>
           <ConnectTextField
-            value={this.props.initialAddress}
+            value={this.state.currentAddress}
             onChangeText={this.changeText}
           />
           {this.renderButton()}

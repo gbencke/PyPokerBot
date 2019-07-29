@@ -1,6 +1,6 @@
 import AsyncStorage from "@react-native-community/async-storage";
 
-const DEFAULT_URL = "http://poker_app.ddns.net:80/";
+const DEFAULT_URL = "http://poker_app.ddns.net:80";
 
 export async function getDefaultURL() {
   const value = await AsyncStorage.getItem("@DEFAULT_URL");
