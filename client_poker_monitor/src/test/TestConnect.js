@@ -9,15 +9,17 @@ export default class TestConnect extends Component {
     super(props);
     this.state = {
       totalWidth: props.totalWidth || Dimensions.get("window").width,
-      initialAddress: props.initialAddress || "",
+      Address: props.initialAddress || "",
       connectText:
         props.connectText || "Enter PokerBot Server URL and press Connect",
       connectState: "disconnected"
     };
+
     this.pressedConnect = this.pressedConnect.bind(this);
     this.connectStatus = this.connectStatus.bind(this);
-    this._isMounted = false;
+    this.pollCurrentTable = this.pollCurrentTable.bind(this);
     this.setDefaultURL = this.setDefaultURL.bind(this);
+    this._isMounted = false;
   }
 
   componentWillUnmount() {
@@ -26,13 +28,18 @@ export default class TestConnect extends Component {
 
   setDefaultURL(x) {
     if (this._isMounted) {
-      this.setState({ ...this.state, initialAddress: x });
+      this.setState({ ...this.state, Address: x });
     }
   }
 
   componentDidMount() {
     this._isMounted = true;
     getDefaultURL().then(x => this.setDefaultURL(x));
+  }
+
+  pollCurrentTable() {
+    console.log("polling table..");
+    setTimeout(() => this.pollCurrentTable(), 200);
   }
 
   pressedConnect(address) {
@@ -43,6 +50,7 @@ export default class TestConnect extends Component {
         () => {
           this.setState({
             ...this.state,
+            Address: address,
             connectState: "connected",
             connectText: "Successfully Connected..."
           });
@@ -50,6 +58,7 @@ export default class TestConnect extends Component {
         errorMessage => {
           this.setState({
             ...this.state,
+            Address: address,
             connectState: "error",
             connectText: errorMessage
           });
@@ -75,7 +84,7 @@ export default class TestConnect extends Component {
           ConnectTextInfo={this.state.connectText}
           pressConnect={this.pressedConnect}
           connectStatus={this.connectStatus}
-          initialAddress={this.state.initialAddress}
+          initialAddress={this.state.Address}
         />
       </View>
     );
