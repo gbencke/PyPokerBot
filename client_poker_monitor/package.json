@@ -24,6 +24,7 @@
     "emotion-theming": "10.0.14",
     "eslint-plugin-flowtype": "3.10.5",
     "global": "4.4.0",
+    "lodash": "^4.17.15",
     "prettier": "1.18.2",
     "react": "16.8.3",
     "react-native": "0.59.9",
