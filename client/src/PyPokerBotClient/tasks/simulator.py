@@ -52,6 +52,7 @@ import os.path
 import argparse
 import json
 import requests
+from time import sleep
 
 from PyPokerBotClient.utils import get_instance
 from PyPokerBotClient.settings import GLOBAL_SETTINGS as Settings
@@ -123,6 +124,10 @@ def get_arguments(args):
     parser.add_argument('--print_result',
                         help='Print Analisys to STDOUT',
                         default=True)
+    parser.add_argument('--sleep',
+                        help='Sleep time in milliseconds',
+                        default=5000)
+
     options = parser.parse_args(args)
     if (options.tableid is not None and options.observer_url is None) or (
             options.tableid is None and options.observer_url is not None):
@@ -173,6 +178,7 @@ def execute(args):
     image_platform = options.image_platform
     image_tabletype = options.image_tabletype
     print_result = options.print_result
+    sleep_time = options.sleep / 1000
 
     table_scanner_class = get_instance(
         Settings.get_table_scanner_class(image_platform))
@@ -224,3 +230,4 @@ def execute(args):
             result = clean_string(result)
             json_result = json.dumps(json.loads(result), indent=3)
             post_table_status(json_result)
+        sleep(sleep_time)
