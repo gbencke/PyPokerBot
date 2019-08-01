@@ -48,7 +48,10 @@ export default PokerAnalyserFlopCards = props => {
   const CardsStyled = CardsToShow.map((x, i) => {
     return (
       <CardSingleView key={i.toString()} totalWidth={props.width}>
-        <CardFontText totalWidth={props.width} style={{ color: x.color }}>
+        <CardFontText
+          totalWidth={props.width}
+          style={{ color: x.color }}
+        >
           {x.cardCharCode}
         </CardFontText>
         <CardTextCode totalWidth={props.width}>{x.currentCard}</CardTextCode>
