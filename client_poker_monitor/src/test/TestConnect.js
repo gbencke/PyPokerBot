@@ -1,8 +1,9 @@
 import React, { Component } from "react";
+import _ from "lodash";
 import styled from "styled-components/native";
 import { Dimensions } from "react-native";
 import PokerAnalyserConnect from "../ui/PokerAnalyserConnect";
-import { testConnection } from "../api/PokerBotServerAPI";
+import { getCurrentTable, testConnection } from "../api/PokerBotServerAPI";
 import { getDefaultURL } from "../helpers/storage";
 
 const PokerConnectWrapper = styled.View`
@@ -13,6 +14,7 @@ export default class TestConnect extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      currentTable: null,
       totalWidth: props.totalWidth || Dimensions.get("window").width,
       Address: props.initialAddress || "",
       connectText:
@@ -24,7 +26,12 @@ export default class TestConnect extends Component {
     this.connectStatus = this.connectStatus.bind(this);
     this.pollCurrentTable = this.pollCurrentTable.bind(this);
     this.setDefaultURL = this.setDefaultURL.bind(this);
+    this.setNextTable = this.setNextTable.bind(this);
+    this.onConnectError = this.onConnectError.bind(this);
+    this.onConnectSuccess = this.onConnectSuccess.bind(this);
+
     this._isMounted = false;
+    this._isFetching = false;
   }
 
   componentWillUnmount() {
@@ -42,9 +49,55 @@ export default class TestConnect extends Component {
     getDefaultURL().then(x => this.setDefaultURL(x));
   }
 
+  setNextTable(table) {
+    if (!_.isEqual(this.state.currentTable, table)) {
+      console.log(`Got new table:${JSON.stringify(table)}`);
+      this.setState({ ...this.state, currentTable: table });
+    }
+  }
+
   pollCurrentTable() {
-    console.log("polling table..");
-    setTimeout(() => this.pollCurrentTable(), 200);
+    if (this.state.connectState === "disconnected") {
+      this._isFetching = false;
+      return;
+    }
+
+    if (!this._isFetching) {
+      //console.log("polling table..");
+      this._isFetching = true;
+      getCurrentTable(
+        this.state.Address,
+        1,
+        table => {
+          this.setNextTable(table);
+          this._isFetching = false;
+        },
+        error => {
+          console.log(error);
+          this._isFetching = false;
+        }
+      );
+    }
+    setTimeout(() => this.pollCurrentTable(), 1000);
+  }
+
+  onConnectSuccess(address) {
+    this.setState({
+      ...this.state,
+      Address: address,
+      connectState: "connected",
+      connectText: "Successfully Connected..."
+    });
+    setTimeout(() => this.pollCurrentTable(), 1000);
+  }
+
+  onConnectError(address, errorMessage) {
+    this.setState({
+      ...this.state,
+      Address: address,
+      connectState: "error",
+      connectText: errorMessage
+    });
   }
 
   pressedConnect(address) {
@@ -52,22 +105,8 @@ export default class TestConnect extends Component {
       console.log(`Connecting to address:${address}`);
       testConnection(
         address,
-        () => {
-          this.setState({
-            ...this.state,
-            Address: address,
-            connectState: "connected",
-            connectText: "Successfully Connected..."
-          });
-        },
-        errorMessage => {
-          this.setState({
-            ...this.state,
-            Address: address,
-            connectState: "error",
-            connectText: errorMessage
-          });
-        }
+        this.onConnectSuccess,
+        this.onConnectError
       );
     } else {
       this.setState({
@@ -81,6 +120,7 @@ export default class TestConnect extends Component {
   connectStatus() {}
 
   render() {
+    console.log("render...");
     return (
       <PokerConnectWrapper totalWidth={this.props.totalWidth}>
         <PokerAnalyserConnect

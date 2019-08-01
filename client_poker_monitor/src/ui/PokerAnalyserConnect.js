@@ -33,7 +33,7 @@ const ConnectTextField = styled.TextInput`
   margin-right: ${props => parseInt((20 / 410) * props.totalWidth)};
   border-width: 1;
   border-color: #dddddd;
-  font-size: ${props => parseInt((16 / 410) * props.totalWidth)};
+  font-size: ${props => parseInt((14 / 410) * props.totalWidth)};
 `;
 
 export default class PokerAnalyserConnect extends Component {
@@ -64,15 +64,16 @@ export default class PokerAnalyserConnect extends Component {
       DisconnectButton: {
         flex: 1,
         container: {
-          width: parseInt((120 / 410) * this.props.totalWidth)
+          width: parseInt((140 / 410) * this.props.totalWidth)
         },
         text: {
-          fontSize: parseInt((14 / 410) * this.props.totalWidth)
+          fontSize: parseInt((12 / 410) * this.props.totalWidth)
         }
       }
     };
 
     if (this.props.status === "connected") {
+      console.log("render connected...");
       return (
         <Button
           style={styles.DisconnectButton}
@@ -83,6 +84,7 @@ export default class PokerAnalyserConnect extends Component {
         />
       );
     } else {
+      console.log("render disconnected...");
       return (
         <Button
           style={styles.ConnectButton}
@@ -104,6 +106,7 @@ export default class PokerAnalyserConnect extends Component {
   }
 
   render() {
+    console.log("render 2...");
     return (
       <View style={{}}>
         <LabelView totalWidth={this.props.totalWidth}>
