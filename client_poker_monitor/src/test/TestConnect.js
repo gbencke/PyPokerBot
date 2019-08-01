@@ -1,9 +1,14 @@
 import React, { Component } from "react";
-import { View, Dimensions } from "react-native";
+import styled from "styled-components/native";
+import { Dimensions } from "react-native";
 import PokerAnalyserConnect from "../ui/PokerAnalyserConnect";
 import { testConnection } from "../api/PokerBotServerAPI";
 import { getDefaultURL } from "../helpers/storage";
 
+const PokerConnectWrapper = styled.View`
+  flex-direction: column;
+  width: ${props => props.totalWidth};
+`;
 export default class TestConnect extends Component {
   constructor(props) {
     super(props);
@@ -77,33 +82,25 @@ export default class TestConnect extends Component {
 
   render() {
     return (
-      <View style={styles.fullScreen}>
+      <PokerConnectWrapper totalWidth={this.props.totalWidth}>
         <PokerAnalyserConnect
-          totalWidth={this.state.totalWidth}
+          totalWidth={this.props.totalWidth}
           status={this.state.connectState}
           ConnectTextInfo={this.state.connectText}
           pressConnect={this.pressedConnect}
           connectStatus={this.connectStatus}
           initialAddress={this.state.Address}
         />
-      </View>
+      </PokerConnectWrapper>
     );
   }
 }
-/*
- *
- */
 
 const styles = {
   dialogStyle: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center"
-  },
-  fullScreen: {
-    width: "100%",
-    height: "100%",
-    flexDirection: "column"
   },
   toolbarStyle: {
     container: {
