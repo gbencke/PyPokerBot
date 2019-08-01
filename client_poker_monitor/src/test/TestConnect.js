@@ -133,17 +133,3 @@ export default class TestConnect extends Component {
     );
   }
 }
-
-const styles = {
-  dialogStyle: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center"
-  },
-  toolbarStyle: {
-    container: {
-      height: 60
-    },
-    width: "100%"
-  }
-};
