@@ -1,4 +1,5 @@
 import _ from "lodash";
+import SplashScreen from 'react-native-splash-screen';
 import React, { Component } from "react";
 import PokerAnalyserConnect from "./PokerAnalyserConnect";
 import PokerAnalyserHeader from "./PokerAnalyserHeader";
@@ -64,6 +65,7 @@ export default class PokerAnalyser extends Component {
   componentDidMount() {
     this._isMounted = true;
     getDefaultURL().then(x => this.setDefaultURL(x));
+    SplashScreen.hide();
   }
 
   setNextTable(table) {
