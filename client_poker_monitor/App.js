@@ -18,7 +18,7 @@ export default class App extends Component {
     if (Platform.OS === "ios") {
       this.useStoryBook = true;
     } else {
-      this.useStoryBook = process.env.REACT_APP_USE_SB === "true";
+      this.useStoryBook = (process.env.REACT_APP_USE_SB == "true");
     }
     this.resolveUI.bind(this);
   }

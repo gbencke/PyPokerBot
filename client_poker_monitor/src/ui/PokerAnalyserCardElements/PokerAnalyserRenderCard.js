@@ -36,10 +36,6 @@ export default PokerAnalyserRenderCard = props => {
     }
   };
 
-  console.log(
-    `WithCardRenderedCardStyle:${styles.WithCardRenderedCardStyle.width}`
-  );
-
   return (
     <RenderCardView width={props.width} totalCards={props.totalCards}>
       <WithCardPlayingCardViewStyle

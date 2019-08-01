@@ -73,7 +73,6 @@ export default class PokerAnalyserConnect extends Component {
     };
 
     if (this.props.status === "connected") {
-      console.log("render connected...");
       return (
         <Button
           style={styles.DisconnectButton}
@@ -84,7 +83,6 @@ export default class PokerAnalyserConnect extends Component {
         />
       );
     } else {
-      console.log("render disconnected...");
       return (
         <Button
           style={styles.ConnectButton}
@@ -106,16 +104,17 @@ export default class PokerAnalyserConnect extends Component {
   }
 
   render() {
-    console.log("render 2...");
     return (
-      <View style={{}}>
+      <View>
         <LabelView totalWidth={this.props.totalWidth}>
-          <LabelText
-            totalWidth={this.props.totalWidth}
-            isError={this.props.status === "error"}
-          >
-            {this.props.ConnectTextInfo}
-          </LabelText>
+          {this.props.status !== "connected" ? (
+            <LabelText
+              totalWidth={this.props.totalWidth}
+              isError={this.props.status === "error"}
+            >
+              {this.props.ConnectTextInfo}
+            </LabelText>
+          ) : null}
         </LabelView>
         <ConnectView totalWidth={this.props.totalWidth}>
           <ConnectTextField

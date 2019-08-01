@@ -19,12 +19,14 @@ const AboutDialog = props => {
           <Text>About Poker Analyser</Text>
         </Dialog.Title>
         <Dialog.Content>
-          <Text>
+          <Text style={{ textAlign: "justify" }}>
             This is a Mobile App to be used to control the PyPokerBot
             application, which controls remotely poker tables and calculates
             winning odds and table equities for playing hands
           </Text>
-          <Text>MIT Licensed</Text>
+          <Text style={{ textAlign: "justify", marginTop: 20 }}>
+            MIT Licensed
+          </Text>
           <Text>Guilherme Bencke, 2019</Text>
         </Dialog.Content>
         <Dialog.Actions>

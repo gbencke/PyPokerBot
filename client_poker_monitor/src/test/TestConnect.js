@@ -63,7 +63,6 @@ export default class TestConnect extends Component {
     }
 
     if (!this._isFetching) {
-      //console.log("polling table..");
       this._isFetching = true;
       getCurrentTable(
         this.state.Address,
@@ -120,7 +119,6 @@ export default class TestConnect extends Component {
   connectStatus() {}
 
   render() {
-    console.log("render...");
     return (
       <PokerConnectWrapper totalWidth={this.props.totalWidth}>
         <PokerAnalyserConnect

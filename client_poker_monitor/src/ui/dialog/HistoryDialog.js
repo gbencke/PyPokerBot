@@ -44,7 +44,7 @@ export default HistoryDialog = props => {
         <View
           style={{
             flexDirection: "row",
-            borderTopColor: '#FFFFFF',
+            borderTopColor: "#FFFFFF",
             borderStyle: "dotted",
             borderWidth: 1,
             borderColor: "#000",
@@ -62,17 +62,31 @@ export default HistoryDialog = props => {
     });
   };
 
+  ShowContent = () => {
+    if (props.table) {
+      return (
+        <Dialog.Content>
+          <Text>Received Tables</Text>
+          <TableListView>{renderTables(props.tables)}</TableListView>
+          <Text>Tap to open...</Text>
+        </Dialog.Content>
+      );
+    } else {
+      return (
+        <Dialog.Content>
+          <Text>No Tables have been received yet!!!</Text>
+        </Dialog.Content>
+      );
+    }
+  };
+
   return (
     <HistoryDialogView>
       <Dialog>
         <Dialog.Title>
           <Text>Table History</Text>
         </Dialog.Title>
-        <Dialog.Content>
-          <Text>Received Tables</Text>
-          <TableListView>{renderTables(props.tables)}</TableListView>
-          <Text>Tap to open...</Text>
-        </Dialog.Content>
+        {ShowContent()}
         <Dialog.Actions>
           <DialogDefaultActions
             actions={["OK"]}
