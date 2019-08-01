@@ -1,6 +1,4 @@
-import React, { Component } from "react";
-import { Dimensions, Image, View, Text } from "react-native";
-import { Card } from "react-native-material-ui";
+import React from "react";
 import styled from "styled-components/native";
 
 const PokerAnalyserTableTypeView = styled.View`

@@ -3,7 +3,7 @@ import React, { Component } from "react";
 import PokerAnalyserConnect from "./PokerAnalyserConnect";
 import PokerAnalyserHeader from "./PokerAnalyserHeader";
 import styled from "styled-components/native";
-import { View, Dimensions } from "react-native";
+import { Dimensions } from "react-native";
 import HistoryDialog from "./dialog/HistoryDialog";
 import AboutDialog from "./dialog/AboutDialog";
 import { getCurrentTable, testConnection } from "../api/PokerBotServerAPI";

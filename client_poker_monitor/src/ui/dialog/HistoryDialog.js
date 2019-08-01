@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import { Text, View, Dimensions } from "react-native";
 import { Dialog, DialogDefaultActions } from "react-native-material-ui";
 import styled from "styled-components/native";

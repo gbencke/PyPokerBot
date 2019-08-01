@@ -1,5 +1,5 @@
 import React from "react";
-import { Dimensions, Platform } from "react-native";
+import { Platform } from "react-native";
 import PokerAnalyserPlayersCards from "./PokerAnalyserCardElements/PokerAnalyserPlayersCards";
 import PokerAnalyserHandStatus from "./PokerAnalyserCardElements/PokerAnalyserHandStatus";
 import PokerAnalyserCommands from "./PokerAnalyserCardElements/PokerAnalyserCommands";

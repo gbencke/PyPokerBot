@@ -7,7 +7,7 @@
  */
 
 import React, {Component} from 'react';
-import { Image, View, Text } from 'react-native';
+import { View, Text } from 'react-native';
 
 /* eslint-disable-next-line */
 export default class ErrorBoundary extends Component {

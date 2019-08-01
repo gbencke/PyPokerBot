@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import PokerAnalyserHand from "./PokerAnalyserHand";
 import styled from "styled-components/native";
 

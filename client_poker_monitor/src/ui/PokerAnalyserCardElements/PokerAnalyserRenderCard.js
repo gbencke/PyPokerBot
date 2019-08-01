@@ -1,5 +1,5 @@
-import React, { Component } from "react";
-import { Dimensions, Image, View, Text } from "react-native";
+import React from "react";
+import { Dimensions } from "react-native";
 import FitImage from "react-native-fit-image";
 import styled from "styled-components/native";
 
