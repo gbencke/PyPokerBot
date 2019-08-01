@@ -107,14 +107,12 @@ export default class PokerAnalyserConnect extends Component {
     return (
       <View>
         <LabelView totalWidth={this.props.totalWidth}>
-          {this.props.status !== "connected" ? (
-            <LabelText
-              totalWidth={this.props.totalWidth}
-              isError={this.props.status === "error"}
-            >
-              {this.props.ConnectTextInfo}
-            </LabelText>
-          ) : null}
+          <LabelText
+            totalWidth={this.props.totalWidth}
+            isError={this.props.status === "error"}
+          >
+            {this.props.ConnectTextInfo}
+          </LabelText>
         </LabelView>
         <ConnectView totalWidth={this.props.totalWidth}>
           <ConnectTextField

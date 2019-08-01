@@ -33,7 +33,7 @@ export default HistoryDialog = props => {
   };
 
   renderTables = tables => {
-    return tables.map(x => {
+    return tables.map((x, i) => {
       let handEquity = "";
 
       if (x.hand_analisys.result) {
@@ -42,6 +42,7 @@ export default HistoryDialog = props => {
 
       return (
         <View
+          key={i.toString()}
           style={{
             flexDirection: "row",
             borderTopColor: "#FFFFFF",
@@ -63,7 +64,7 @@ export default HistoryDialog = props => {
   };
 
   ShowContent = () => {
-    if (props.table) {
+    if (props.tables) {
       return (
         <Dialog.Content>
           <Text>Received Tables</Text>

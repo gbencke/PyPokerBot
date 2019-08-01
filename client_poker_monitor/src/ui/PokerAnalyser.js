@@ -25,7 +25,6 @@ export default class PokerAnalyser extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      currentTable: null,
       totalWidth:
         props.totalWidth || parseInt(Dimensions.get("window").width / 10) * 10,
       Address: props.initialAddress || "",
@@ -68,9 +67,16 @@ export default class PokerAnalyser extends Component {
   }
 
   setNextTable(table) {
-    if (!_.isEqual(this.state.currentTable, table)) {
+    if (!_.isEqual(this.state.table, table)) {
       console.log(`Got new table:${JSON.stringify(table)}`);
-      this.setState({ ...this.state, currentTable: table });
+
+      const tableHistory = [...this.state.tableHistory, table];
+
+      this.setState({
+        ...this.state,
+        table: table,
+        tableHistory: tableHistory
+      });
     }
   }
 
@@ -103,7 +109,7 @@ export default class PokerAnalyser extends Component {
       ...this.state,
       Address: address,
       connectState: "connected",
-      connectText: "Successfully Connected..."
+      connectText: "Connected and Receiving table data..."
     });
     setTimeout(() => this.pollCurrentTable(), 1000);
   }
@@ -133,19 +139,19 @@ export default class PokerAnalyser extends Component {
   connectStatus() {}
 
   HistoryPressed() {
-    this.setState({ showHistory: true, showAbout: false });
+    this.setState({ ...this.state, showHistory: true, showAbout: false });
   }
 
   AboutPressed() {
-    this.setState({ showHistory: false, showAbout: true });
+    this.setState({ ...this.state, showHistory: false, showAbout: true });
   }
 
   PressedOk() {
-    this.setState({ showHistory: false, showAbout: false });
+    this.setState({ ...this.state, showHistory: false, showAbout: false });
   }
 
   PressedCancel() {
-    this.setState({ showHistory: false, showAbout: false });
+    this.setState({ ...this.state, showHistory: false, showAbout: false });
   }
 
   render() {
@@ -166,18 +172,26 @@ export default class PokerAnalyser extends Component {
           connectStatus={this.connectStatus}
           initialAddress={this.state.Address}
         />
-        <DialogView>
-          {showHistory ? (
-            <HistoryDialog
-              onOk={PressedOk}
-              onCancel={PressedCancel}
-              tables={this.state.tableHistory}
-            />
-          ) : null}
-          {showAbout ? (
-            <AboutDialog onOk={PressedOk} onCancel={PressedCancel} />
-          ) : null}
-        </DialogView>
+        {showHistory || showAbout ? (
+          <DialogView>
+            {showHistory ? (
+              <HistoryDialog
+                onOk={PressedOk}
+                onCancel={PressedCancel}
+                tables={this.state.tableHistory}
+              />
+            ) : null}
+            {showAbout ? (
+              <AboutDialog onOk={PressedOk} onCancel={PressedCancel} />
+            ) : null}
+          </DialogView>
+        ) : (
+          <PokerAnalyserCard
+            noMargin={true}
+            width={this.state.totalWidth}
+            table={this.state.table}
+          />
+        )}
       </PokerAnalyserView>
     );
   }

@@ -17,7 +17,7 @@ const PokerAnalyserCardView = styled.View`
 `;
 
 export default PokerAnalyserCard = props => {
-  if (props.width < 100 || props.width > 1000) return null;
+  if (!props.table || props.width < 100 || props.width > 1000) return null;
 
   return (
     <PokerAnalyserCardView width={props.width} noMargin={props.noMargin}>
