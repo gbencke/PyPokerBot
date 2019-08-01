@@ -59,9 +59,9 @@ def table_status_get(tableid):
     if str_tableid not in table_status:
         return "{}"
 
-    table_status = table_status[str_tableid]
+    ret_table_status = table_status[str_tableid]
     logging.debug("Sending status for table:{} ".format(tableid))
-    return str(table_status)
+    return str(ret_table_status)
 
 
 @app.route('/table/<tableid>', methods=['POST'])
