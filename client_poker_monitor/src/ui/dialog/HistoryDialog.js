@@ -64,7 +64,7 @@ export default HistoryDialog = props => {
   };
 
   ShowContent = () => {
-    if (props.tables) {
+    if (props.tables && props.tables.length > 0) {
       return (
         <Dialog.Content>
           <Text>Received Tables</Text>
