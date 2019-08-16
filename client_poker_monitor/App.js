@@ -10,6 +10,7 @@ import { Platform } from "react-native";
 import PokerAnalyser from "./src/ui/PokerAnalyser";
 import ErrorBoundary from "./src/ui/ErrorBoundary";
 import StorybookUI from "./storybook";
+import SplashScreen from 'react-native-splash-screen';
 
 /* eslint-disable-next-line */
 export default class App extends Component {
@@ -25,6 +26,7 @@ export default class App extends Component {
 
   resolveUI() {
     if (this.useStoryBook) {
+      SplashScreen.hide();
       return <StorybookUI />;
     } else {
       return <PokerAnalyser />;
