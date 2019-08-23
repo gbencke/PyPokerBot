@@ -19,7 +19,12 @@ from settings import settings
 app = Flask(__name__)
 CORS(app)
 app.config['HOST'] = '0.0.0.0'
-app.config['PORT'] = 80
+
+if 'POKER_PORT' not in os.environ:
+    app.config['PORT'] = 5000
+else:
+    app.config['PORT'] = os.environ['POKER_PORT']
+
 app.config['SECRET_KEY'] = '12345'
 
 log_location = os.path.join(
@@ -114,4 +119,4 @@ def calculator():
 
 
 if __name__ == '__main__':
-    socketio.run(app, host='0.0.0.0', port=80)
+    socketio.run(app, host='0.0.0.0', port=app.config['PORT'])
