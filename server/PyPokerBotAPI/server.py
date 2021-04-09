@@ -1,4 +1,3 @@
-import json
 import os
 import logging
 import sys
@@ -6,7 +5,6 @@ from datetime import datetime
 
 from flask_cors import CORS
 from flask import Flask, request
-from flask_socketio import SocketIO
 
 sys.path.insert(0, ".")
 
@@ -18,7 +16,6 @@ from settings import settings
 
 app = Flask(__name__)
 CORS(app)
-app.config['HOST'] = '0.0.0.0'
 
 if 'POKER_PORT' not in os.environ:
     app.config['PORT'] = 5000
@@ -34,8 +31,8 @@ print('log_location:{}'.format(log_location))
 logging.basicConfig(format=settings['LOG_FORMAT'],
                     level=settings['LOG_LEVEL'],
                     filename=log_location)
+logging.getLogger().addHandler(logging.StreamHandler(sys.stdout))
 
-socketio = SocketIO(app)
 lookup_table_utils = LookupTable()
 
 table_status = {}
@@ -75,8 +72,7 @@ def table_status_post(tableid):
     str_tableid = str(tableid)
     table_status[str_tableid] = request.get_json()
     logging.debug("Status for table:{} was received".format(tableid))
-    logging.debug(table_status[str_tableid])
-    socketio.emit('tablestatus', table_status[str_tableid])
+    #logging.debug( str(table_status[str_tableid]).replace("\n", "").replace("\r", ""))
     return "OK"
 
 
@@ -87,6 +83,8 @@ def calculator():
     start_cards = tokens[0]
     board = ""
     dead = ""
+    logging.debug("{} {} {} {} {}".format(command, tokens, start_cards, board,
+                                          dead))
     if len(tokens) > 1:
         board = tokens[1]
     else:
@@ -119,4 +117,4 @@ def calculator():
 
 
 if __name__ == '__main__':
-    socketio.run(app, host='0.0.0.0', port=app.config['PORT'])
+    app.run(host='0.0.0.0', port=app.config['PORT'], debug=True)
