@@ -1,6 +1,6 @@
 @echo on
-echo Starting virtualenv
-call ..\env\Scripts\activate.bat
+#echo Starting virtualenv
+#call ..\env\Scripts\activate.bat
 cd src
 echo Starting Table Analisys
 echo 1st Table Analisys

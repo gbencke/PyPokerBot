@@ -52,7 +52,9 @@ import os.path
 import argparse
 import json
 import requests
+import base64
 from time import sleep
+from io import BytesIO
 
 from PyPokerBotClient.utils import get_instance
 from PyPokerBotClient.settings import GLOBAL_SETTINGS as Settings
@@ -227,7 +229,11 @@ def execute(args):
                 final_analisys += '=================================================================\n'
             PokerTableScanner.generate_analisys_summary_info(final_analisys)
         if should_observe:
+            imageBase64 = BytesIO()
+            table_image.save(imageBase64, format="JPEG")
+            result['jpeg_image'] = base64.b64encode(imageBase64.getvalue())
             result = clean_string(result)
             json_result = json.dumps(json.loads(result), indent=3)
             post_table_status(json_result)
         sleep(sleep_time)
+

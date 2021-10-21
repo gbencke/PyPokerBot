@@ -30,4 +30,6 @@ client.poker.monitor/android/app/build/
 yarn.lock
 *.code-workspace
 .vscode/
+server/pbots_calc/
+server/poker-eval/
 
