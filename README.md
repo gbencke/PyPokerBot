@@ -1,5 +1,7 @@
 # PyPokerBot
 
+![PokerBot Demo](https://i.ibb.co/kBRwPnP/ezgif-2-edd7101fd6.gif)
+
 As an amateur poker player, I always thought that Online Poker is a very interesting domain for AI Techniques and Third-Party Desktop Application Automation Techniques using computer vision, so I created PyPokerBot which is a project to study the use of OpenCV in order to create a working poker bot that using only Win32 API can interact with PokerStars Poker Client. 
 
 The first implementation only implements a simple decision tree for poker decisions as the focus is object detection and interaction with the poker client.
